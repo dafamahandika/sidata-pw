@@ -34,13 +34,13 @@ export const register = async (req, res) => {
     const user = await newUser.save();
     const userId = user._id;
     const userName = user.username;
-    // const token = jwt.sign({ userName, userId }, process.env.TOKEN_KEY, {
-    //   expiresIn: "20s",
-    // });
+    const token = jwt.sign({ userName, userId }, process.env.TOKEN_KEY, {
+      expiresIn: "20s",
+    });
 
-    // res.cookie(token);
+    res.cookie(token);
 
-    res.status(200).json({ user });
+    res.status(200).json({ user, token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "Itu kayanya gak lucky" });
