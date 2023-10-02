@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://127.0.0.1:27017/sidata", {
+mongoose.connect("mongodb+srv://bisena:bisena12345@cluster0.cmqrijy.mongodb.net/sidata", {
   useNewUrlparser: true,
   useUnifiedTopology: true,
 });
@@ -8,3 +8,4 @@ mongoose.connect("mongodb://127.0.0.1:27017/sidata", {
 const db = mongoose.connection;
 
 export default db;
+  

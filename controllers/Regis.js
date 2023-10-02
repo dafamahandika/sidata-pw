@@ -1,4 +1,4 @@
-import Regis from "../models/Register.js";
+import Regis from "../models/User.js";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 
