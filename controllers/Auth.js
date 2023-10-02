@@ -25,13 +25,9 @@ export const Login = async (req, res) => {
     const userEmail = user.email;
     const userName = user.username;
 
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      "secret-key",
-      {
-        expiresIn: "1h",
-      }
-    );
+    const token = jwt.sign({ userId: user._id, role: user.role }, "Berchanda", {
+      expiresIn: "1h",
+    });
 
     const refreshToken = jwt.sign(
       { userId, userEmail, userName },
