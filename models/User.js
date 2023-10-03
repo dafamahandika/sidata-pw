@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Register = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -14,10 +14,20 @@ const Register = new mongoose.Schema(
       type: String,
       required: true,
     },
+    refreshToken: {
+      type: String,
+      required: false,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    },
   },
   {
     timestamps: true,
   }
 );
-const Regis = mongoose.model("Regis", Register);
-export default Regis;
+
+const User = mongoose.model("User", userSchema);
+export default User;
