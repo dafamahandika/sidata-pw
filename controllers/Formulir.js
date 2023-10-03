@@ -142,3 +142,73 @@ export const reaData = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const updateData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    const updatedFamily = await Family.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    })
+      .populate("student_id")
+      .lean();
+
+    if (!updatedFamily) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    res.status(200).json({
+      message: "Success",
+      family: {
+        ...updatedFamily.student_id,
+        nama_ayah: updatedFamily.nama_ayah,
+        nik_ayah: updatedFamily.nik_ayah,
+        tanggal_lahir_ayah: updatedFamily.tanggal_lahir_ayah,
+        pendidikan_ayah: updatedFamily.pendidikan_ayah,
+        pekerjaan_ayah: updatedFamily.pekerjaan_ayah,
+        penghasilan_ayah: updatedFamily.penghasilan_ayah,
+        nama_ibu: updatedFamily.nama_ibu,
+        nik_ibu: updatedFamily.nik_ibu,
+        tanggal_lahir_ibu: updatedFamily.tanggal_lahir_ibu,
+        pendidikan_ibu: updatedFamily.pendidikan_ibu,
+        pekerjaan_ibu: updatedFamily.pekerjaan_ibu,
+        penghasilan_ibu: updatedFamily.penghasilan_ibu,
+        nama_wali: updatedFamily.nama_wali,
+        nik_wali: updatedFamily.nik_wali,
+        tanggal_lahir_wali: updatedFamily.tanggal_lahir_wali,
+        pendidikan_wali: updatedFamily.pendidikan_wali,
+        pekerjaan_wali: updatedFamily.pekerjaan_wali,
+        penghasilan_wali: updatedFamily.penghasilan_wali,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const delData = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedFamily = await Family.findByIdAndDelete(id);
+
+    if (!deletedFamily) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    const deletedStudent = await Student.findByIdAndDelete(
+      deletedFamily.student_id
+    );
+
+    if (!deletedStudent) {
+      return res.status(404).json({ message: "Student data not found" });
+    }
+
+    res.status(200).json({ message: "Data deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
