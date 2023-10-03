@@ -112,10 +112,31 @@ export const studentCreate = async (req, res) => {
 // PR
 export const reaData = async (req, res) => {
   try {
-    const family = await Family.findById("651bc8f1176e11fb5c623d71");
-    await family.populate("student_id");
-    console.log(family);
-    res.status(200).json({ massage: "Success", family });
+    const families = await Family.find().populate("student_id").lean();
+    res.status(200).json({
+      message: "Success",
+      families: families.map((family) => ({
+        ...family.student_id,
+        nama_ayah: family.nama_ayah,
+        nik_ayah: family.nik_ayah,
+        tanggal_lahir_ayah: family.tanggal_lahir_ayah,
+        pendidikan_ayah: family.pendidikan_ayah,
+        pekerjaan_ayah: family.pekerjaan_ayah,
+        penghasilan_ayah: family.penghasilan_ayah,
+        nama_ibu: family.nama_ibu,
+        nik_ibu: family.nik_ibu,
+        tanggal_lahir_ibu: family.tanggal_lahir_ibu,
+        pendidikan_ibu: family.pendidikan_ibu,
+        pekerjaan_ibu: family.pekerjaan_ibu,
+        penghasilan_ibu: family.penghasilan_ibu,
+        nama_wali: family.nama_wali,
+        nik_wali: family.nik_wali,
+        tanggal_lahir_wali: family.tanggal_lahir_wali,
+        pendidikan_wali: family.pendidikan_wali,
+        pekerjaan_wali: family.pekerjaan_wali,
+        penghasilan_wali: family.penghasilan_wali,
+      })),
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
