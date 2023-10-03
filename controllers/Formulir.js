@@ -56,7 +56,23 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
+    const {
+      nama_ayah,
+      nik_ayah,
+      pendidikan_ayah,
+      pekerjaan_ayah,
+      penghasilan_ayah,
+      nama_ibu,
+      nik_ibu,
+      pendidikan_ibu,
+      pekerjaan_ibu,
+      penghasilan_ibu,
+      nama_wali,
+      nik_wali,
+      pendidikan_wali,
+      pekerjaan_wali,
+      penghasilan_wali,
+    } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
@@ -93,12 +109,13 @@ export const studentCreate = async (req, res) => {
   }
 };
 
+// PR
 export const reaData = async (req, res) => {
   try {
-    const saveStudent = await Student.find();
-    const savedFamily = await Family.find();
-
-    res.status(200).json({ massage: "Success", saveStudent, savedFamily });
+    const family = await Family.findById("651bc8f1176e11fb5c623d71");
+    await family.populate("student_id");
+    console.log(family);
+    res.status(200).json({ massage: "Success", family });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

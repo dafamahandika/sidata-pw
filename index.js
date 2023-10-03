@@ -35,19 +35,3 @@ db.once("open", () => {
 app.listen(port, () => {
   console.log(`Run Server http://localhost:${port}`);
 });
-
-const getData1 = async (req, res) => {
-  const family = await Family.findById("651bc8f1176e11fb5c623d71");
-  await family.populate("student_id");
-  console.log(family);
-};
-
-
-const getData2 = async (req, res) => {
-  const family = await Family.findById("651bd214176e11fb5c623d75");
-  await family.populate("student_id");
-  console.log(family);
-};
-
-getData1();
-getData2();
