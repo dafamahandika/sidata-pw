@@ -29,9 +29,13 @@ export const Login = async (req, res) => {
       expiresIn: "1h",
     });
 
-    const refreshToken = jwt.sign({ userId, userEmail, userName }, "RefreshToken", {
-      expiresIn: "1h",
-    });
+    const refreshToken = jwt.sign(
+      { userId, userEmail, userName },
+      "RefreshToken",
+      {
+        expiresIn: "1h",
+      }
+    );
 
     await User.updateOne({ _id: userId }, { refreshToken });
 

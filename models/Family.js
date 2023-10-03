@@ -16,7 +16,7 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     tanggal_lahir_ayah: {
-      type: date,
+      type: Date,
       required: true,
     },
     pendidikan_ayah: {
@@ -28,7 +28,7 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     penghasilan_ayah: {
-      type: Float,
+      type: Number,
       required: true,
     },
     //     data ibu
@@ -41,7 +41,7 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     tanggal_lahir_ibu: {
-      type: date,
+      type: Date,
       required: true,
     },
     pendidikan_ibu: {
@@ -53,7 +53,7 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     penghasilan_ibu: {
-      type: Float,
+      type: Number,
       required: true,
     },
     //     data wali
@@ -66,7 +66,7 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     tanggal_lahir_wali: {
-      type: date,
+      type: Date,
       required: true,
     },
     pendidikan_wali: {
@@ -78,7 +78,7 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     penghasilan_wali: {
-      type: Float,
+      type: Number,
       required: true,
     },
   },
