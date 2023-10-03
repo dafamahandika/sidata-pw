@@ -1,4 +1,4 @@
-import resLog from "../models/User.js";
+import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 
@@ -9,7 +9,7 @@ export const Login = async (req, res) => {
   }
 
   try {
-    const user = await resLog.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -33,7 +33,7 @@ export const Login = async (req, res) => {
       expiresIn: "1h",
     });
 
-    await resLog.updateOne({ _id: userId }, { refreshToken });
+    await User.updateOne({ _id: userId }, { refreshToken });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
