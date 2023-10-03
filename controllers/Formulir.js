@@ -3,7 +3,28 @@ import Student from "../models/Student.js";
 
 export const studentCreate = async (req, res) => {
   try {
-    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp } = req.body;
+    const {
+      nama,
+      jk,
+      nisn,
+      nik,
+      no_kk,
+      tempat_lahir,
+      no_akta,
+      agama,
+      kewarganegaraan,
+      alamat,
+      rt,
+      rw,
+      nama_dusun,
+      kecamatan,
+      kode_pos,
+      transportasi,
+      anak_ke,
+      tinggal_bersama,
+      email,
+      no_telp,
+    } = req.body;
 
     const date = new Date();
     const tanggal_lahir = date.setHours(date.getHours() + 7);
@@ -61,9 +82,25 @@ export const studentCreate = async (req, res) => {
 
     const savedFamily = await newFamily.save();
 
-    res.status(201).json({ message: "Formulir created successfully", savedForm, savedFamily });
+    res.status(201).json({
+      message: "Formulir created successfully",
+      savedForm,
+      savedFamily,
+    });
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: "Gagal", savedForm, savedFamily });
+  }
+};
+
+export const reaData = async (req, res) => {
+  try {
+    const saveStudent = await Student.find();
+    const savedFamily = await Family.find();
+
+    res.status(200).json({ massage: "Success", saveStudent, savedFamily });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
