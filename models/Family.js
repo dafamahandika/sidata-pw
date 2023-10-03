@@ -1,10 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const familySchema = new mongoose.Schema(
   {
     student_id: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: "Student"
     },
     //     data ayah
     nama_ayah: {

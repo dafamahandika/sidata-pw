@@ -88,5 +88,11 @@ const studentSchema = new mongoose.Schema({
   },
 });
 
+studentSchema.virtual('family', {
+  ref: "Family",
+  localField: "_id",
+  foreignField: "student_id"
+})
+
 const Student = mongoose.model("Student", studentSchema);
 export default Student;

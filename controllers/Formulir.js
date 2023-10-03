@@ -35,23 +35,7 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const {
-      nama_ayah,
-      nik_ayah,
-      pendidikan_ayah,
-      pekerjaan_ayah,
-      penghasilan_ayah,
-      nama_ibu,
-      nik_ibu,
-      pendidikan_ibu,
-      pekerjaan_ibu,
-      penghasilan_ibu,
-      nama_wali,
-      nik_wali,
-      pendidikan_wali,
-      pekerjaan_wali,
-      penghasilan_wali,
-    } = req.body;
+    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
