@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 
 const studentSchema = new mongoose.Schema({
+  rombel_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Rombel",
+  },
+  rayon_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Rayon",
+  },
   nama: {
     type: String,
     required: true,
