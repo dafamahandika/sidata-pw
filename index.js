@@ -6,9 +6,6 @@ import register from "./routes/Regist.js";
 import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import cookieParser from "cookie-parser";
-import Student from "./models/Student.js";
-import Family from "./models/Family.js";
-
 const port = process.env.PORT || 3000;
 
 const app = express();

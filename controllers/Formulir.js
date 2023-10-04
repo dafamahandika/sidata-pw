@@ -1,5 +1,7 @@
-import Family from "../models/Family.js";
-import Student from "../models/Student.js";
+import Family from "../models/Student/Family.js";
+import Student from "../models/Student/Student.js";
+import Rombel from "../models/Student/Rombel.js";
+// import Rayon from "../models/Student/Rayon.js";
 // import isAdmin from "../middleware/isAdmin.js";
 
 export const studentCreate = async (req, res) => {
@@ -25,6 +27,9 @@ export const studentCreate = async (req, res) => {
       tinggal_bersama,
       email,
       no_telp,
+      tb,
+      bb,
+      gol_darah,
     } = req.body;
 
     const date = new Date();
@@ -52,6 +57,9 @@ export const studentCreate = async (req, res) => {
       tinggal_bersama: tinggal_bersama,
       email: email,
       no_telp: no_telp,
+      tb: tb,
+      bb: bb,
+      gol_darah: gol_darah,
       createdAt: date,
     });
 
@@ -99,10 +107,20 @@ export const studentCreate = async (req, res) => {
 
     const savedFamily = await newFamily.save();
 
+    const { nama_rombel } = req.body;
+
+    const newRombel = new Rombel({
+      rombel_id: savedForm._id,
+      nama_rombel: nama_rombel,
+    });
+
+    const saveRombel = await newRombel.save();
+
     res.status(201).json({
       message: "Formulir created successfully",
       savedForm,
       savedFamily,
+      saveRombel,
     });
   } catch (error) {
     console.log(error);
@@ -114,9 +132,14 @@ export const studentCreate = async (req, res) => {
 export const reaData = async (req, res) => {
   try {
     const families = await Family.find().populate("student_id").lean();
-    res.status(200).json({
-      message: "Success",
-      families: families.map((family) => ({
+    const rombels = await Rombel.find().lean();
+
+    const result = families.map((family) => {
+      const rombel = rombels.find(
+        (rombel) => rombel.rombel_id === family.student_id._id.toString()
+      );
+
+      return {
         ...family.student_id,
         nama_ayah: family.nama_ayah,
         nik_ayah: family.nik_ayah,
@@ -136,7 +159,13 @@ export const reaData = async (req, res) => {
         pendidikan_wali: family.pendidikan_wali,
         pekerjaan_wali: family.pekerjaan_wali,
         penghasilan_wali: family.penghasilan_wali,
-      })),
+        rombels: rombel.nama_rombel,
+      };
+    });
+
+    res.status(200).json({
+      message: "Success",
+      families: result,
     });
   } catch (error) {
     console.log(error);

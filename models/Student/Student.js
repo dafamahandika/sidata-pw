@@ -86,13 +86,37 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  tb: {
+    type: Number,
+    required: true,
+  },
+  bb: {
+    type: Number,
+    required: true,
+  },
+  gol_darah: {
+    type: String,
+    required: true,
+  },
 });
 
-studentSchema.virtual('family', {
+studentSchema.virtual("family", {
   ref: "Family",
   localField: "_id",
-  foreignField: "student_id"
-})
+  foreignField: "student_id",
+});
+
+studentSchema.virtual("rombel", {
+  ref: "Rombel",
+  localField: "rombel_id",
+  foreignField: "_id",
+  justOne: true,
+});
+// studentSchema.virtual("Rayon", {
+//   ref: "Rayon",
+//   localField: "_id",
+//   foreignField: "rayon_id",
+// });
 
 const Student = mongoose.model("Student", studentSchema);
 export default Student;
