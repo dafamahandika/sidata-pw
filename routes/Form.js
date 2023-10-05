@@ -1,4 +1,5 @@
 import {
+  isRayon,
   isRombel,
   studentCreate,
   reaData,
@@ -8,6 +9,7 @@ import {
 import express from "express";
 
 const routes = express.Router();
+routes.post("/rayon", isRayon);
 routes.post("/rombel", isRombel);
 routes.post("/create", studentCreate);
 routes.get("/get", reaData);

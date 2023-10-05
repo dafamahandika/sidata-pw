@@ -10,5 +10,11 @@ const rayonSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+rayonSchema.virtual("students", {
+  ref: "Student",
+  localField: "rayon_id",
+  foreignField: "_id",
+});
 const Rayon = mongoose.model("Rayon", rayonSchema);
 export default Rayon;

@@ -1,17 +1,38 @@
 import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
+import Rayon from "../models/Student/Rayon.js";
 // import User from "../models/Student/User.js";
-// import Rayon from "../models/Student/Rayon.js";
 // import isAdmin from "../middleware/isAdmin.js";
+
+export const isRayon = async (req, res) => {
+  try {
+    const { nama_rayon, ruang_rayon } = req.body;
+
+    const rayon = new Rayon({
+      nama_rayon: nama_rayon,
+      ruang_rayon: ruang_rayon,
+    });
+
+    const saveRayon = await rayon.save();
+
+    res.status(200).json({
+      massage: "success",
+      saveRayon,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "error" });
+  }
+};
 
 export const isRombel = async (req, res) => {
   try {
-    const { nama_rombel, tingkat, tahun_ajaran } = req.body;
+    const { nama_rombel, tahun_ajaran } = req.body;
 
     const rombel = new Rombel({
       nama_rombel: nama_rombel,
-      tingkat: tingkat,
+      // tingkat: tingkat,
       tahun_ajaran: tahun_ajaran,
     });
 
@@ -26,6 +47,19 @@ export const isRombel = async (req, res) => {
 
 export const studentCreate = async (req, res) => {
   try {
+    const rayonId = req.body.rayon_id;
+    const rayon = await Rayon.findById(rayonId);
+    if (!rayon) {
+      return res.status(404).json({ message: "Rayon tidak ditemukan" });
+    }
+
+    const rayonData = await Rayon.findById(rayonId);
+    if (!rayonData) {
+      return res.status(404).json({ message: "Rayon tidak ditemukan" });
+    }
+
+    const nama_rayon = rayonData.nama_rayon;
+
     const rombelId = req.body.rombel_id;
 
     const rombel = await Rombel.findById(rombelId);
@@ -71,6 +105,7 @@ export const studentCreate = async (req, res) => {
     const tanggal_lahir = date.setHours(date.getHours() + 7);
 
     const newForm = new Student({
+      rayon_id: rayonId,
       rombel_id: rombelId,
       nama: nama,
       jk: jk,
@@ -97,6 +132,7 @@ export const studentCreate = async (req, res) => {
       bb: bb,
       gol_darah: gol_darah,
       nama_rombel: nama_rombel,
+      nama_rayon: nama_rayon,
       createdAt: date,
     });
 
@@ -161,10 +197,11 @@ export const reaData = async (req, res) => {
     const families = await Family.find()
       .populate({
         path: "student_id",
-        populate: {
-          path: "rombel_id",
-          model: "Rombel",
-        },
+        model: "Student",
+        populate: [
+          { path: "rombel_id", model: "Rombel" },
+          { path: "rayon_id", model: "Rayon" },
+        ],
       })
       .lean();
 
@@ -172,11 +209,14 @@ export const reaData = async (req, res) => {
       const student = family.student_id;
 
       const rombelId = student.rombel_id ? student.rombel_id._id : null;
+      const rayonId = student.rayon_id ? student.rayon_id._id : null;
 
       return {
         ...student,
         rombel_id: rombelId,
         nama_rombel: student.rombel_id ? student.rombel_id.nama_rombel : null,
+        rayon_id: rayonId,
+        nama_rayon: student.rayon_id ? student.rayon_id.nama_rayon : null,
         nama_ayah: family.nama_ayah,
         nik_ayah: family.nik_ayah,
         tanggal_lahir_ayah: family.tanggal_lahir_ayah,

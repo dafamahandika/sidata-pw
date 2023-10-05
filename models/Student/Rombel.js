@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const rombelSchema = new mongoose.Schema({
   nama_rombel: {
     type: String,
-    enum: ["PPLG", "TJKT", "DKV", "MPLB", "PMN", "HTL", "KLN"],
+    // enum: ["PPLG", "TJKT", "DKV", "MPLB", "PMN", "HTL", "KLN"],
     required: true,
   },
-  tingkat: {
-    type: String,
-    required: true,
-  },
+  // tingkat: {
+  //   type: String,
+  //   required: true,
+  // },
   tahun_ajaran: {
     type: String,
     required: true,
