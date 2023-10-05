@@ -1,4 +1,5 @@
 import {
+  isRombel,
   studentCreate,
   reaData,
   updateData,
@@ -7,6 +8,7 @@ import {
 import express from "express";
 
 const routes = express.Router();
+routes.post("/rombel", isRombel);
 routes.post("/create", studentCreate);
 routes.get("/get", reaData);
 routes.put("/update/:id", updateData);

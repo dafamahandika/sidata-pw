@@ -1,11 +1,46 @@
 import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
+// import User from "../models/Student/User.js";
 // import Rayon from "../models/Student/Rayon.js";
 // import isAdmin from "../middleware/isAdmin.js";
 
+export const isRombel = async (req, res) => {
+  try {
+    const { nama_rombel, tingkat, tahun_ajaran } = req.body;
+
+    const rombel = new Rombel({
+      nama_rombel: nama_rombel,
+      tingkat: tingkat,
+      tahun_ajaran: tahun_ajaran,
+    });
+
+    const saveRombel = await rombel.save();
+
+    res.status(200).json({ massage: "success", saveRombel });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "error" });
+  }
+};
+
 export const studentCreate = async (req, res) => {
   try {
+    const rombelId = req.body.rombel_id;
+
+    const rombel = await Rombel.findById(rombelId);
+    if (!rombel) {
+      return res.status(404).json({ message: "Rombel tidak ditemukan" });
+    }
+
+    const rombelData = await Rombel.findById(rombelId);
+
+    if (!rombelData) {
+      return res.status(404).json({ message: "Rombel tidak ditemukan" });
+    }
+
+    const nama_rombel = rombelData.nama_rombel;
+
     const {
       nama,
       jk,
@@ -36,6 +71,7 @@ export const studentCreate = async (req, res) => {
     const tanggal_lahir = date.setHours(date.getHours() + 7);
 
     const newForm = new Student({
+      rombel_id: rombelId,
       nama: nama,
       jk: jk,
       nisn: nisn,
@@ -60,6 +96,7 @@ export const studentCreate = async (req, res) => {
       tb: tb,
       bb: bb,
       gol_darah: gol_darah,
+      nama_rombel: nama_rombel,
       createdAt: date,
     });
 
@@ -107,40 +144,39 @@ export const studentCreate = async (req, res) => {
 
     const savedFamily = await newFamily.save();
 
-    const { nama_rombel } = req.body;
-
-    const newRombel = new Rombel({
-      rombel_id: savedForm._id,
-      nama_rombel: nama_rombel,
-    });
-
-    const saveRombel = await newRombel.save();
-
     res.status(201).json({
       message: "Formulir created successfully",
       savedForm,
       savedFamily,
-      saveRombel,
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({ message: "Gagal", savedForm, savedFamily });
+    res.status(404).json({ message: "Gagal" });
   }
 };
 
 // Untuk Menampilkan semua data yang ada di database
 export const reaData = async (req, res) => {
   try {
-    const families = await Family.find().populate("student_id").lean();
-    const rombels = await Rombel.find().lean();
+    const families = await Family.find()
+      .populate({
+        path: "student_id",
+        populate: {
+          path: "rombel_id",
+          model: "Rombel",
+        },
+      })
+      .lean();
 
     const result = families.map((family) => {
-      const rombel = rombels.find(
-        (rombel) => rombel.rombel_id === family.student_id._id.toString()
-      );
+      const student = family.student_id;
+
+      const rombelId = student.rombel_id ? student.rombel_id._id : null;
 
       return {
-        ...family.student_id,
+        ...student,
+        rombel_id: rombelId,
+        nama_rombel: student.rombel_id ? student.rombel_id.nama_rombel : null,
         nama_ayah: family.nama_ayah,
         nik_ayah: family.nik_ayah,
         tanggal_lahir_ayah: family.tanggal_lahir_ayah,
@@ -159,7 +195,6 @@ export const reaData = async (req, res) => {
         pendidikan_wali: family.pendidikan_wali,
         pekerjaan_wali: family.pekerjaan_wali,
         penghasilan_wali: family.penghasilan_wali,
-        rombels: rombel.nama_rombel,
       };
     });
 

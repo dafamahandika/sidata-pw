@@ -6,11 +6,11 @@ const studentSchema = new mongoose.Schema({
     required: true,
     ref: "Rombel",
   },
-  rayon_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Rayon",
-  },
+  // rayon_id: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   required: true,
+  //   ref: "Rayon",
+  // },
   nama: {
     type: String,
     required: true,
@@ -118,10 +118,11 @@ studentSchema.virtual("family", {
 
 studentSchema.virtual("rombel", {
   ref: "Rombel",
-  localField: "rombel_id",
-  foreignField: "_id",
+  localField: "_id",
+  foreignField: "rombel_id",
   justOne: true,
 });
+
 // studentSchema.virtual("Rayon", {
 //   ref: "Rayon",
 //   localField: "_id",
