@@ -3,28 +3,31 @@ import Kepegawaian from "../models/Gtk/Kepegawaian.js";
 import StatusKepegawaian from "../models/Gtk/StatusKepegawaian.js";
 import JenisPtk from "../models/Gtk/JenisPtk.js";
 
-export const createStatus = async (res, req) => {
+export const createStatus = async (req, res) => {
   try {
     const { jenis_status } = req.body;
-    const status = new StatusKepegawaian({
-      jenis_status: jenis_status,
+
+    if (!jenis_status) {
+      return res.status(400).json({ message: "jenis_status is required" });
+    }
+
+    const statusKepegawaian = new StatusKepegawaian({
+      jenis_status,
     });
 
-    const savedStatus = await status.save();
+    const saveStatus = await statusKepegawaian.save();
 
     res.status(200).json({
-      massage: "Berhasil Menambahkan Status Pegawai",
-      savedStatus,
+      message: "Success",
+      saveStatus,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      massage: "Error",
-    });
+    console.error(error);
+    res.status(500).json({ message: "Error" });
   }
 };
 
-export const createJenis = async (res, req) => {
+export const createJenis = async (req, res) => {
   try {
     const { jenis_ptk } = req.body;
     const jenis = new JenisPtk({

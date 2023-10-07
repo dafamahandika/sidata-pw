@@ -5,6 +5,8 @@ import create from "./routes/Form.js";
 import register from "./routes/Regist.js";
 import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
+import createStatus from "./routes/gtkRoutes.js";
+import createJenis from "./routes/gtkRoutes.js";
 import cookieParser from "cookie-parser";
 const port = process.env.PORT || 3000;
 
@@ -17,6 +19,8 @@ app.use(create);
 app.use(register);
 app.use(Login);
 app.use(refreshToken);
+app.use(createStatus);
+app.use(createJenis);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -6,4 +6,4 @@ const routes = express.Router();
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
 
-export default routes
+export default routes;

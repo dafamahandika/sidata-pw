@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const kepegawaianSchema = new mongoose.Schema(
   {
@@ -21,7 +21,7 @@ const kepegawaianSchema = new mongoose.Schema(
     nip: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     niy: {
       type: String,
@@ -41,7 +41,13 @@ const kepegawaianSchema = new mongoose.Schema(
   }
 );
 
-kepegawaianSchema.virtual()
+kepegawaianSchema.virtual("status_kepegawaian", {
+  status_kepegawaian: {
+    ref: "Status_Kepegawaian",
+    localField: "status_kepegawaian_id",
+    foreignField: "_id",
+  },
+});
 
-const Kepegawaian = mongoose.model("Gtk", kepegawaianSchema);
+const Kepegawaian = mongoose.model("KepegawaiaN", kepegawaianSchema);
 export default Kepegawaian;
