@@ -64,6 +64,7 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
+      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
       required: true,
     },
     kewarganegaraan: {
@@ -82,19 +83,20 @@ const gtkSchema = new mongoose.Schema(
     },
     status_kawin: {
       type: String,
+      enum: ["Kawin", "Belum Kawin", "Duda/Janda"],
       required: true,
     },
     nama_istri_suami: {
       type: String,
-      required: true,
+      required: false,
     },
     nip_istri_suami: {
       type: String,
-      required: true,
+      required: false,
     },
     pekerjaan_istri_suami: {
       type: String,
-      required: true,
+      required: false,
     },
     no_telp: {
       type: String,
@@ -102,7 +104,7 @@ const gtkSchema = new mongoose.Schema(
     },
     no_telp_rumah: {
       type: String,
-      required: true,
+      required: false,
     },
     email: {
       type: String,

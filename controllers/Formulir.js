@@ -57,7 +57,7 @@ export const studentCreate = async (req, res) => {
     }
 
     const nama_rayon = rayonData.nama_rayon;
-
+      
     const rombelId = req.body.rombel_id;
 
     const rombel = await Rombel.findById(rombelId);

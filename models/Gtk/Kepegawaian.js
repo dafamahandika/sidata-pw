@@ -11,7 +11,7 @@ const kepegawaianSchema = new mongoose.Schema(
     status_kepegawaian_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Status_Kepegawaian",
+      ref: "StatusKepegawaian",
     },
     jenis_ptk_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,13 +40,21 @@ const kepegawaianSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+kepegawaianSchema.virtual("gtk", {
+  ref: "Gtk",
+  localField: "_id",
+  foreignField: "gtk_id",
+});
 kepegawaianSchema.virtual("status_kepegawaian", {
-  status_kepegawaian: {
-    ref: "Status_Kepegawaian",
-    localField: "status_kepegawaian_id",
-    foreignField: "_id",
-  },
+  ref: "StatusKepegawaian",
+  localField: "_id",
+  foreignField: "status_kepegawaian_id",
+});
+
+kepegawaianSchema.virtual("jenis_ptk", {
+  ref: "JenisPtk",
+  localField: "_id",
+  foreignField: "jenis_ptk_id",
 });
 
 const Kepegawaian = mongoose.model("KepegawaiaN", kepegawaianSchema);
