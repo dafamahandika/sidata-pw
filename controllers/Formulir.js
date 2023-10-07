@@ -73,7 +73,7 @@ export const studentCreate = async (req, res) => {
       return res.status(404).json({ message: "Rombel tidak ditemukan" });
     }
 
-    const nama_rombel = rombelData.nama_rombel;
+    const nama_rombel = rombelData.nama_rombel; 
 
     const {
       nama,

@@ -60,27 +60,27 @@ const familySchema = new mongoose.Schema(
     //     data wali
     nama_wali: {
       type: String,
-      required: true,
+      required: false,
     },
     nik_wali: {
       type: String,
-      required: true,
+      required: false,
     },
     tanggal_lahir_wali: {
       type: Date,
-      required: true,
+      required: false,
     },
     pendidikan_wali: {
       type: String,
-      required: true,
+      required: false,
     },
     pekerjaan_wali: {
       type: String,
-      required: true,
+      required: false,
     },
     penghasilan_wali: {
       type: Number,
-      required: true,
+      required: false,
     },
   },
   {
