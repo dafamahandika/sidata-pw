@@ -2,8 +2,6 @@ import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
-// import User from "../models/Student/User.js";
-// import isAdmin from "../middleware/isAdmin.js";
 
 export const isRayon = async (req, res) => {
   try {
@@ -28,11 +26,11 @@ export const isRayon = async (req, res) => {
 
 export const isRombel = async (req, res) => {
   try {
-    const { nama_rombel, tahun_ajaran } = req.body;
+    const { nama_rombel, tingkat, tahun_ajaran } = req.body;
 
     const rombel = new Rombel({
       nama_rombel: nama_rombel,
-      // tingkat: tingkat,
+      tingkat: tingkat,
       tahun_ajaran: tahun_ajaran,
     });
 
@@ -215,6 +213,7 @@ export const reaData = async (req, res) => {
         ...student,
         rombel_id: rombelId,
         nama_rombel: student.rombel_id ? student.rombel_id.nama_rombel : null,
+        tingkat: student.rombel_id ? student.rombel_id.tingkat : null,
         tahun_ajaran: student.rombel_id ? student.rombel_id.tahun_ajaran : null,
         rayon_id: rayonId,
         nama_rayon: student.rayon_id ? student.rayon_id.nama_rayon : null,
