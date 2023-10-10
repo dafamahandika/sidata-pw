@@ -1,9 +1,9 @@
 import express from "express";
-import { getGtk, createGtk, createStatus, createJenis } from "../controllers/gtkController.js";
+import { getData, createGtk, createStatus, createJenis } from "../controllers/gtkController.js";
 
 const routes = express.Router();
 
-routes.get("/gtk", getGtk);
+routes.get("/gtk", getData);
 routes.post("/gtk", createGtk);
 
 routes.post("/status-pegawai", createStatus);

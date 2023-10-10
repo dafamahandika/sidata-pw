@@ -14,7 +14,7 @@ const anakSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  jenjang_pendidikan: {
+  jenjang_pendidikan_anak: {
     type: String,
     required: true,
   },
@@ -27,16 +27,16 @@ const anakSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  jk: {
+  jk_anak: {
     type: String,
     enum: ["L", "P"],
     required: true,
   },
-  tempat_lahir: {
+  tempat_lahir_anak: {
     type: String,
     required: true,
   },
-  tanggal_lahir: {
+  tanggal_lahir_anak: {
     type: String,
     required: true,
   },

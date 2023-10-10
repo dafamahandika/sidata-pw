@@ -40,11 +40,7 @@ const kepegawaianSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-kepegawaianSchema.virtual("gtk", {
-  ref: "Gtk",
-  localField: "_id",
-  foreignField: "gtk_id",
-});
+
 kepegawaianSchema.virtual("status_kepegawaian", {
   ref: "StatusKepegawaian",
   localField: "_id",
@@ -56,6 +52,5 @@ kepegawaianSchema.virtual("jenis_ptk", {
   localField: "_id",
   foreignField: "jenis_ptk_id",
 });
-
-const Kepegawaian = mongoose.model("KepegawaiaN", kepegawaianSchema);
+const Kepegawaian = mongoose.model("Kepegawaian", kepegawaianSchema);
 export default Kepegawaian;

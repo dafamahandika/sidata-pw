@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const jenisPtkschema = new mongoose.Schema(
+const jenisPtkSchema = new mongoose.Schema(
   {
     jenis_ptk: {
       type: String,
@@ -11,6 +11,11 @@ const jenisPtkschema = new mongoose.Schema(
     timestamps: true,
   }
 );
+jenisPtkSchema.virtual("kepegawaian", {
+  ref: "Kepegawaian",
+  localField: "jenis_ptk_id",
+  foreignField: "_id",
+});
 
-const JenisPtk = mongoose.model("JenisPtk", jenisPtkschema);
+const JenisPtk = mongoose.model("JenisPtk", jenisPtkSchema);
 export default JenisPtk;

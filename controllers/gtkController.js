@@ -1,17 +1,41 @@
 import Gtk from "../models/Gtk/Gtk.js";
 import Kepegawaian from "../models/Gtk/Kepegawaian.js";
+import RiwayatPendidikan from "../models/Gtk/RiwayatPendidikan.js";
 import StatusKepegawaian from "../models/Gtk/StatusKepegawaian.js";
 import JenisPtk from "../models/Gtk/JenisPtk.js";
 
-export const getGtk = async (req, res) => {
+export const getData = async (req, res) => {
   try {
-    const gtk = await Gtk.find();
-    if (!gtk) {
+    const kepegawaian = await Kepegawaian.find()
+      .populate({
+        path: "gtk_id",
+        model: "Gtk",
+        // populate: [
+        //   { path: "status_kepegawaian_id", model: "StatusKepegawaian" },
+        //   { path: "jenis_ptk_id", model: "JenisPtk" },
+        // ],
+      })
+      .lean();
+    if (!kepegawaian) {
       return res.status(404).json({ message: "Tidak Ada Data GTK" });
     }
+    // const result = kepegawaian.map((data) => {
+    //   const gtk = data.gtk_id;
+    //   // const status_kepegawaian = data.status_kepegawaian_id.jenis_status;
+    //   // const jenis_ptk = data.jenis_ptk_id.jenis_ptk;
+    //   return {
+    //     ...gtk,
+    //     status_kepegawaian: status_kepegawaian_id,
+    //     jenis_ptk: jenis_ptk_id,
+    //     nip: nip,
+    //     niy: niy,
+    //     nuptk: nuptk,
+    //     sumber_gaji: sumber_gaji,
+    //   };
+    // });
     res.status(200).json({
       message: "Succes",
-      data: gtk,
+      data: kepegawaian,
     });
   } catch (error) {
     console.log(error);
@@ -105,10 +129,17 @@ export const createGtk = async (req, res) => {
 
     const savedKepegawaian = await kepegawaian.save();
 
+    const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
+
+    const riwayat_pendidikan = new RiwayatPendidikan({
+      gtk_id: gtk_id,
+      bidang,
+    });
     res.status(201).json({
       message: "Berhasil Menambahkan GTK",
       savedGtk,
       savedKepegawaian,
+      savedAnak,
     });
   } catch (error) {
     console.log(error);
