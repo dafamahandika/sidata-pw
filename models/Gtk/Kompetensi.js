@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const kompetensiSchema = mongoose.Schema(
+const kompetensiSchema = new mongoose.Schema(
   {
     gtk_id: {
       type: mongoose.Schema.Types.ObjectId,

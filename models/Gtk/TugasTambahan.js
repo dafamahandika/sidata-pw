@@ -1,30 +1,30 @@
 import mongoose from "mongoose";
 
-const beasiswaSchema = new mongoose.Schema(
+const tugasTambahSchema = new mongoose.Schema(
   {
     gtk_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Gtk",
+      ref: "REF",
     },
-    jenis_beasiswa: {
+    jabatan: {
       type: String,
       required: true,
     },
-    keterangan: {
+    prasarana: {
       type: String,
       required: true,
     },
-    tahun_mulai: {
+    no_sk: {
       type: String,
       required: true,
     },
-    tahun_akhir: {
+    tmt_tambahan: {
       type: String,
       required: true,
     },
-    masih_menerima: {
-      type: Boolean,
+    tst_tambahan: {
+      type: String,
       required: true,
     },
   },
@@ -32,6 +32,5 @@ const beasiswaSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-const Beasiswa = mongoose.model("Beasiswa", beasiswaSchema);
-export default Beasiswa;
+const TugasTambahan = mongoose.model("TugasTambahan", tugasTambahSchema);
+export default TugasTambahan;

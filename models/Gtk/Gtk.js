@@ -129,11 +129,15 @@ const gtkSchema = new mongoose.Schema(
   }
 );
 
-gtkSchema.virtual("kepegawaian", {
-  ref: "Kepegawaian",
-  localField: "_id",
-  foreignField: "gtk_id",
-});
-
+// gtkSchema.virtual("kepegawaian", {
+//   ref: "Kepegawaian",
+//   localField: "_id",
+//   foreignField: "gtk_id",
+// });
+// gtkSchema.virtual("riwayat_pendidikan", {
+//   ref: "RiwayatPendidikan",
+//   localField: "_id",
+//   foreignField: "gtk_id",
+// });
 const Gtk = mongoose.model("Gtk", gtkSchema);
 export default Gtk;

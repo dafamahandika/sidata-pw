@@ -3,6 +3,51 @@ import Kepegawaian from "../models/Gtk/Kepegawaian.js";
 import RiwayatPendidikan from "../models/Gtk/RiwayatPendidikan.js";
 import StatusKepegawaian from "../models/Gtk/StatusKepegawaian.js";
 import JenisPtk from "../models/Gtk/JenisPtk.js";
+import Anak from "../models/Gtk/Anak.js";
+import Beasiswa from "../models/Gtk/Beasiswa.js";
+import Diklat from "../models/Gtk/Diklat.js";
+import Inpassing from "../models/Gtk/Inpassing.js";
+import Kompetensi from "../models/Gtk/Kompetensi.js";
+import Penugasan from "../models/Gtk/Penugasan.js";
+import Sertifikasi from "../models/Gtk/Sertifikasi.js";
+import TugasTambahan from "../models/Gtk/TugasTambahan.js";
+import Tunjangan from "../models/Gtk/Tunjangan.js";
+
+export const getStatus = async (req, res) => {
+  try {
+    const statusKepegawaian = await StatusKepegawaian.find();
+
+    if (!statusKepegawaian) {
+      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+    }
+
+    res.status(200).json({
+      message: "Get Data Status Kepegawaian Success",
+      datas: statusKepegawaian,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Get Data Status Kepegawaian Failed" });
+  }
+};
+
+export const getJenis = async (req, res) => {
+  try {
+    const jenisPtk = await JenisPtk.find();
+
+    if (!jenisPtk) {
+      return res.status(404).json({ message: "Data Jenis PTK Not Found" });
+    }
+
+    res.status(200).json({
+      message: "Get Data Jenis PTK Success",
+      datas: jenisPtk,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Get Data Jenis PTK Failed" });
+  }
+};
 
 export const getData = async (req, res) => {
   try {
@@ -10,6 +55,7 @@ export const getData = async (req, res) => {
       .populate({
         path: "gtk_id",
         model: "Gtk",
+        // populate: [{ path: "gtk_id", model: "RiwayatPendidikan" }],
         // populate: [
         //   { path: "status_kepegawaian_id", model: "StatusKepegawaian" },
         //   { path: "jenis_ptk_id", model: "JenisPtk" },
@@ -39,7 +85,7 @@ export const getData = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({
+    res.status(500).json({
       message: "Data Not Found",
     });
   }
@@ -111,20 +157,18 @@ export const createGtk = async (req, res) => {
 
     const savedGtk = await gtk.save();
 
-    const { nip, niy, nuptk, sumber_gaji } = req.body;
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
 
     const gtk_id = savedGtk._id;
-    const status_kepegawaian_id = req.body.status_kepegawaian_id;
-    const jenis_ptk_id = req.body.jenis_ptk_id;
 
     const kepegawaian = new Kepegawaian({
       gtk_id: gtk_id,
-      status_kepegawaian_id: status_kepegawaian_id,
-      jenis_ptk_id: jenis_ptk_id,
-      nip: nip,
-      niy: niy,
-      nuptk: nuptk,
-      sumber_gaji: sumber_gaji,
+      status_kepegawaian,
+      jenis_ptk,
+      nip,
+      niy,
+      nuptk,
+      sumber_gaji,
     });
 
     const savedKepegawaian = await kepegawaian.save();
@@ -133,17 +177,29 @@ export const createGtk = async (req, res) => {
 
     const riwayat_pendidikan = new RiwayatPendidikan({
       gtk_id: gtk_id,
-      bidang,
+      bidang_studi,
+      jenjang_pendidikan,
+      gelar_akademik,
+      satuan_pendidikan,
+      tahun_masuk,
+      tahun_keluar,
+      nim,
+      mata_kuliah,
+      semester,
+      ipk,
     });
+
+    const savedPendidikan = await riwayat_pendidikan.save();
+
     res.status(201).json({
       message: "Berhasil Menambahkan GTK",
-      savedGtk,
-      savedKepegawaian,
-      savedAnak,
+      Gtk: savedGtk,
+      Kepegawaian: savedKepegawaian,
+      Pendidikan: savedPendidikan,
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({ message: "Gagal" });
+    res.status(404).json({ message: "Gagal Menambahkan Data" });
   }
 };
 

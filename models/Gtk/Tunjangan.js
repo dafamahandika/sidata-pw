@@ -1,58 +1,61 @@
 import mongoose from "mongoose";
 
-const riwayatpendidikanSchema = new mongoose.Schema(
+const tunjanganSchema = new mongoose.Schema(
   {
     gtk_id: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: "Gtk",
-      required: true,
     },
-    bidang_studi: {
+    jensi_tunjangan: {
+      type: String,
+      required: false,
+    },
+    nama_tunjangan: {
       type: String,
       required: true,
     },
-    jenjang_pendidikan: {
+    instansi: {
       type: String,
       required: true,
     },
-    gelar_akademik: {
+    sk_tunjangan: {
       type: String,
       required: true,
     },
-    satuan_pendidikan: {
+    tanggal_sk: {
       type: String,
       required: true,
     },
-    tahun_masuk: {
+    tanggal_terima: {
       type: String,
       required: true,
     },
-    tahun_keluar: {
+    sumber_dana: {
       type: String,
       required: true,
     },
-    nim: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    mata_kuliah: {
+    dari_tahun: {
       type: String,
       required: true,
     },
-    semester: {
+    sampai_tahun: {
       type: String,
       required: true,
     },
-    ipk: {
+    nominal: {
+      type: Number,
+      required: true,
+    },
+    status: {
       type: String,
       required: true,
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );
 
-const RiwayatPendidikan = mongoose.model("RiwayatPendidikan", riwayatpendidikanSchema);
-export default RiwayatPendidikan;
+const Tunjangan = mongoose.model("Tunjangan", tunjanganSchema);
+export default Tunjangan;

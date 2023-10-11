@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const sertifikasiSchema = mongoose.Schema(
+const sertifikasiSchema = new mongoose.Schema(
   {
     gtk_id: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,35 +1,33 @@
 import mongoose from "mongoose";
 
-const kepegawaianSchema = new mongoose.Schema(
+const inpassingSchema = new mongoose.Schema(
   {
     gtk_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Gtk",
-      unique: true,
     },
-    status_kepegawaian: {
+    no_sk: {
       type: String,
       required: true,
     },
-    jenis_ptk: {
+    tanggal_sk: {
       type: String,
       required: true,
     },
-    nip: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    niy: {
+    tmt_sk: {
       type: String,
       required: true,
     },
-    nuptk: {
-      type: String,
-      required: false,
+    angka_kridit: {
+      type: Number,
+      required: true,
     },
-    sumber_gaji: {
+    masa_kerja_thn: {
+      type: String,
+      required: true,
+    },
+    masa_kerja_bln: {
       type: String,
       required: true,
     },
@@ -39,10 +37,5 @@ const kepegawaianSchema = new mongoose.Schema(
   }
 );
 
-kepegawaianSchema.virtual("Gtk", {
-  ref: "Gtk",
-  localField: "gtk_id",
-  foreignField: "_id",
-});
-const Kepegawaian = mongoose.model("Kepegawaian", kepegawaianSchema);
-export default Kepegawaian;
+const Inpassing = mongoose.model("Inpassing", inpassingSchema);
+export default Inpassing;
