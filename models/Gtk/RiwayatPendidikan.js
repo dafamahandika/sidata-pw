@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const riwayatpendidikanSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Gtk",
-      required: true,
-    },
     bidang_studi: {
       type: String,
       required: true,

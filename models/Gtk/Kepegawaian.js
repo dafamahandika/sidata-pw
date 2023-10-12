@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 
 const kepegawaianSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Gtk",
-      unique: true,
-    },
     status_kepegawaian: {
       type: String,
       required: true,
@@ -24,10 +18,12 @@ const kepegawaianSchema = new mongoose.Schema(
     niy: {
       type: String,
       required: true,
+      unique: true,
     },
     nuptk: {
       type: String,
       required: false,
+      unique: true,
     },
     sumber_gaji: {
       type: String,
@@ -38,11 +34,5 @@ const kepegawaianSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-kepegawaianSchema.virtual("Gtk", {
-  ref: "Gtk",
-  localField: "gtk_id",
-  foreignField: "_id",
-});
 const Kepegawaian = mongoose.model("Kepegawaian", kepegawaianSchema);
 export default Kepegawaian;

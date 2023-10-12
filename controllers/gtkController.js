@@ -51,37 +51,28 @@ export const getJenis = async (req, res) => {
 
 export const getData = async (req, res) => {
   try {
-    const kepegawaian = await Kepegawaian.find()
-      .populate({
-        path: "gtk_id",
-        model: "Gtk",
-        // populate: [{ path: "gtk_id", model: "RiwayatPendidikan" }],
-        // populate: [
-        //   { path: "status_kepegawaian_id", model: "StatusKepegawaian" },
-        //   { path: "jenis_ptk_id", model: "JenisPtk" },
-        // ],
-      })
+    const gtk = await Gtk.find()
+      .populate(
+        [
+          { path: "kepegawaian_id", model: "Kepegawaian" },
+          { path: "pendidikan_id", model: "RiwayatPendidikan" },
+        ]
+        //   {
+        //   // path: "kepegawaian_id",
+        //   // model: "Kepegawaian",
+        //   // populate: [
+        //   //   { path: "status_kepegawaian_id", model: "StatusKepegawaian" },
+        //   //   { path: "jenis_ptk_id", model: "JenisPtk" },
+        //   // ],
+        // }
+      )
       .lean();
-    if (!kepegawaian) {
+    if (!gtk) {
       return res.status(404).json({ message: "Tidak Ada Data GTK" });
     }
-    // const result = kepegawaian.map((data) => {
-    //   const gtk = data.gtk_id;
-    //   // const status_kepegawaian = data.status_kepegawaian_id.jenis_status;
-    //   // const jenis_ptk = data.jenis_ptk_id.jenis_ptk;
-    //   return {
-    //     ...gtk,
-    //     status_kepegawaian: status_kepegawaian_id,
-    //     jenis_ptk: jenis_ptk_id,
-    //     nip: nip,
-    //     niy: niy,
-    //     nuptk: nuptk,
-    //     sumber_gaji: sumber_gaji,
-    //   };
-    // });
     res.status(200).json({
       message: "Succes",
-      data: kepegawaian,
+      data: gtk,
     });
   } catch (error) {
     console.log(error);
@@ -93,6 +84,39 @@ export const getData = async (req, res) => {
 
 export const createGtk = async (req, res) => {
   try {
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+
+    const kepegawaian = new Kepegawaian({
+      status_kepegawaian,
+      jenis_ptk,
+      nip,
+      niy,
+      nuptk,
+      sumber_gaji,
+    });
+
+    const savedKepegawaian = await kepegawaian.save();
+
+    const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
+
+    const riwayat_pendidikan = new RiwayatPendidikan({
+      bidang_studi,
+      jenjang_pendidikan,
+      gelar_akademik,
+      satuan_pendidikan,
+      tahun_masuk,
+      tahun_keluar,
+      nim,
+      mata_kuliah,
+      semester,
+      ipk,
+    });
+
+    const savedPendidikan = await riwayat_pendidikan.save();
+
+    const kepegawaian_id = savedKepegawaian._id;
+    const pendidikan_id = savedPendidikan._id;
+
     const {
       nama_lengkap,
       nik,
@@ -125,6 +149,8 @@ export const createGtk = async (req, res) => {
     } = req.body;
 
     const gtk = new Gtk({
+      kepegawaian_id: kepegawaian_id,
+      pendidikan_id: pendidikan_id,
       nama_lengkap,
       nik,
       jk,
@@ -156,40 +182,6 @@ export const createGtk = async (req, res) => {
     });
 
     const savedGtk = await gtk.save();
-
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
-
-    const gtk_id = savedGtk._id;
-
-    const kepegawaian = new Kepegawaian({
-      gtk_id: gtk_id,
-      status_kepegawaian,
-      jenis_ptk,
-      nip,
-      niy,
-      nuptk,
-      sumber_gaji,
-    });
-
-    const savedKepegawaian = await kepegawaian.save();
-
-    const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
-
-    const riwayat_pendidikan = new RiwayatPendidikan({
-      gtk_id: gtk_id,
-      bidang_studi,
-      jenjang_pendidikan,
-      gelar_akademik,
-      satuan_pendidikan,
-      tahun_masuk,
-      tahun_keluar,
-      nim,
-      mata_kuliah,
-      semester,
-      ipk,
-    });
-
-    const savedPendidikan = await riwayat_pendidikan.save();
 
     res.status(201).json({
       message: "Berhasil Menambahkan GTK",

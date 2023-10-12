@@ -2,6 +2,16 @@ import mongoose from "mongoose";
 
 const gtkSchema = new mongoose.Schema(
   {
+    kepegawaian_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Kepegawaian",
+    },
+    pendidikan_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "RiwayatPendidikan",
+    },
     nama_lengkap: {
       type: String,
       required: true,
@@ -131,13 +141,13 @@ const gtkSchema = new mongoose.Schema(
 
 // gtkSchema.virtual("kepegawaian", {
 //   ref: "Kepegawaian",
-//   localField: "_id",
-//   foreignField: "gtk_id",
+//   localField: "kepegawaian_id",
+//   foreignField: "_id",
 // });
 // gtkSchema.virtual("riwayat_pendidikan", {
 //   ref: "RiwayatPendidikan",
-//   localField: "_id",
-//   foreignField: "gtk_id",
+//   localField: "pendidikan_id",
+//   foreignField: "_id",
 // });
 const Gtk = mongoose.model("Gtk", gtkSchema);
 export default Gtk;
