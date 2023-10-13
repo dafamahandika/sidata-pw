@@ -12,6 +12,11 @@ const gtkSchema = new mongoose.Schema(
       required: true,
       ref: "RiwayatPendidikan",
     },
+    anak_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Anak",
+    },
     nama_lengkap: {
       type: String,
       required: true,
@@ -74,7 +79,14 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
+      enum: [
+        "Islam",
+        "Kristen Protestan",
+        "Kristen Katholik",
+        "Hindu",
+        "Budha",
+        "Konghuchu",
+      ],
       required: true,
     },
     kewarganegaraan: {
@@ -138,6 +150,13 @@ const gtkSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// gtkSchema.pre("save", function (next) {
+//   if (!this.gtk_id) {
+//     this.gtk_id = mongoose.Types.ObjectId();
+//   }
+//   next();
+// });
 
 // gtkSchema.virtual("kepegawaian", {
 //   ref: "Kepegawaian",

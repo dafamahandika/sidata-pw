@@ -18,7 +18,9 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+      return res
+        .status(404)
+        .json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(200).json({
@@ -52,28 +54,21 @@ export const getJenis = async (req, res) => {
 export const getData = async (req, res) => {
   try {
     const gtk = await Gtk.find()
-      .populate(
-        [
-          { path: "kepegawaian_id", model: "Kepegawaian" },
-          { path: "pendidikan_id", model: "RiwayatPendidikan" },
-        ]
-        //   {
-        //   // path: "kepegawaian_id",
-        //   // model: "Kepegawaian",
-        //   // populate: [
-        //   //   { path: "status_kepegawaian_id", model: "StatusKepegawaian" },
-        //   //   { path: "jenis_ptk_id", model: "JenisPtk" },
-        //   // ],
-        // }
-      )
+      .populate({
+        path: "kepegawaian_id",
+        model: "Kepegawaian",
+      })
+      .populate({
+        path: "pendidikan_id",
+        model: "RiwayatPendidikan",
+      })
+      .populate({
+        path: "anak_id",
+        model: "Anak",
+      })
       .lean();
-    if (!gtk) {
-      return res.status(404).json({ message: "Tidak Ada Data GTK" });
-    }
-    res.status(200).json({
-      message: "Succes",
-      data: gtk,
-    });
+
+    res.status(200).json({ message: "Success", datas: gtk });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -84,7 +79,8 @@ export const getData = async (req, res) => {
 
 export const createGtk = async (req, res) => {
   try {
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
+      req.body;
 
     const kepegawaian = new Kepegawaian({
       status_kepegawaian,
@@ -97,7 +93,18 @@ export const createGtk = async (req, res) => {
 
     const savedKepegawaian = await kepegawaian.save();
 
-    const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
+    const {
+      bidang_studi,
+      jenjang_pendidikan,
+      gelar_akademik,
+      satuan_pendidikan,
+      tahun_masuk,
+      tahun_keluar,
+      nim,
+      mata_kuliah,
+      semester,
+      ipk,
+    } = req.body;
 
     const riwayat_pendidikan = new RiwayatPendidikan({
       bidang_studi,
@@ -114,8 +121,56 @@ export const createGtk = async (req, res) => {
 
     const savedPendidikan = await riwayat_pendidikan.save();
 
-    const kepegawaian_id = savedKepegawaian._id;
-    const pendidikan_id = savedPendidikan._id;
+    const {
+      nama_anak,
+      status,
+      jenjang_pendidikan_anak,
+      nisn,
+      tahun_masuk_anak,
+      jk_anak,
+      tempat_lahir_anak,
+      tanggal_lahir_anak,
+    } = req.body;
+
+    const isAnak = new Anak({
+      nama_anak,
+      status,
+      jenjang_pendidikan_anak,
+      nisn,
+      tahun_masuk_anak,
+      jk_anak,
+      tempat_lahir_anak,
+      tanggal_lahir_anak,
+    });
+
+    let anakBaru;
+
+    if (isAnak) {
+      isAnak.nama_anak = nama_anak;
+      isAnak.status = status;
+      isAnak.jenjang_pendidikan_anak = jenjang_pendidikan_anak;
+      isAnak.tahun_masuk_anak = tahun_masuk_anak;
+      isAnak.jk_anak = jk_anak;
+      isAnak.tempat_lahir_anak = tempat_lahir_anak;
+      isAnak.tanggal_lahir_anak = tanggal_lahir_anak;
+
+      await isAnak.save();
+    } else {
+      anakBaru = new Anak({
+        nama_anak,
+        status,
+        jenjang_pendidikan_anak,
+        nisn,
+        tahun_masuk_anak,
+        jk_anak,
+        tempat_lahir_anak,
+        tanggal_lahir_anak,
+      });
+
+      await anakBaru.save();
+    }
+
+    const saveAnak = await isAnak.save();
 
     const {
       nama_lengkap,
@@ -149,8 +204,9 @@ export const createGtk = async (req, res) => {
     } = req.body;
 
     const gtk = new Gtk({
-      kepegawaian_id: kepegawaian_id,
-      pendidikan_id: pendidikan_id,
+      kepegawaian_id: savedKepegawaian._id,
+      pendidikan_id: savedPendidikan._id,
+      anak_id: saveAnak._id,
       nama_lengkap,
       nik,
       jk,
@@ -188,6 +244,7 @@ export const createGtk = async (req, res) => {
       Gtk: savedGtk,
       Kepegawaian: savedKepegawaian,
       Pendidikan: savedPendidikan,
+      Anak: saveAnak,
     });
   } catch (error) {
     console.log(error);
