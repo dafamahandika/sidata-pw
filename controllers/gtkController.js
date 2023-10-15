@@ -74,6 +74,10 @@ export const getData = async (req, res) => {
         path: "sertifikasi_id",
         model: "Sertifikasi",
       })
+      .populate({
+        path: "diklat_id",
+        model: "Diklat",
+      })
       .lean();
 
     res.status(200).json({ message: "Success", gtk });
@@ -183,6 +187,30 @@ export const createGtk = async (req, res) => {
     const saveSertifikasi = await sertifikasi.save();
 
     const {
+      jenis_diklat,
+      nama_diklat,
+      penyelenggara,
+      tahun_diklat,
+      peran,
+      tingkat_diklat,
+      berapa_jam,
+      sertifikat,
+    } = req.body;
+
+    const diklat = new Diklat({
+      jenis_diklat,
+      nama_diklat,
+      penyelenggara,
+      tahun_diklat,
+      peran,
+      tingkat_diklat,
+      berapa_jam,
+      sertifikat,
+    });
+
+    const saveDiklat = await diklat.save();
+
+    const {
       nama_lengkap,
       nik,
       jk,
@@ -219,6 +247,7 @@ export const createGtk = async (req, res) => {
       anak_id: saveAnak._id,
       beasiswa_id: saveBeasiswa._id,
       sertifikasi_id: saveSertifikasi._id,
+      diklat_id: saveDiklat._id,
       nama_lengkap,
       nik,
       jk,
@@ -258,6 +287,7 @@ export const createGtk = async (req, res) => {
       Pendidikan: savedPendidikan,
       Anak: saveAnak,
       Beasiswa: saveBeasiswa,
+      Diklat: saveDiklat,
     });
   } catch (error) {
     console.log(error);
