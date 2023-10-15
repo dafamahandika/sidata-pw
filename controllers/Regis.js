@@ -64,9 +64,11 @@ export const createAccount = async (req, res) => {
 
     const savedAdmin = await newAdmin.save();
 
-    res
-      .status(200)
-      .json({ userId: savedAdmin._id, username: savedAdmin.username });
+    res.status(200).json({
+      userId: savedAdmin._id,
+      username: savedAdmin.username,
+      role: savedAdmin.role,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
