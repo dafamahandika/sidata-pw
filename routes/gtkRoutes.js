@@ -18,14 +18,14 @@ routes.get("/status-kepeg", isAdmin, getStatus);
 routes.get("/jenis-ptk", isAdmin, getJenis);
 
 routes.get("/gtk", isAdmin, getData);
-routes.post("/gtk", isAdmin, createGtk);
+routes.post("/gtk", createGtk);
 
-routes.post("/status-pegawai", isAdmin, createStatus);
-routes.post("/jenis-ptk", isAdmin, createJenis);
+routes.post("/status-pegawai", createStatus);
+routes.post("/jenis-ptk", createJenis);
 
-routes.put("/anak/:id", isAdmin, updateDataAnak);
+routes.put("/anak/:id", updateDataAnak);
 
-routes.post("/tambahPendidikan/:id", isAdmin, tambahDataPendidikan);
-routes.post("/tambah-anak/:id", isAdmin, appendDataAnak);
+routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
+routes.post("/tambah-anak/:id", appendDataAnak);
 
 export default routes;
