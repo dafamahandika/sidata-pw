@@ -272,17 +272,14 @@ export const createJenis = async (req, res) => {
 
 export const updateDataAnak = async function (req, res) {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
     const updateDataAnak = req.body;
-
     const isUpdate = await Anak.findByIdAndUpdate(id, updateDataAnak, {
       new: true,
     });
-
     if (!isUpdate) {
       return res.status(404).json({ massage: "Data Tidak Ditemukan" });
     }
-
     return res.status(200).json({
       message: "Success",
       isUpdate,
@@ -299,22 +296,16 @@ export const appendDataAnak = async function (req, res) {
   try {
     const { id } = req.params;
     const dataAnakBaru = req.body;
-
     const dataGtk = await Gtk.findById(id);
-
     if (!dataGtk) {
       return res.status(404).json({
         error: "Data Gtk tidak ditemukan",
         message: "Tidak ada data Gtk yang sesuai dengan kriteria pencarian",
       });
     }
-
     const anakBaru = await Anak.create(dataAnakBaru);
-
     dataGtk.anak_id.push(anakBaru._id);
-
     await dataGtk.save();
-
     res.status(201).json({
       message: "Data anak berhasil ditambahkan ke Gtk",
       data: anakBaru,

@@ -6,7 +6,7 @@ import {
   createJenis,
   getStatus,
   getJenis,
-  // updateDataAnak,
+  updateDataAnak,
   appendDataAnak,
 } from "../controllers/gtkController.js";
 
@@ -21,7 +21,7 @@ routes.post("/gtk", createGtk);
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
 
-// routes.put("/anak/:id", updateDataAnak);
+routes.put("/anak/:id", updateDataAnak);
 routes.post("/tambah-anak/:id", appendDataAnak);
 
 export default routes;
