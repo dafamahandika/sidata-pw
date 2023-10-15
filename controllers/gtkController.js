@@ -66,6 +66,7 @@ export const getData = async (req, res) => {
         path: "anak_id",
         model: "Anak",
       })
+      .populate({ path: "beasiswa_id", model: "Beasiswa" })
       .lean();
 
     res.status(200).json({ message: "Success", data: gtk });
@@ -146,6 +147,24 @@ export const createGtk = async (req, res) => {
     const saveAnak = await isAnak.save();
 
     const {
+      jenis_beasiswa,
+      keterangan,
+      tahun_mulai,
+      tahun_akhir,
+      masih_menerima,
+    } = req.body;
+
+    const beasiswa = new Beasiswa({
+      jenis_beasiswa,
+      keterangan,
+      tahun_mulai,
+      tahun_akhir,
+      masih_menerima,
+    });
+
+    const saveBeasiswa = await beasiswa.save();
+
+    const {
       nama_lengkap,
       nik,
       jk,
@@ -180,6 +199,7 @@ export const createGtk = async (req, res) => {
       kepegawaian_id: savedKepegawaian._id,
       pendidikan_id: savedPendidikan._id,
       anak_id: saveAnak._id,
+      beasiswa_id: saveBeasiswa._id,
       nama_lengkap,
       nik,
       jk,
@@ -218,6 +238,7 @@ export const createGtk = async (req, res) => {
       Kepegawaian: savedKepegawaian,
       Pendidikan: savedPendidikan,
       Anak: saveAnak,
+      Beasiswa: saveBeasiswa,
     });
   } catch (error) {
     console.log(error);
@@ -288,6 +309,33 @@ export const updateDataAnak = async function (req, res) {
     console.log(error);
     return res.status(500).json({
       message: "Error",
+    });
+  }
+};
+
+export const tambahDataPendidikan = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const dataBaruPendidikan = req.body;
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      return res.status(404).json({
+        error: "Data Gtk tidak ditemukan",
+        message: "Tidak ada data Gtk yang sesuai dengan kriteria pencarian",
+      });
+    }
+    const dataBaru = await RiwayatPendidikan.create(dataBaruPendidikan);
+    dataGtk.pendidikan_id.push(dataBaru._id);
+    await dataGtk.save();
+    res.status(201).json({
+      message: "Data Pendidikan berhasil ditambahkan ke Gtk",
+      data: dataBaru,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Gagal menambahkan data Pendidikan ke Gtk",
+      message: error.message,
     });
   }
 };

@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const tugasTambahSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "REF",
-    },
     jabatan: {
       type: String,
       required: true,

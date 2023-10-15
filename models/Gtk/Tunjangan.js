@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const tunjanganSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Gtk",
-    },
     jensi_tunjangan: {
       type: String,
       required: false,

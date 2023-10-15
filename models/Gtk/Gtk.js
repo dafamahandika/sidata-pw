@@ -7,15 +7,39 @@ const gtkSchema = new mongoose.Schema(
       required: true,
       ref: "Kepegawaian",
     },
-    pendidikan_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "RiwayatPendidikan",
-    },
+    pendidikan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "RiwayatPendidikan",
+      },
+    ],
     anak_id: [
       {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: "Anak",
+      },
+    ],
+    beasiswa_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requied: true,
+        ref: "Beasiswa",
+      },
+    ],
+    sertifikasi_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requied: true,
+        ref: "Sertifikasi",
+      },
+    ],
+    diklat_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requied: true,
+        ref: "Diklat",
       },
     ],
     nama_lengkap: {
