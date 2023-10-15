@@ -21,24 +21,30 @@ export const register = async (req, res) => {
       email,
     });
 
-    // Cek jika tidak ada user lainnya, set role admin
-    const isFirstUser = (await User.countDocuments()) === 0;
-    if (isFirstUser) {
+    const userCount = await User.countDocuments();
+
+    if (userCount < 4) {
       newUser.role = "admin";
+    } else if (userCount >= 4 && userCount <= 60) {
+      newUser.role = "guru";
+    } else {
+      newUser.role = "student";
     }
 
     const savedUser = await newUser.save();
 
-    res
-      .status(200)
-      .json({ userId: savedUser._id, username: savedUser.username });
+    res.status(200).json({
+      userId: savedUser._id,
+      username: savedUser.username,
+      role: savedUser.role,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-export const createAdmin = async (req, res) => {
+export const createAccount = async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
@@ -53,7 +59,7 @@ export const createAdmin = async (req, res) => {
       username,
       password: hashedPassword,
       email,
-      role: "admin",
+      role: "guru",
     });
 
     const savedAdmin = await newAdmin.save();
