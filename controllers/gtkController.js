@@ -68,7 +68,7 @@ export const getData = async (req, res) => {
       })
       .lean();
 
-    res.status(200).json({ message: "Success", datas: gtk });
+    res.status(200).json({ message: "Success", data: gtk });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -142,33 +142,6 @@ export const createGtk = async (req, res) => {
       tempat_lahir_anak,
       tanggal_lahir_anak,
     });
-
-    let anakBaru;
-
-    if (isAnak) {
-      isAnak.nama_anak = nama_anak;
-      isAnak.status = status;
-      isAnak.jenjang_pendidikan_anak = jenjang_pendidikan_anak;
-      isAnak.tahun_masuk_anak = tahun_masuk_anak;
-      isAnak.jk_anak = jk_anak;
-      isAnak.tempat_lahir_anak = tempat_lahir_anak;
-      isAnak.tanggal_lahir_anak = tanggal_lahir_anak;
-
-      await isAnak.save();
-    } else {
-      anakBaru = new Anak({
-        nama_anak,
-        status,
-        jenjang_pendidikan_anak,
-        nisn,
-        tahun_masuk_anak,
-        jk_anak,
-        tempat_lahir_anak,
-        tanggal_lahir_anak,
-      });
-
-      await anakBaru.save();
-    }
 
     const saveAnak = await isAnak.save();
 
@@ -293,6 +266,64 @@ export const createJenis = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Error",
+    });
+  }
+};
+
+export const updateDataAnak = async function (req, res) {
+  try {
+    const { id } = req.params.id;
+    const updateDataAnak = req.body;
+
+    const isUpdate = await Anak.findByIdAndUpdate(id, updateDataAnak, {
+      new: true,
+    });
+
+    if (!isUpdate) {
+      return res.status(404).json({ massage: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      isUpdate,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Error",
+    });
+  }
+};
+
+export const appendDataAnak = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const dataAnakBaru = req.body;
+
+    const dataGtk = await Gtk.findById(id);
+
+    if (!dataGtk) {
+      return res.status(404).json({
+        error: "Data Gtk tidak ditemukan",
+        message: "Tidak ada data Gtk yang sesuai dengan kriteria pencarian",
+      });
+    }
+
+    const anakBaru = await Anak.create(dataAnakBaru);
+
+    dataGtk.anak_id.push(anakBaru._id);
+
+    await dataGtk.save();
+
+    res.status(201).json({
+      message: "Data anak berhasil ditambahkan ke Gtk",
+      data: anakBaru,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Gagal menambahkan data anak ke Gtk",
+      message: error.message,
     });
   }
 };

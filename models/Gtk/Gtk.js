@@ -12,11 +12,12 @@ const gtkSchema = new mongoose.Schema(
       required: true,
       ref: "RiwayatPendidikan",
     },
-    anak_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Anak",
-    },
+    anak_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Anak",
+      },
+    ],
     nama_lengkap: {
       type: String,
       required: true,
@@ -151,22 +152,5 @@ const gtkSchema = new mongoose.Schema(
   }
 );
 
-// gtkSchema.pre("save", function (next) {
-//   if (!this.gtk_id) {
-//     this.gtk_id = mongoose.Types.ObjectId();
-//   }
-//   next();
-// });
-
-// gtkSchema.virtual("kepegawaian", {
-//   ref: "Kepegawaian",
-//   localField: "kepegawaian_id",
-//   foreignField: "_id",
-// });
-// gtkSchema.virtual("riwayat_pendidikan", {
-//   ref: "RiwayatPendidikan",
-//   localField: "pendidikan_id",
-//   foreignField: "_id",
-// });
 const Gtk = mongoose.model("Gtk", gtkSchema);
 export default Gtk;

@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const kepegawaianSchema = new mongoose.Schema(
   {
-    guru_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Rayon",
-    },
     status_kepegawaian: {
       type: String,
       required: true,

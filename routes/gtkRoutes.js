@@ -1,5 +1,14 @@
 import express from "express";
-import { getData, createGtk, createStatus, createJenis, getStatus, getJenis } from "../controllers/gtkController.js";
+import {
+  getData,
+  createGtk,
+  createStatus,
+  createJenis,
+  getStatus,
+  getJenis,
+  // updateDataAnak,
+  appendDataAnak,
+} from "../controllers/gtkController.js";
 
 const routes = express.Router();
 
@@ -11,5 +20,8 @@ routes.post("/gtk", createGtk);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
+
+// routes.put("/anak/:id", updateDataAnak);
+routes.post("/tambah-anak/:id", appendDataAnak);
 
 export default routes;
