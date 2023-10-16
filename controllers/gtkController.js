@@ -15,14 +15,34 @@ import Tunjangan from "../models/Gtk/Tunjangan.js";
 
 export const createAnak = async (req, res) => {
   try {
-    const {id} = req,params,
-    const gtk = await 
+    const { id } = req.params;
+
+    const gtk = await Gtk.findById(id);
     const { nama, status, jenjang_pendidikan, nisn, tahun_masuk, jk, tempat_lahir, tanggal_lahir } = req.body;
-    
+
     const anak = new Anak({
-      gtk_id: 
-    })
-  } catch (error) {}
+      gtk_id: gtk._id,
+      nama,
+      status,
+      jenjang_pendidikan,
+      nisn,
+      tahun_masuk,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+    });
+
+    const savedAnak = await anak.save();
+    res.status(201).json({
+      anak: savedAnak,
+      message: "Berhasil Menambahkan Data Anak",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 export const getStatus = async (req, res) => {
@@ -102,8 +122,7 @@ export const getData = async (req, res) => {
 export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
-      req.body;
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
     const dataGtk = await Gtk.findById(id);
 
     const kepegawaian = new Kepegawaian({
@@ -126,87 +145,6 @@ export const createKepegawaian = async (req, res) => {
 
 export const createGtk = async (req, res) => {
   try {
-    const {
-      bidang_studi,
-      jenjang_pendidikan,
-      gelar_akademik,
-      satuan_pendidikan,
-      tahun_masuk,
-      tahun_keluar,
-      nim,
-      mata_kuliah,
-      semester,
-      ipk,
-    } = req.body;
-
-    const riwayat_pendidikan = new RiwayatPendidikan({
-      bidang_studi,
-      jenjang_pendidikan,
-      gelar_akademik,
-      satuan_pendidikan,
-      tahun_masuk,
-      tahun_keluar,
-      nim,
-      mata_kuliah,
-      semester,
-      ipk,
-    });
-
-    const savedPendidikan = await riwayat_pendidikan.save();
-
-    const { nama_anak, status, jenjang_pendidikan_anak, nisn, tahun_masuk_anak, jk_anak, tempat_lahir_anak, tanggal_lahir_anak } = req.body;
-
-    const isAnak = new Anak({
-      nama_anak,
-      status,
-      jenjang_pendidikan_anak,
-      nisn,
-      tahun_masuk_anak,
-      jk_anak,
-      tempat_lahir_anak,
-      tanggal_lahir_anak,
-    });
-
-    const saveAnak = await isAnak.save();
-
-    const { jenis_beasiswa, keterangan, tahun_mulai, tahun_akhir, masih_menerima } = req.body;
-
-    const beasiswa = new Beasiswa({
-      jenis_beasiswa,
-      keterangan,
-      tahun_mulai,
-      tahun_akhir,
-      masih_menerima,
-    });
-
-    const saveBeasiswa = await beasiswa.save();
-
-    const { jenis_sertifikasi, no_sertifikasi, no_reg, no_peserta } = req.body;
-
-    const sertifikasi = new Sertifikasi({
-      jenis_sertifikasi,
-      no_sertifikasi,
-      no_reg,
-      no_peserta,
-    });
-
-    const saveSertifikasi = await sertifikasi.save();
-
-    const { jenis_diklat, nama_diklat, penyelenggara, tahun_diklat, peran, tingkat_diklat, berapa_jam, sertifikat } = req.body;
-
-    const diklat = new Diklat({
-      jenis_diklat,
-      nama_diklat,
-      penyelenggara,
-      tahun_diklat,
-      peran,
-      tingkat_diklat,
-      berapa_jam,
-      sertifikat,
-    });
-
-    const saveDiklat = await diklat.save();
-
     const {
       nama_lengkap,
       nik,
@@ -237,7 +175,7 @@ export const createGtk = async (req, res) => {
       tb,
       gol_darah,
     } = req.body;
-
+    
     const gtk = new Gtk({
       pendidikan_id: savedPendidikan._id,
       anak_id: saveAnak._id,
@@ -273,8 +211,78 @@ export const createGtk = async (req, res) => {
       tb,
       gol_darah,
     });
-
+    
     const savedGtk = await gtk.save();
+    // const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
+
+    // const riwayat_pendidikan = new RiwayatPendidikan({
+    //   bidang_studi,
+    //   jenjang_pendidikan,
+    //   gelar_akademik,
+    //   satuan_pendidikan,
+    //   tahun_masuk,
+    //   tahun_keluar,
+    //   nim,
+    //   mata_kuliah,
+    //   semester,
+    //   ipk,
+    // });
+
+    // const savedPendidikan = await riwayat_pendidikan.save();
+
+    // const { nama_anak, status, jenjang_pendidikan_anak, nisn, tahun_masuk_anak, jk_anak, tempat_lahir_anak, tanggal_lahir_anak } = req.body;
+
+    // const isAnak = new Anak({
+    //   nama_anak,
+    //   status,
+    //   jenjang_pendidikan_anak,
+    //   nisn,
+    //   tahun_masuk_anak,
+    //   jk_anak,
+    //   tempat_lahir_anak,
+    //   tanggal_lahir_anak,
+    // });
+
+    // const saveAnak = await isAnak.save();
+
+    // const { jenis_beasiswa, keterangan, tahun_mulai, tahun_akhir, masih_menerima } = req.body;
+    
+    // const beasiswa = new Beasiswa({
+    //   jenis_beasiswa,
+    //   keterangan,
+    //   tahun_mulai,
+    //   tahun_akhir,
+    //   masih_menerima,
+    // });
+
+    // const saveBeasiswa = await beasiswa.save();
+
+    // const { jenis_sertifikasi, no_sertifikasi, no_reg, no_peserta } = req.body;
+
+    // const sertifikasi = new Sertifikasi({
+    //   jenis_sertifikasi,
+    //   no_sertifikasi,
+    //   no_reg,
+    //   no_peserta,
+    // });
+
+    // const saveSertifikasi = await sertifikasi.save();
+
+    // const { jenis_diklat, nama_diklat, penyelenggara, tahun_diklat, peran, tingkat_diklat, berapa_jam, sertifikat } = req.body;
+
+    // const diklat = new Diklat({
+    //   jenis_diklat,
+    //   nama_diklat,
+    //   penyelenggara,
+    //   tahun_diklat,
+    //   peran,
+    //   tingkat_diklat,
+    //   berapa_jam,
+    //   sertifikat,
+    // });
+
+    // const saveDiklat = await diklat.save();
+
 
     const { lisensi_kepsek, keahliah_lab } = req.body;
 

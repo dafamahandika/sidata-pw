@@ -1,16 +1,5 @@
 import express from "express";
-import {
-  getData,
-  createGtk,
-  createStatus,
-  createJenis,
-  getStatus,
-  getJenis,
-  updateDataAnak,
-  tambahDataPendidikan,
-  appendDataAnak,
-  createKepegawaian,
-} from "../controllers/gtkController.js";
+import { getData, createGtk, createStatus, createJenis, getStatus, getJenis, updateDataAnak, tambahDataPendidikan, appendDataAnak, createKepegawaian, createAnak } from "../controllers/gtkController.js";
 
 import { isAdmin } from "../middleware/isAdmin.js";
 
@@ -30,5 +19,7 @@ routes.put("/anak/:id", updateDataAnak);
 
 routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
 routes.post("/tambah-anak/:id", appendDataAnak);
+
+routes.post("/anak/:id", createAnak);
 
 export default routes;
