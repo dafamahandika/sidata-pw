@@ -1,28 +1,28 @@
-import User from "../models/User.js";
 import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
-import cookieParser from "cookie-parser";
+import User from "../models/User.js";
 
-const isAdmin = asyncHandler(async (req, res, next) => {
-  let token;
-
-  if (req.cookies && req.cookies.token) {
-    token = req.cookies.token;
-
-    try {
-      const decoded = jwt.verify(token, process.env.REFRESH_TOKEN);
-
-      if (decoded && decoded.role === "admin") {
-        next();
-      } else {
-        res.status(403).json({ message: "Forbidden Must Admin" });
-      }
-    } catch (error) {
-      throw new Error("Not Authorized, Please Login Again");
+export const isAdmin = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Anda tidak diizinkan akses." });
     }
-  } else {
-    throw new Error("There is no token attached to the cookie...");
+    const decoded = jwt.verify(refreshToken, "RefreshToken");
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({ message: "Anda tidak diizinkan akses." });
+    }
+    if (user.role === "admin") {
+      next();
+    } else {
+      res
+        .status(403)
+        .json({ message: "Anda tidak memiliki izin akses sebagai admin." });
+    }
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan dalam memproses permintaan." });
   }
-});
-
-export default isAdmin;
+};

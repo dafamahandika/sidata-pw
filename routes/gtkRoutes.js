@@ -1,15 +1,31 @@
 import express from "express";
-import { getData, createGtk, createStatus, createJenis, getStatus, getJenis } from "../controllers/gtkController.js";
+import {
+  getData,
+  createGtk,
+  createStatus,
+  createJenis,
+  getStatus,
+  getJenis,
+  updateDataAnak,
+  tambahDataPendidikan,
+  appendDataAnak,
+} from "../controllers/gtkController.js";
+import { isAdmin } from "../middleware/isAdmin.js";
 
 const routes = express.Router();
 
-routes.get("/status-kepeg", getStatus);
-routes.get("/jenis-ptk", getJenis);
+routes.get("/status-kepeg", isAdmin, getStatus);
+routes.get("/jenis-ptk", isAdmin, getJenis);
 
-routes.get("/gtk", getData);
+routes.get("/gtk", isAdmin, getData);
 routes.post("/gtk", createGtk);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
+
+routes.put("/anak/:id", updateDataAnak);
+
+routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
+routes.post("/tambah-anak/:id", appendDataAnak);
 
 export default routes;

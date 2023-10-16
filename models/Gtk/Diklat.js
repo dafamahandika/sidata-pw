@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const diklatShcema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Gtk",
-    },
     jenis_diklat: {
       type: String,
       required: true,

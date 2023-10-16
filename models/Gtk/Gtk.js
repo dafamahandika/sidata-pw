@@ -7,10 +7,45 @@ const gtkSchema = new mongoose.Schema(
       required: true,
       ref: "Kepegawaian",
     },
-    pendidikan_id: {
+    pendidikan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "RiwayatPendidikan",
+      },
+    ],
+    anak_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Anak",
+      },
+    ],
+    beasiswa_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requied: true,
+        ref: "Beasiswa",
+      },
+    ],
+    sertifikasi_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requied: true,
+        ref: "Sertifikasi",
+      },
+    ],
+    diklat_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requied: true,
+        ref: "Diklat",
+      },
+    ],
+    inpassing_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "RiwayatPendidikan",
+      ref: "Inpassing",
     },
     nama_lengkap: {
       type: String,
@@ -74,7 +109,14 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
+      enum: [
+        "Islam",
+        "Kristen Protestan",
+        "Kristen Katholik",
+        "Hindu",
+        "Budha",
+        "Konghuchu",
+      ],
       required: true,
     },
     kewarganegaraan: {
@@ -139,15 +181,5 @@ const gtkSchema = new mongoose.Schema(
   }
 );
 
-// gtkSchema.virtual("kepegawaian", {
-//   ref: "Kepegawaian",
-//   localField: "kepegawaian_id",
-//   foreignField: "_id",
-// });
-// gtkSchema.virtual("riwayat_pendidikan", {
-//   ref: "RiwayatPendidikan",
-//   localField: "pendidikan_id",
-//   foreignField: "_id",
-// });
 const Gtk = mongoose.model("Gtk", gtkSchema);
 export default Gtk;

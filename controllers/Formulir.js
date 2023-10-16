@@ -57,7 +57,7 @@ export const studentCreate = async (req, res) => {
     }
 
     const nama_rayon = rayonData.nama_rayon;
-      
+
     const rombelId = req.body.rombel_id;
 
     const rombel = await Rombel.findById(rombelId);
@@ -71,7 +71,7 @@ export const studentCreate = async (req, res) => {
       return res.status(404).json({ message: "Rombel tidak ditemukan" });
     }
 
-    const nama_rombel = rombelData.nama_rombel; 
+    const nama_rombel = rombelData.nama_rombel;
 
     const {
       nama,
