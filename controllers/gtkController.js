@@ -52,20 +52,10 @@ export const getJenis = async (req, res) => {
 export const getData = async (req, res) => {
   try {
     const gtk = await Gtk.find()
-      .populate(
-        [
-          { path: "kepegawaian_id", model: "Kepegawaian" },
-          { path: "pendidikan_id", model: "RiwayatPendidikan" },
-        ]
-        //   {
-        //   // path: "kepegawaian_id",
-        //   // model: "Kepegawaian",
-        //   // populate: [
-        //   //   { path: "status_kepegawaian_id", model: "StatusKepegawaian" },
-        //   //   { path: "jenis_ptk_id", model: "JenisPtk" },
-        //   // ],
-        // }
-      )
+      .populate([
+        { path: "kepegawaian_id", model: "Kepegawaian" },
+        { path: "pendidikan_id", model: "RiwayatPendidikan" },
+      ])
       .lean();
     if (!gtk) {
       return res.status(404).json({ message: "Tidak Ada Data GTK" });
@@ -114,9 +104,6 @@ export const createGtk = async (req, res) => {
 
     const savedPendidikan = await riwayat_pendidikan.save();
 
-    const kepegawaian_id = savedKepegawaian._id;
-    const pendidikan_id = savedPendidikan._id;
-
     const {
       nama_lengkap,
       nik,
@@ -149,8 +136,8 @@ export const createGtk = async (req, res) => {
     } = req.body;
 
     const gtk = new Gtk({
-      kepegawaian_id: kepegawaian_id,
-      pendidikan_id: pendidikan_id,
+      kepegawaian_id: savedKepegawaian._id,
+      pendidikan_id: savedPendidikan._id,
       nama_lengkap,
       nik,
       jk,
@@ -182,6 +169,8 @@ export const createGtk = async (req, res) => {
     });
 
     const savedGtk = await gtk.save();
+
+    const { lisensi_kepsek, keahliah_lab } = req.body;
 
     res.status(201).json({
       message: "Berhasil Menambahkan GTK",
