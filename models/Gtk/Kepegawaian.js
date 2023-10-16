@@ -4,7 +4,7 @@ const kepegawaianSchema = new mongoose.Schema(
   {
     gtk_id: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      required: false,
       ref: "Gtk",
     },
     status_kepegawaian: {

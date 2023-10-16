@@ -201,6 +201,10 @@ export const reaData = async (req, res) => {
           { path: "rayon_id", model: "Rayon" },
         ],
       })
+      .populate({
+        path: "guru_id",
+        model: "Gtk",
+      })
       .lean();
 
     const result = families.map((family) => {
