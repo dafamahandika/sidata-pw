@@ -9,7 +9,9 @@ import {
   updateDataAnak,
   tambahDataPendidikan,
   appendDataAnak,
+  createKepegawaian,
 } from "../controllers/gtkController.js";
+
 import { isAdmin } from "../middleware/isAdmin.js";
 
 const routes = express.Router();
@@ -19,6 +21,7 @@ routes.get("/jenis-ptk", isAdmin, getJenis);
 
 routes.get("/gtk", isAdmin, getData);
 routes.post("/gtk", createGtk);
+routes.post("/kepegawaian/:id", createKepegawaian);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);

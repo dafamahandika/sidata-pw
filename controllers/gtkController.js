@@ -55,7 +55,7 @@ export const getData = async (req, res) => {
   try {
     const gtk = await Gtk.find()
       .populate({
-        path: "kepegawaian_id",
+        path: "gtk_id",
         model: "Kepegawaian",
       })
       .populate({
@@ -89,12 +89,15 @@ export const getData = async (req, res) => {
   }
 };
 
-export const createGtk = async (req, res) => {
+export const createKepegawaian = async (req, res) => {
   try {
+    const { id } = req.params;
     const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
       req.body;
+    const dataGtk = await Gtk.findById(id);
 
     const kepegawaian = new Kepegawaian({
+      gtk_id: dataGtk.id,
       status_kepegawaian,
       jenis_ptk,
       nip,
@@ -104,7 +107,15 @@ export const createGtk = async (req, res) => {
     });
 
     const savedKepegawaian = await kepegawaian.save();
+    res.status(200).json({ massage: "success", savedKepegawaian });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ massage: "Error" });
+  }
+};
 
+export const createGtk = async (req, res) => {
+  try {
     const {
       bidang_studi,
       jenjang_pendidikan,
@@ -242,7 +253,6 @@ export const createGtk = async (req, res) => {
     } = req.body;
 
     const gtk = new Gtk({
-      kepegawaian_id: savedKepegawaian._id,
       pendidikan_id: savedPendidikan._id,
       anak_id: saveAnak._id,
       beasiswa_id: saveBeasiswa._id,
@@ -283,7 +293,6 @@ export const createGtk = async (req, res) => {
     res.status(201).json({
       message: "Berhasil Menambahkan GTK",
       Gtk: savedGtk,
-      Kepegawaian: savedKepegawaian,
       Pendidikan: savedPendidikan,
       Anak: saveAnak,
       Beasiswa: saveBeasiswa,
