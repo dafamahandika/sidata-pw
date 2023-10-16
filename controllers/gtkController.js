@@ -13,14 +13,24 @@ import Sertifikasi from "../models/Gtk/Sertifikasi.js";
 import TugasTambahan from "../models/Gtk/TugasTambahan.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
 
+export const createAnak = async (req, res) => {
+  try {
+    const {id} = req,params,
+    const gtk = await 
+    const { nama, status, jenjang_pendidikan, nisn, tahun_masuk, jk, tempat_lahir, tanggal_lahir } = req.body;
+    
+    const anak = new Anak({
+      gtk_id: 
+    })
+  } catch (error) {}
+};
+
 export const getStatus = async (req, res) => {
   try {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res
-        .status(404)
-        .json({ message: "Data Status Kepegawaian Not Found" });
+      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(200).json({
@@ -55,7 +65,7 @@ export const getData = async (req, res) => {
   try {
     const gtk = await Gtk.find()
       .populate({
-        path: "kepegawaian_id",
+        path: "gtk_id",
         model: "Kepegawaian",
       })
       .populate({
@@ -89,34 +99,31 @@ export const getData = async (req, res) => {
   }
 };
 
+export const createKepegawaian = async (req, res) => {
+  const { id } = req.params;
+  const dataKepegawaian = await Gtk.findById(id);
+  const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+
+  const kepegawaian = new Kepegawaian({
+    gtk_id: dataKepegawaian._id,
+    status_kepegawaian,
+    jenis_ptk,
+    nip,
+    niy,
+    nuptk,
+    sumber_gaji,
+  });
+
+  const savedKepegawaian = await kepegawaian.save();
+
+  res.status(201).json({
+    massage: "Berhasil Menambahkan data Kepegawaian",
+    data: savedKepegawaian,
+  });
+};
 export const createGtk = async (req, res) => {
   try {
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
-      req.body;
-
-    const kepegawaian = new Kepegawaian({
-      status_kepegawaian,
-      jenis_ptk,
-      nip,
-      niy,
-      nuptk,
-      sumber_gaji,
-    });
-
-    const savedKepegawaian = await kepegawaian.save();
-
-    const {
-      bidang_studi,
-      jenjang_pendidikan,
-      gelar_akademik,
-      satuan_pendidikan,
-      tahun_masuk,
-      tahun_keluar,
-      nim,
-      mata_kuliah,
-      semester,
-      ipk,
-    } = req.body;
+    const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
 
     const riwayat_pendidikan = new RiwayatPendidikan({
       bidang_studi,
@@ -133,16 +140,7 @@ export const createGtk = async (req, res) => {
 
     const savedPendidikan = await riwayat_pendidikan.save();
 
-    const {
-      nama_anak,
-      status,
-      jenjang_pendidikan_anak,
-      nisn,
-      tahun_masuk_anak,
-      jk_anak,
-      tempat_lahir_anak,
-      tanggal_lahir_anak,
-    } = req.body;
+    const { nama_anak, status, jenjang_pendidikan_anak, nisn, tahun_masuk_anak, jk_anak, tempat_lahir_anak, tanggal_lahir_anak } = req.body;
 
     const isAnak = new Anak({
       nama_anak,
@@ -157,13 +155,7 @@ export const createGtk = async (req, res) => {
 
     const saveAnak = await isAnak.save();
 
-    const {
-      jenis_beasiswa,
-      keterangan,
-      tahun_mulai,
-      tahun_akhir,
-      masih_menerima,
-    } = req.body;
+    const { jenis_beasiswa, keterangan, tahun_mulai, tahun_akhir, masih_menerima } = req.body;
 
     const beasiswa = new Beasiswa({
       jenis_beasiswa,
@@ -186,16 +178,7 @@ export const createGtk = async (req, res) => {
 
     const saveSertifikasi = await sertifikasi.save();
 
-    const {
-      jenis_diklat,
-      nama_diklat,
-      penyelenggara,
-      tahun_diklat,
-      peran,
-      tingkat_diklat,
-      berapa_jam,
-      sertifikat,
-    } = req.body;
+    const { jenis_diklat, nama_diklat, penyelenggara, tahun_diklat, peran, tingkat_diklat, berapa_jam, sertifikat } = req.body;
 
     const diklat = new Diklat({
       jenis_diklat,
@@ -337,7 +320,7 @@ export const createJenis = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Error",
+      message: error.message,
     });
   }
 };

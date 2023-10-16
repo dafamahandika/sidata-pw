@@ -42,11 +42,11 @@ const gtkSchema = new mongoose.Schema(
         ref: "Diklat",
       },
     ],
-    inpassing_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Inpassing",
-    },
+    // inpassing_id: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: "Inpassing",
+    // },
     nama_lengkap: {
       type: String,
       required: true,

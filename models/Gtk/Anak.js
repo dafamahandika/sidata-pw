@@ -2,7 +2,12 @@ import mongoose from "mongoose";
 
 const anakSchema = new mongoose.Schema(
   {
-    nama_anak: {
+    gtk_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Gtk",
+    },
+    nama: {
       type: String,
       required: true,
     },
@@ -10,7 +15,7 @@ const anakSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    jenjang_pendidikan_anak: {
+    jenjang_pendidikan: {
       type: String,
       required: true,
     },
@@ -19,20 +24,20 @@ const anakSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    tahun_masuk_anak: {
+    tahun_masuk: {
       type: String,
       required: true,
     },
-    jk_anak: {
+    jk: {
       type: String,
       enum: ["L", "P"],
       required: true,
     },
-    tempat_lahir_anak: {
+    tempat_lahir: {
       type: String,
       required: true,
     },
-    tanggal_lahir_anak: {
+    tanggal_lahir: {
       type: String,
       required: true,
     },
