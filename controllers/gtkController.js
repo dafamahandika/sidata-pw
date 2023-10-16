@@ -18,7 +18,16 @@ export const createAnak = async (req, res) => {
     const { id } = req.params;
 
     const gtk = await Gtk.findById(id);
-    const { nama, status, jenjang_pendidikan, nisn, tahun_masuk, jk, tempat_lahir, tanggal_lahir } = req.body;
+    const {
+      nama,
+      status,
+      jenjang_pendidikan,
+      nisn,
+      tahun_masuk,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+    } = req.body;
 
     const anak = new Anak({
       gtk_id: gtk._id,
@@ -50,7 +59,9 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+      return res
+        .status(404)
+        .json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(200).json({
@@ -89,11 +100,11 @@ export const getData = async (req, res) => {
         model: "Kepegawaian",
       })
       .populate({
-        path: "pendidikan_id",
+        path: "gtk_id",
         model: "RiwayatPendidikan",
       })
       .populate({
-        path: "anak_id",
+        path: "gtk_id",
         model: "Anak",
       })
       .populate({
@@ -122,7 +133,8 @@ export const getData = async (req, res) => {
 export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
+      req.body;
     const dataGtk = await Gtk.findById(id);
 
     const kepegawaian = new Kepegawaian({
@@ -140,6 +152,33 @@ export const createKepegawaian = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "Error" });
+  }
+};
+
+export const createPendidikan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataPendidikan = req.body;
+    const dataGtk = await Gtk.findById(id);
+
+    if (!dataGtk) {
+      return res.status(404).json({ message: "Data GTK Not Found" });
+    }
+
+    const pendidikan = new RiwayatPendidikan({
+      gtk_id: dataGtk.id,
+      ...dataPendidikan,
+    });
+
+    const savePendidikan = await pendidikan.save();
+
+    res.status(200).json({
+      message: "Success",
+      savePendidikan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: "Error" });
   }
 };
 
@@ -175,7 +214,7 @@ export const createGtk = async (req, res) => {
       tb,
       gol_darah,
     } = req.body;
-    
+
     const gtk = new Gtk({
       pendidikan_id: savedPendidikan._id,
       anak_id: saveAnak._id,
@@ -211,7 +250,7 @@ export const createGtk = async (req, res) => {
       tb,
       gol_darah,
     });
-    
+
     const savedGtk = await gtk.save();
     // const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
 
@@ -246,7 +285,7 @@ export const createGtk = async (req, res) => {
     // const saveAnak = await isAnak.save();
 
     // const { jenis_beasiswa, keterangan, tahun_mulai, tahun_akhir, masih_menerima } = req.body;
-    
+
     // const beasiswa = new Beasiswa({
     //   jenis_beasiswa,
     //   keterangan,
@@ -282,7 +321,6 @@ export const createGtk = async (req, res) => {
     // });
 
     // const saveDiklat = await diklat.save();
-
 
     const { lisensi_kepsek, keahliah_lab } = req.body;
 
