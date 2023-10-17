@@ -25,7 +25,16 @@ export const createAnak = async (req, res) => {
       });
     }
 
-    const { nama, status, jenjang_pendidikan, nisn, tahun_masuk, jk, tempat_lahir, tanggal_lahir } = req.body;
+    const {
+      nama,
+      status,
+      jenjang_pendidikan,
+      nisn,
+      tahun_masuk,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+    } = req.body;
 
     const anak = new Anak({
       nama,
@@ -99,7 +108,9 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+      return res
+        .status(404)
+        .json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(200).json({
@@ -143,6 +154,14 @@ export const getData = async (req, res) => {
       // })
       .populate({
         path: "gtk_id",
+        model: "Kepegawaian",
+      })
+      .populate({
+        path: "gtk_id",
+        model: "RiwayatPendidikan",
+      })
+      .populate({
+        path: "gtk_id",
         model: "Anak",
       })
       .populate({
@@ -178,7 +197,8 @@ export const getData = async (req, res) => {
 export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
+      req.body;
     const dataGtk = await Gtk.findById(id);
 
     const kepegawaian = new Kepegawaian({
