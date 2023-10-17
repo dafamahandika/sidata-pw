@@ -11,6 +11,7 @@ routes.get("/jenis-ptk", isAdmin, getJenis);
 routes.get("/gtk", isAdmin, getData);
 routes.post("/gtk", createGtk);
 routes.post("/kepegawaian/:id", createKepegawaian);
+routes.post("/pendidikan/:id", createPendidikan);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);

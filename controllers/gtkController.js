@@ -99,7 +99,9 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+      return res
+        .status(404)
+        .json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(200).json({
@@ -142,7 +144,7 @@ export const getData = async (req, res) => {
       //   model: "RiwayatPendidikan",
       // })
       .populate({
-        path: "anak_id",
+        path: "gtk_id",
         model: "Anak",
       })
       .populate({
@@ -178,7 +180,8 @@ export const getData = async (req, res) => {
 export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
+      req.body;
     const dataGtk = await Gtk.findById(id);
 
     const kepegawaian = new Kepegawaian({
@@ -196,6 +199,33 @@ export const createKepegawaian = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "Error" });
+  }
+};
+
+export const createPendidikan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataPendidikan = req.body;
+    const dataGtk = await Gtk.findById(id);
+
+    if (!dataGtk) {
+      return res.status(404).json({ message: "Data GTK Not Found" });
+    }
+
+    const pendidikan = new RiwayatPendidikan({
+      gtk_id: dataGtk.id,
+      ...dataPendidikan,
+    });
+
+    const savePendidikan = await pendidikan.save();
+
+    res.status(200).json({
+      message: "Success",
+      savePendidikan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: "Error" });
   }
 };
 
