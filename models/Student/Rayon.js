@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const rayonSchema = new mongoose.Schema({
-  guru_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Gtk",
-  },
   nama_rayon: {
     type: String,
     required: true,

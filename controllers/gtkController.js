@@ -96,15 +96,15 @@ export const getData = async (req, res) => {
   try {
     const gtk = await Gtk.find()
       .populate({
-        path: "gtk_id",
+        path: "kepegawaian_id",
         model: "Kepegawaian",
       })
       .populate({
-        path: "gtk_id",
+        path: "pendidikan_id",
         model: "RiwayatPendidikan",
       })
       .populate({
-        path: "gtk_id",
+        path: "anak_id",
         model: "Anak",
       })
       .populate({
@@ -216,11 +216,11 @@ export const createGtk = async (req, res) => {
     } = req.body;
 
     const gtk = new Gtk({
-      pendidikan_id: savedPendidikan._id,
-      anak_id: saveAnak._id,
-      beasiswa_id: saveBeasiswa._id,
-      sertifikasi_id: saveSertifikasi._id,
-      diklat_id: saveDiklat._id,
+      // pendidikan_id: savedPendidikan._id,
+      // anak_id: saveAnak._id,
+      // beasiswa_id: saveBeasiswa._id,
+      // sertifikasi_id: saveSertifikasi._id,
+      // diklat_id: saveDiklat._id,
       nama_lengkap,
       nik,
       jk,
