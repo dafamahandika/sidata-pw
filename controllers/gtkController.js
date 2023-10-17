@@ -153,15 +153,15 @@ export const getData = async (req, res) => {
       //   model: "RiwayatPendidikan",
       // })
       .populate({
-        path: "gtk_id",
+        path: "kepegawaian_id",
         model: "Kepegawaian",
       })
       .populate({
-        path: "gtk_id",
+        path: "pendidikan_id",
         model: "RiwayatPendidikan",
       })
       .populate({
-        path: "gtk_id",
+        path: "anak_id",
         model: "Anak",
       })
       .populate({
