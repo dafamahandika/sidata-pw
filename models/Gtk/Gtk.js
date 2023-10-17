@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 
 const gtkSchema = new mongoose.Schema(
   {
+    kepegawaian_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Kepegawaian",
+      },
+    ],
     pendidikan_id: [
       {
         type: mongoose.Schema.Types.ObjectId,
