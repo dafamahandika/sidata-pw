@@ -12,6 +12,7 @@ import Penugasan from "../models/Gtk/Penugasan.js";
 import Sertifikasi from "../models/Gtk/Sertifikasi.js";
 import TugasTambahan from "../models/Gtk/TugasTambahan.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
+import { isMiddlewareGtk } from "../middleware/isGtk.js";
 
 export const createAnak = async (req, res) => {
   try {

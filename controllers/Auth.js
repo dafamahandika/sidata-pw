@@ -78,3 +78,23 @@ export const refreshToken = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const isLogout = (req, res, next) => {
+  try {
+    if (req.session) {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Error logging out:", err);
+          return next(new Error("Error logging out"));
+        }
+
+        res.status(200).json({ message: "Logged out" });
+      });
+    } else {
+      res.status(200).json({ message: "Logged out" });
+    }
+  } catch (err) {
+    console.error("Error logging out:", err);
+    next(new Error("Error logging out"));
+  }
+};

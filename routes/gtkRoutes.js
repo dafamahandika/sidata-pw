@@ -15,7 +15,7 @@ import {
   createBeasiswa,
   createSertifikasi,
 } from "../controllers/gtkController.js";
-
+import { importCsv } from "../controllers/csvController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 
 const routes = express.Router();
@@ -39,5 +39,7 @@ routes.post("/sertifikasi/:id", createSertifikasi);
 routes.post("/kepegawaian/:id", createKepegawaian);
 routes.post("/pendidikan/:id", createPendidikan);
 routes.post("/beasiswa/:id", createBeasiswa);
+
+routes.post("/csv", importCsv);
 
 export default routes;
