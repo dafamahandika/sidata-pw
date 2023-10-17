@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const gtkSchema = new mongoose.Schema(
   {
-    pendidikan_id: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "RiwayatPendidikan",
-      },
-    ],
+    // pendidikan_id: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     required: true,
+    //     ref: "RiwayatPendidikan",
+    //   },
+    // ],
     anak_id: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -23,20 +23,20 @@ const gtkSchema = new mongoose.Schema(
         ref: "Beasiswa",
       },
     ],
-    sertifikasi_id: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        requied: true,
-        ref: "Sertifikasi",
-      },
-    ],
-    diklat_id: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        requied: true,
-        ref: "Diklat",
-      },
-    ],
+    // sertifikasi_id: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     requied: true,
+    //     ref: "Sertifikasi",
+    //   },
+    // ],
+    // diklat_id: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     requied: true,
+    //     ref: "Diklat",
+    //   },
+    // ],
     nama_lengkap: {
       type: String,
       required: true,
@@ -99,14 +99,7 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: [
-        "Islam",
-        "Kristen Protestan",
-        "Kristen Katholik",
-        "Hindu",
-        "Budha",
-        "Konghuchu",
-      ],
+      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
       required: true,
     },
     kewarganegaraan: {
