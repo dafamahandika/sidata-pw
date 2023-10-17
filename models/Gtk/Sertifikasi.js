@@ -11,13 +11,19 @@ const sertifikasiSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    thn_sertifikasi: {
+      type: String,
+      required: true,
+    },
     no_reg: {
       type: String,
       required: true,
+      unique: true,
     },
     no_peserta: {
       type: String,
       required: true,
+      unique: true,
     },
   },
   {

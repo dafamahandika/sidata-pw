@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const riwayatpendidikanSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "RiwayatPendidikan",
-    },
     bidang_studi: {
       type: String,
       required: true,
@@ -54,8 +49,5 @@ const riwayatpendidikanSchema = new mongoose.Schema(
   }
 );
 
-const RiwayatPendidikan = mongoose.model(
-  "RiwayatPendidikan",
-  riwayatpendidikanSchema
-);
+const RiwayatPendidikan = mongoose.model("RiwayatPendidikan", riwayatpendidikanSchema);
 export default RiwayatPendidikan;

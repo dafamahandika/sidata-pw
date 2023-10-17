@@ -30,6 +30,13 @@ const gtkSchema = new mongoose.Schema(
         ref: "Beasiswa",
       },
     ],
+    sertifikasi_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Sertifikasi",
+      },
+    ],
     nama_lengkap: {
       type: String,
       required: true,

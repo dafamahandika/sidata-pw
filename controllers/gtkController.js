@@ -19,7 +19,7 @@ export const createAnak = async (req, res) => {
 
     const dataGtk = await Gtk.findById(id);
     if (!dataGtk) {
-      console.log(`${error} data => ${dataGtk}`);
+      console.log(dataGtk);
       return res.status(404).json({
         error: "Data GTK Not Found",
         message: "Data GTK Tidak di Temukan",
@@ -63,7 +63,7 @@ export const createBeasiswa = async (req, res) => {
 
     const dataGtk = await Gtk.findById(id);
     if (!dataGtk) {
-      console.log(`${error} => ${dataGtk}`);
+      console.log(dataGtk);
       return res.status(404).json({
         error: "Data GTK Not Found",
         message: "Data GTK Tidak di Temukan",
@@ -104,7 +104,7 @@ export const createKepegawaian = async (req, res) => {
 
     const dataGtk = await Gtk.findById(id);
     if (!dataGtk) {
-      console.log(`${error} => ${dataGtk}`);
+      console.log(dataGtk);
       return res.status(404).json({
         error: "Data GTK Not Found",
         message: "Data GTK Tidak di Temukan",
@@ -123,7 +123,7 @@ export const createKepegawaian = async (req, res) => {
 
     const savedKepegawaian = await kepegawaian.save();
 
-    dataGtk.beasiswa_id.push(savedKepegawaian._id);
+    dataGtk.kepegawaian_id.push(savedKepegawaian._id);
     await dataGtk.save();
 
     res.status(200).json({
@@ -147,7 +147,7 @@ export const createPendidikan = async (req, res) => {
     const dataGtk = await Gtk.findById(id);
 
     if (!dataGtk) {
-      console.log(`${error} => ${dataGtk}`);
+      console.log(dataGtk);
       return res.status(404).json({
         error: "Data GTK Not Found",
         message: "Data GTK Tidak di Temukan",
@@ -172,6 +172,46 @@ export const createPendidikan = async (req, res) => {
     res.status(404).json({
       error: error.message,
       message: "Gagal Menambahkan Data Riwayat Pendidikan",
+    });
+  }
+};
+
+export const createSertifikasi = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        error: "Data GTK Not Found",
+        message: "Data GTK Tidak di Temukan",
+      });
+    }
+
+    const { jenis_sertifikasi, no_sertifikasi, thn_sertifikasi, no_reg, no_peserta } = req.body;
+    const sertifikasi = new Sertifikasi({
+      jenis_sertifikasi,
+      no_sertifikasi,
+      thn_sertifikasi,
+      no_reg,
+      no_peserta,
+    });
+
+    const savedSertfikasi = sertifikasi.save();
+
+    dataGtk.sertifikasi_id.push(savedSertfikasi._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      sertifikasi: savedSertfikasi,
+      message: "Berhasil Menambahkan Data Sertifikasi",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Sertifikasi",
     });
   }
 };
@@ -305,11 +345,6 @@ export const createGtk = async (req, res) => {
     } = req.body;
 
     const gtk = new Gtk({
-      // pendidikan_id: savedPendidikan._id,
-      // anak_id: saveAnak._id,
-      // beasiswa_id: saveBeasiswa._id,
-      // sertifikasi_id: saveSertifikasi._id,
-      // diklat_id: saveDiklat._id,
       nama_lengkap,
       nik,
       jk,
@@ -341,85 +376,10 @@ export const createGtk = async (req, res) => {
     });
 
     const savedGtk = await gtk.save();
-    // const { bidang_studi, jenjang_pendidikan, gelar_akademik, satuan_pendidikan, tahun_masuk, tahun_keluar, nim, mata_kuliah, semester, ipk } = req.body;
-
-    // const riwayat_pendidikan = new RiwayatPendidikan({
-    //   bidang_studi,
-    //   jenjang_pendidikan,
-    //   gelar_akademik,
-    //   satuan_pendidikan,
-    //   tahun_masuk,
-    //   tahun_keluar,
-    //   nim,
-    //   mata_kuliah,
-    //   semester,
-    //   ipk,
-    // });
-
-    // const savedPendidikan = await riwayat_pendidikan.save();
-
-    // const { nama_anak, status, jenjang_pendidikan_anak, nisn, tahun_masuk_anak, jk_anak, tempat_lahir_anak, tanggal_lahir_anak } = req.body;
-
-    // const isAnak = new Anak({
-    //   nama_anak,
-    //   status,
-    //   jenjang_pendidikan_anak,
-    //   nisn,
-    //   tahun_masuk_anak,
-    //   jk_anak,
-    //   tempat_lahir_anak,
-    //   tanggal_lahir_anak,
-    // });
-
-    // const saveAnak = await isAnak.save();
-
-    // const { jenis_beasiswa, keterangan, tahun_mulai, tahun_akhir, masih_menerima } = req.body;
-
-    // const beasiswa = new Beasiswa({
-    //   jenis_beasiswa,
-    //   keterangan,
-    //   tahun_mulai,
-    //   tahun_akhir,
-    //   masih_menerima,
-    // });
-
-    // const saveBeasiswa = await beasiswa.save();
-
-    // const { jenis_sertifikasi, no_sertifikasi, no_reg, no_peserta } = req.body;
-
-    // const sertifikasi = new Sertifikasi({
-    //   jenis_sertifikasi,
-    //   no_sertifikasi,
-    //   no_reg,
-    //   no_peserta,
-    // });
-
-    // const saveSertifikasi = await sertifikasi.save();
-
-    // const { jenis_diklat, nama_diklat, penyelenggara, tahun_diklat, peran, tingkat_diklat, berapa_jam, sertifikat } = req.body;
-
-    // const diklat = new Diklat({
-    //   jenis_diklat,
-    //   nama_diklat,
-    //   penyelenggara,
-    //   tahun_diklat,
-    //   peran,
-    //   tingkat_diklat,
-    //   berapa_jam,
-    //   sertifikat,
-    // });
-
-    // const saveDiklat = await diklat.save();
-
-    // const { lisensi_kepsek, keahliah_lab } = req.body;
 
     res.status(201).json({
-      message: "Berhasil Menambahkan GTK",
-      Gtk: savedGtk,
-      // Pendidikan: savedPendidikan,
-      // Anak: saveAnak,
-      // Beasiswa: saveBeasiswa,
-      // Diklat: saveDiklat,
+      message: "Berhasil Menambahkan Data GTK",
+      gtk: savedGtk,
     });
   } catch (error) {
     console.log(error);

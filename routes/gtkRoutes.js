@@ -12,6 +12,8 @@ import {
   createKepegawaian,
   createAnak,
   createPendidikan,
+  createBeasiswa,
+  createSertifikasi,
 } from "../controllers/gtkController.js";
 
 import { isAdmin } from "../middleware/isAdmin.js";
@@ -22,9 +24,7 @@ routes.get("/status-kepeg", isAdmin, getStatus);
 routes.get("/jenis-ptk", isAdmin, getJenis);
 
 routes.get("/gtk", isAdmin, getData);
-routes.post("/gtk", createGtk);
-routes.post("/kepegawaian/:id", createKepegawaian);
-routes.post("/pendidikan/:id", createPendidikan);
+routes.post("/gtk", isAdmin, createGtk);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
@@ -35,5 +35,9 @@ routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
 routes.post("/tambah-anak/:id", appendDataAnak);
 
 routes.post("/anak/:id", createAnak);
+routes.post("/sertifikasi/:id", createSertifikasi);
+routes.post("/kepegawaian/:id", createKepegawaian);
+routes.post("/pendidikan/:id", createPendidikan);
+routes.post("/beasiswa/:id", createBeasiswa);
 
 export default routes;
