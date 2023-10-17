@@ -13,7 +13,7 @@ import {
   createAnak,
   createPendidikan,
 } from "../controllers/gtkController.js";
-
+import { importCsv } from "../controllers/csvController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 
 const routes = express.Router();
@@ -35,5 +35,7 @@ routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
 routes.post("/tambah-anak/:id", appendDataAnak);
 
 routes.post("/anak/:id", createAnak);
+
+routes.post("/csv", importCsv);
 
 export default routes;
