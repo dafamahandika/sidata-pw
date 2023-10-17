@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const anakSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Gtk",
-    },
     nama: {
       type: String,
       required: true,

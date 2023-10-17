@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 
 const beasiswaSchema = new mongoose.Schema(
   {
-    gtk_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Gtk",
-    },
-
     jenis_beasiswa: {
       type: String,
       required: true,
