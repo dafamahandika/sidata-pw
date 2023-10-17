@@ -2,11 +2,18 @@ import mongoose from "mongoose";
 
 const gtkSchema = new mongoose.Schema(
   {
+    kepegawaian_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Kepegawaian",
+      },
+    ],
     pendidikan_id: [
       {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "RiwayatPendidikan",
+        ref: "Pendidikan",
       },
     ],
     anak_id: [
@@ -21,20 +28,6 @@ const gtkSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         requied: true,
         ref: "Beasiswa",
-      },
-    ],
-    sertifikasi_id: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        requied: true,
-        ref: "Sertifikasi",
-      },
-    ],
-    diklat_id: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        requied: true,
-        ref: "Diklat",
       },
     ],
     nama_lengkap: {
@@ -99,14 +92,7 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: [
-        "Islam",
-        "Kristen Protestan",
-        "Kristen Katholik",
-        "Hindu",
-        "Budha",
-        "Konghuchu",
-      ],
+      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
       required: true,
     },
     kewarganegaraan: {

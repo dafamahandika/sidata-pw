@@ -24,6 +24,29 @@ export const isRayon = async (req, res) => {
   }
 };
 
+export const getRayon = async (req, res) => {
+  try {
+    const dataRayon = await Rayon.find();
+    if (!dataRayon) {
+      console.log(dataRayon);
+      return res.status(404).json({
+        message: "Data Rayon Not Found",
+      });
+    }
+
+    res.status(200).json({
+      rayon: dataRayon,
+      message: "Success Get Data Rayon",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Failed Get Data Rayon",
+    });
+  }
+};
+
 export const isRombel = async (req, res) => {
   try {
     const { nama_rombel, tingkat, tahun_ajaran } = req.body;
@@ -40,6 +63,29 @@ export const isRombel = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "error" });
+  }
+};
+
+export const getRombel = async (req, res) => {
+  try {
+    const rombel = await Rombel.find();
+    if (!rombel) {
+      console.log(rombel);
+      return res.status(404).json({
+        message: "Data Rombel Not Found",
+      });
+    }
+
+    res.status(200).json({
+      rombel: rombel,
+      message: "Success Get Data Rombel",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Failed Get Data Rombel",
+    });
   }
 };
 
@@ -73,31 +119,7 @@ export const studentCreate = async (req, res) => {
 
     const nama_rombel = rombelData.nama_rombel;
 
-    const {
-      nama,
-      jk,
-      nisn,
-      nik,
-      no_kk,
-      tempat_lahir,
-      no_akta,
-      agama,
-      kewarganegaraan,
-      alamat,
-      rt,
-      rw,
-      nama_dusun,
-      kecamatan,
-      kode_pos,
-      transportasi,
-      anak_ke,
-      tinggal_bersama,
-      email,
-      no_telp,
-      tb,
-      bb,
-      gol_darah,
-    } = req.body;
+    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp, tb, bb, gol_darah } = req.body;
 
     const date = new Date();
     const tanggal_lahir = date.setHours(date.getHours() + 7);
@@ -136,23 +158,7 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const {
-      nama_ayah,
-      nik_ayah,
-      pendidikan_ayah,
-      pekerjaan_ayah,
-      penghasilan_ayah,
-      nama_ibu,
-      nik_ibu,
-      pendidikan_ibu,
-      pekerjaan_ibu,
-      penghasilan_ibu,
-      nama_wali,
-      nik_wali,
-      pendidikan_wali,
-      pekerjaan_wali,
-      penghasilan_wali,
-    } = req.body;
+    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
@@ -310,9 +316,7 @@ export const delData = async (req, res) => {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    const deletedStudent = await Student.findByIdAndDelete(
-      deletedFamily.student_id
-    );
+    const deletedStudent = await Student.findByIdAndDelete(deletedFamily.student_id);
 
     if (!deletedStudent) {
       return res.status(404).json({ message: "Student data not found" });

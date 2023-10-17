@@ -17,24 +17,16 @@ export const createAnak = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const gtk = await Gtk.findById(id);
-    if (!gtk) {
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(`${error} data => ${dataGtk}`);
       return res.status(404).json({
         error: "Data GTK Not Found",
         message: "Data GTK Tidak di Temukan",
       });
     }
 
-    const {
-      nama,
-      status,
-      jenjang_pendidikan,
-      nisn,
-      tahun_masuk,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
-    } = req.body;
+    const { nama, status, jenjang_pendidikan, nisn, tahun_masuk, jk, tempat_lahir, tanggal_lahir } = req.body;
 
     const anak = new Anak({
       nama,
@@ -49,8 +41,8 @@ export const createAnak = async (req, res) => {
 
     const savedAnak = await anak.save();
 
-    gtk.anak_id.push(savedAnak._id);
-    await gtk.save();
+    dataGtk.anak_id.push(savedAnak._id);
+    await dataGtk.save();
 
     res.status(201).json({
       anak: savedAnak,
@@ -59,7 +51,8 @@ export const createAnak = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: error.message,
+      error: error.message,
+      message: "Gagal Menambahkan Data Anak",
     });
   }
 };
@@ -68,10 +61,11 @@ export const createBeasiswa = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const gtk = await Gtk.findById(id);
-    if (!gtk) {
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(`${error} => ${dataGtk}`);
       return res.status(404).json({
-        error: `${res.status(404)} Data GTK Not Found `,
+        error: "Data GTK Not Found",
         message: "Data GTK Tidak di Temukan",
       });
     }
@@ -88,8 +82,8 @@ export const createBeasiswa = async (req, res) => {
 
     const savedBeasiswa = await beasiswa.save();
 
-    gtk.beasiswa_id.push(savedBeasiswa._id);
-    await gtk.save();
+    dataGtk.beasiswa_id.push(savedBeasiswa._id);
+    await dataGtk.save();
 
     res.status(201).json({
       Beasiswa: savedBeasiswa,
@@ -98,7 +92,86 @@ export const createBeasiswa = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: error.message,
+      error: error.message,
+      message: "Gagal Menambahkan Data Beasiswa",
+    });
+  }
+};
+
+export const createKepegawaian = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(`${error} => ${dataGtk}`);
+      return res.status(404).json({
+        error: "Data GTK Not Found",
+        message: "Data GTK Tidak di Temukan",
+      });
+    }
+
+    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+    const kepegawaian = new Kepegawaian({
+      status_kepegawaian,
+      jenis_ptk,
+      nip,
+      niy,
+      nuptk,
+      sumber_gaji,
+    });
+
+    const savedKepegawaian = await kepegawaian.save();
+
+    dataGtk.beasiswa_id.push(savedKepegawaian._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      massage: "Berhasil Menambahkan Data Kepegawaian",
+      data: savedKepegawaian,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Kepegawaian",
+    });
+  }
+};
+
+export const createPendidikan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dataPendidikan = req.body;
+
+    const dataGtk = await Gtk.findById(id);
+
+    if (!dataGtk) {
+      console.log(`${error} => ${dataGtk}`);
+      return res.status(404).json({
+        error: "Data GTK Not Found",
+        message: "Data GTK Tidak di Temukan",
+      });
+    }
+
+    const pendidikan = new RiwayatPendidikan({
+      ...dataPendidikan,
+    });
+
+    const savedPendidikan = await pendidikan.save();
+
+    dataGtk.pendidikan_id.push(savedPendidikan._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Riwayat Pendidikan",
+      riwayat_pendidikan: savedPendidikan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Riwayat Pendidikan",
     });
   }
 };
@@ -108,18 +181,19 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res
-        .status(404)
-        .json({ message: "Data Status Kepegawaian Not Found" });
+      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(200).json({
       message: "Get Data Status Kepegawaian Success",
-      datas: statusKepegawaian,
+      status_kepegawaian: statusKepegawaian,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Get Data Status Kepegawaian Failed" });
+    res.status(500).json({
+      error: error.message,
+      message: "Get Data Status Kepegawaian Failed",
+    });
   }
 };
 
@@ -133,11 +207,14 @@ export const getJenis = async (req, res) => {
 
     res.status(200).json({
       message: "Get Data Jenis PTK Success",
-      datas: jenisPtk,
+      jenis_ptk: jenisPtk,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Get Data Jenis PTK Failed" });
+    res.status(500).json({
+      error: error.message,
+      message: "Get Data Jenis PTK Failed",
+    });
   }
 };
 
@@ -153,15 +230,15 @@ export const getData = async (req, res) => {
       //   model: "RiwayatPendidikan",
       // })
       .populate({
-        path: "gtk_id",
+        path: "kepegawaian_id",
         model: "Kepegawaian",
       })
       .populate({
-        path: "gtk_id",
+        path: "pendidikan_id",
         model: "RiwayatPendidikan",
       })
       .populate({
-        path: "gtk_id",
+        path: "anak_id",
         model: "Anak",
       })
       .populate({
@@ -191,58 +268,6 @@ export const getData = async (req, res) => {
     res.status(500).json({
       message: "Data Not Found",
     });
-  }
-};
-
-export const createKepegawaian = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } =
-      req.body;
-    const dataGtk = await Gtk.findById(id);
-
-    const kepegawaian = new Kepegawaian({
-      gtk_id: dataGtk.id,
-      status_kepegawaian,
-      jenis_ptk,
-      nip,
-      niy,
-      nuptk,
-      sumber_gaji,
-    });
-
-    const savedKepegawaian = await kepegawaian.save();
-    res.status(200).json({ massage: "success", savedKepegawaian });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ massage: "Error" });
-  }
-};
-
-export const createPendidikan = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const dataPendidikan = req.body;
-    const dataGtk = await Gtk.findById(id);
-
-    if (!dataGtk) {
-      return res.status(404).json({ message: "Data GTK Not Found" });
-    }
-
-    const pendidikan = new RiwayatPendidikan({
-      gtk_id: dataGtk.id,
-      ...dataPendidikan,
-    });
-
-    const savePendidikan = await pendidikan.save();
-
-    res.status(200).json({
-      message: "Success",
-      savePendidikan,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({ message: "Error" });
   }
 };
 
