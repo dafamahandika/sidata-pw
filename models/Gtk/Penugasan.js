@@ -16,7 +16,7 @@ const penugasanSchema = new mongoose.Schema(
       required: true,
     },
     status_sekolah_induk: {
-      type: String,
+      type: Boolean,
       required: true,
     },
     keluar_karena: {

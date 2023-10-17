@@ -6,13 +6,12 @@ import JenisPtk from "../models/Gtk/JenisPtk.js";
 import Anak from "../models/Gtk/Anak.js";
 import Beasiswa from "../models/Gtk/Beasiswa.js";
 import Diklat from "../models/Gtk/Diklat.js";
-import Inpassing from "../models/Gtk/Inpassing.js";
-import Kompetensi from "../models/Gtk/Kompetensi.js";
-import Penugasan from "../models/Gtk/Penugasan.js";
 import Sertifikasi from "../models/Gtk/Sertifikasi.js";
+import Penugasan from "../models/Gtk/Penugasan.js";
+import Penghargaan from "../models/Gtk/Penghargaan.js";
+import Inpassing from "../models/Gtk/Inpassing.js";
 import TugasTambahan from "../models/Gtk/TugasTambahan.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
-import { isMiddlewareGtk } from "../middleware/isGtk.js";
 
 export const createAnak = async (req, res) => {
   try {
@@ -180,8 +179,10 @@ export const createPendidikan = async (req, res) => {
 export const createSertifikasi = async (req, res) => {
   try {
     const { id } = req.params;
+    const dataSertifikasi = req.body;
 
     const dataGtk = await Gtk.findById(id);
+
     if (!dataGtk) {
       console.log(dataGtk);
       return res.status(404).json({
@@ -190,29 +191,92 @@ export const createSertifikasi = async (req, res) => {
       });
     }
 
-    const { jenis_sertifikasi, no_sertifikasi, thn_sertifikasi, no_reg, no_peserta } = req.body;
     const sertifikasi = new Sertifikasi({
-      jenis_sertifikasi,
-      no_sertifikasi,
-      thn_sertifikasi,
-      no_reg,
-      no_peserta,
+      ...dataSertifikasi,
     });
 
-    const savedSertfikasi = sertifikasi.save();
+    const savedSertifikasi = await sertifikasi.save();
 
-    dataGtk.sertifikasi_id.push(savedSertfikasi._id);
+    dataGtk.sertifikasi_id.push(savedSertifikasi._id);
     await dataGtk.save();
 
     res.status(200).json({
-      sertifikasi: savedSertfikasi,
       message: "Berhasil Menambahkan Data Sertifikasi",
+      sertifikasi: savedSertifikasi,
     });
   } catch (error) {
     console.log(error);
     res.status(404).json({
       error: error.message,
-      message: "Gagal Menambahkan Data Sertifikasi",
+      message: "Gagal Menambahkan Data Riwayat Pendidikan",
+    });
+  }
+};
+
+export const createDiklat = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const dataDiklat = req.body;
+    const diklat = new Diklat({ ...dataDiklat });
+
+    const savedDiklat = await diklat.save();
+
+    dataGtk.diklat_id.push(savedDiklat._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Diklat",
+      diklat: savedDiklat,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Diklat",
+    });
+  }
+};
+
+export const createPenugasan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const dataPenugasan = req.body;
+    const penugasan = new Penugasan({
+      ...dataPenugasan,
+    });
+
+    const savedPenugasan = await penugasan.save();
+
+    dataGtk.penugasan_id.push(savedPenugasan._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Penugasan",
+      penugasan: savedPenugasan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Penugasan",
     });
   }
 };
@@ -262,42 +326,15 @@ export const getJenis = async (req, res) => {
 export const getData = async (req, res) => {
   try {
     const gtk = await Gtk.find()
-      // .populate({
-      //   path: "gtk_id",
-      //   model: "Kepegawaian",
-      // })
-      // .populate({
-      //   path: "pendidikan_id",
-      //   model: "RiwayatPendidikan",
-      // })
-      .populate({
-        path: "kepegawaian_id",
-        model: "Kepegawaian",
-      })
-      .populate({
-        path: "pendidikan_id",
-        model: "RiwayatPendidikan",
-      })
-      .populate({
-        path: "anak_id",
-        model: "Anak",
-      })
-      .populate({
-        path: "beasiswa_id",
-        model: "Beasiswa",
-      })
-      // .populate({
-      //   path: "sertifikasi_id",
-      //   model: "Sertifikasi",
-      // })
-      // .populate({
-      //   path: "diklat_id",
-      //   model: "Diklat",
-      // })
-      // .populate([
-      //   { path: "gtk_id", model: "Anak" },
-      //   { path: "gtk_id", model: "Beasiswa" },
-      // ])
+      .populate([
+        { path: "kepegawaian_id", model: "Kepegawaian" },
+        { path: "pendidikan_id", model: "RiwayatPendidikan" },
+        { path: "anak_id", model: "Anak" },
+        { path: "beasiswa_id", model: "Beasiswa" },
+        { path: "sertifikasi_id", model: "Sertifikasi" },
+        { path: "diklat_id", model: "Diklat" },
+        { path: "penugasan_id", model: "Penugasan" },
+      ])
       .lean();
 
     res.status(200).json({

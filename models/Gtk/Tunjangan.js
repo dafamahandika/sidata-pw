@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const tunjanganSchema = new mongoose.Schema(
   {
-    jensi_tunjangan: {
+    jenis_tunjangan: {
       type: String,
       required: false,
     },

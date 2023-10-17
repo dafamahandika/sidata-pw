@@ -37,6 +37,62 @@ const gtkSchema = new mongoose.Schema(
         ref: "Sertifikasi",
       },
     ],
+    diklat_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Diklat",
+      },
+    ],
+    penugasan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Penugasan",
+      },
+    ],
+    tugas_tambahan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "TugasTambahan",
+      },
+    ],
+    penghargaan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Penghargaan",
+      },
+    ],
+    tunjangan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Tunjangan",
+      },
+    ],
+    inpassing_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Inpassing",
+      },
+    ],
+    jabatan_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "RiwayatJabatan",
+      },
+    ],
+    gaji_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "RiwayatGaji",
+      },
+    ],
     nama_lengkap: {
       type: String,
       required: true,

@@ -14,6 +14,8 @@ import {
   createPendidikan,
   createBeasiswa,
   createSertifikasi,
+  createDiklat,
+  createPenugasan,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
@@ -39,6 +41,8 @@ routes.post("/sertifikasi/:id", createSertifikasi);
 routes.post("/kepegawaian/:id", createKepegawaian);
 routes.post("/pendidikan/:id", createPendidikan);
 routes.post("/beasiswa/:id", createBeasiswa);
+routes.post("/diklat/:id", createDiklat);
+routes.post("/penugasan/:id", createPenugasan);
 
 routes.post("/csv", importCsv);
 
