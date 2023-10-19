@@ -16,6 +16,12 @@ import {
   createSertifikasi,
   createDiklat,
   createPenugasan,
+  createTugas,
+  createPenghargaan,
+  createJabatan,
+  createGaji,
+  createInpassing,
+  createTunjangan,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
@@ -43,6 +49,12 @@ routes.post("/pendidikan/:id", createPendidikan);
 routes.post("/beasiswa/:id", createBeasiswa);
 routes.post("/diklat/:id", createDiklat);
 routes.post("/penugasan/:id", createPenugasan);
+routes.post("/tugas/:id", createTugas);
+routes.post("/penghargaan/:id", createPenghargaan);
+routes.post("/jabatan/:id", createJabatan);
+routes.post("/gaji/:id", createGaji);
+routes.post("/inpasssing/:id", createInpassing);
+routes.post("/tunjangan/:id", createTunjangan);
 
 routes.post("/csv", importCsv);
 

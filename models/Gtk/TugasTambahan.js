@@ -8,7 +8,7 @@ const tugasTambahSchema = new mongoose.Schema(
     },
     prasarana: {
       type: String,
-      required: true,
+      required: false,
     },
     no_sk: {
       type: String,

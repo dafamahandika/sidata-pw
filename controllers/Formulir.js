@@ -2,6 +2,7 @@ import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
+import Gtk from "../models/Gtk/Gtk.js";
 
 export const isRayon = async (req, res) => {
   try {
@@ -85,6 +86,37 @@ export const getRombel = async (req, res) => {
     res.status(404).json({
       error: error.message,
       message: "Failed Get Data Rombel",
+    });
+  }
+};
+
+export const getOnlyGty = async (req, res) => {
+  try {
+    const dataGtk = await Gtk.find().populate({
+      path: "kepegawaian_id",
+      model: "Kepegawaian",
+    });
+
+    const onlyGty = dataGtk.find({
+      status_kepegawaian: "GTY/PTY ",
+    });
+
+    if (!onlyGty) {
+      console.log(onlyGty);
+      return res.status(404).json({
+        message: "Data onlyGty Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Get Data onlyGty Success ",
+      only_gty: onlyGty,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Get Data onlyGty Failed",
     });
   }
 };

@@ -8,9 +8,11 @@ import Beasiswa from "../models/Gtk/Beasiswa.js";
 import Diklat from "../models/Gtk/Diklat.js";
 import Sertifikasi from "../models/Gtk/Sertifikasi.js";
 import Penugasan from "../models/Gtk/Penugasan.js";
-import Penghargaan from "../models/Gtk/Penghargaan.js";
-import Inpassing from "../models/Gtk/Inpassing.js";
 import TugasTambahan from "../models/Gtk/TugasTambahan.js";
+import Penghargaan from "../models/Gtk/Penghargaan.js";
+import RiwayatJabatan from "../models/Gtk/RiwayatJabatan.js";
+import RiwayatGaji from "../models/Gtk/RiwayatGaji.js";
+import Inpassing from "../models/Gtk/Inpassing.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
 
 export const createAnak = async (req, res) => {
@@ -26,17 +28,10 @@ export const createAnak = async (req, res) => {
       });
     }
 
-    const { nama, status, jenjang_pendidikan, nisn, tahun_masuk, jk, tempat_lahir, tanggal_lahir } = req.body;
+    const formAnak = req.body;
 
     const anak = new Anak({
-      nama,
-      status,
-      jenjang_pendidikan,
-      nisn,
-      tahun_masuk,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
+      ...formAnak,
     });
 
     const savedAnak = await anak.save();
@@ -70,14 +65,10 @@ export const createBeasiswa = async (req, res) => {
       });
     }
 
-    const { jenis_beasiswa, keterangan, tahun_mulai, tahun_akhir, masih_menerima } = req.body;
+    const formBeasiswa = req.body;
 
     const beasiswa = new Beasiswa({
-      jenis_beasiswa,
-      keterangan,
-      tahun_mulai,
-      tahun_akhir,
-      masih_menerima,
+      ...formBeasiswa,
     });
 
     const savedBeasiswa = await beasiswa.save();
@@ -111,14 +102,9 @@ export const createKepegawaian = async (req, res) => {
       });
     }
 
-    const { status_kepegawaian, jenis_ptk, nip, niy, nuptk, sumber_gaji } = req.body;
+    const formKepegawaian = req.body;
     const kepegawaian = new Kepegawaian({
-      status_kepegawaian,
-      jenis_ptk,
-      nip,
-      niy,
-      nuptk,
-      sumber_gaji,
+      ...formKepegawaian,
     });
 
     const savedKepegawaian = await kepegawaian.save();
@@ -142,7 +128,6 @@ export const createKepegawaian = async (req, res) => {
 export const createPendidikan = async (req, res) => {
   try {
     const { id } = req.params;
-    const dataPendidikan = req.body;
 
     const dataGtk = await Gtk.findById(id);
 
@@ -154,8 +139,9 @@ export const createPendidikan = async (req, res) => {
       });
     }
 
+    const formPendidikan = req.body;
     const pendidikan = new RiwayatPendidikan({
-      ...dataPendidikan,
+      ...formPendidikan,
     });
 
     const savedPendidikan = await pendidikan.save();
@@ -179,7 +165,6 @@ export const createPendidikan = async (req, res) => {
 export const createSertifikasi = async (req, res) => {
   try {
     const { id } = req.params;
-    const dataSertifikasi = req.body;
 
     const dataGtk = await Gtk.findById(id);
 
@@ -191,8 +176,9 @@ export const createSertifikasi = async (req, res) => {
       });
     }
 
+    const formSertifikasi = req.body;
     const sertifikasi = new Sertifikasi({
-      ...dataSertifikasi,
+      ...formSertifikasi,
     });
 
     const savedSertifikasi = await sertifikasi.save();
@@ -225,8 +211,8 @@ export const createDiklat = async (req, res) => {
       });
     }
 
-    const dataDiklat = req.body;
-    const diklat = new Diklat({ ...dataDiklat });
+    const formDiklat = req.body;
+    const diklat = new Diklat({ ...formDiklat });
 
     const savedDiklat = await diklat.save();
 
@@ -258,9 +244,9 @@ export const createPenugasan = async (req, res) => {
       });
     }
 
-    const dataPenugasan = req.body;
+    const formPenugasan = req.body;
     const penugasan = new Penugasan({
-      ...dataPenugasan,
+      ...formPenugasan,
     });
 
     const savedPenugasan = await penugasan.save();
@@ -277,6 +263,215 @@ export const createPenugasan = async (req, res) => {
     res.status(404).json({
       error: error.message,
       message: "Gagal Menambahkan Data Penugasan",
+    });
+  }
+};
+
+export const createTugas = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const formTugas = req.body;
+    const tugasTambahan = new TugasTambahan({
+      ...formTugas,
+    });
+
+    const savedTugas = await tugasTambahan.save();
+
+    dataGtk.tugas_tambahan_id.push(savedTugas._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Tugas Tambahan",
+      tugas_tambahan: savedTugas,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Tugas Tambahan",
+    });
+  }
+};
+
+export const createPenghargaan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const formPenghargaan = req.body;
+    const penghargaan = new Penghargaan({
+      ...formPenghargaan,
+    });
+
+    const savedPenghargaan = await penghargaan.save();
+
+    dataGtk.penghargaan_id.push(savedPenghargaan._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Penghargaan",
+      penghargaan: savedPenghargaan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      message: "Gagal Menambahkan Data Penghargaan",
+    });
+  }
+};
+
+export const createJabatan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const formJabatan = req.body;
+    const riwayatJabatan = new RiwayatJabatan({
+      ...formJabatan,
+    });
+
+    const savedJabatan = await riwayatJabatan.save();
+
+    dataGtk.jabatan_id.push(savedJabatan._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Riwayat Jabatan",
+      riwayat_jabatan: savedJabatan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Riwayat Jabatan",
+    });
+  }
+};
+
+export const createGaji = async (req, res) => {
+  try {
+    const { id } = req.param;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const formGaji = req.body;
+    const riwayatGaji = new RiwayatGaji({
+      ...formGaji,
+    });
+
+    const savedGaji = await riwayatGaji.save();
+
+    dataGtk.gaji_id.push(savedGaji._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Riwayat Gaji",
+      riwayat_gaji: savedGaji,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Riwayat Gaji",
+    });
+  }
+};
+
+export const createInpassing = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const formInpassing = req.body;
+    const inpassing = new Inpassing({
+      ...formInpassing,
+    });
+
+    const savedInpassing = await inpassing.save();
+
+    dataGtk.inpassing_id.push(savedInpassing._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Inpassing",
+      inpassing: savedInpassing,
+    });
+  } catch (error) {
+    console.log(erro.massage);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Inpassing",
+    });
+  }
+};
+
+export const createTunjangan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataGtk = await Gtk.findById(id);
+    if (!dataGtk) {
+      console.log(dataGtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    const formTunjangan = req.body;
+    const tunjangan = new Tunjangan({
+      ...formTunjangan,
+    });
+
+    const savedTunjangan = await tunjangan.save();
+
+    dataGtk.tunjangan_id.push(savedTunjangan._id);
+    await dataGtk.save();
+
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data Tunjangan",
+      tunjangan: savedTunjangan,
+    });
+  } catch (error) {
+    console.log(error.massage);
+    res.status(404).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data Tunjangan",
     });
   }
 };
@@ -334,9 +529,20 @@ export const getData = async (req, res) => {
         { path: "sertifikasi_id", model: "Sertifikasi" },
         { path: "diklat_id", model: "Diklat" },
         { path: "penugasan_id", model: "Penugasan" },
+        { path: "tugas_tambahan_id", model: "TugasTambahan" },
+        { path: "penghargaan_id", model: "Penghargaan" },
+        { path: "jabatan_id", model: "RiwayatJabatan" },
+        { path: "gaji_id", model: "RiwayatGaji" },
+        { path: "inpassing_id", model: "Inpassing" },
+        { path: "tunjangan_id", model: "Tunjangan" },
       ])
       .lean();
-
+    if (!gtk) {
+      console.log(gtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
     res.status(200).json({
       message: "Success",
       datas: gtk,

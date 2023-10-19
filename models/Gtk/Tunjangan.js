@@ -14,9 +14,10 @@ const tunjanganSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    sk_tunjangan: {
+    no_sk: {
       type: String,
       required: true,
+      unique: true,
     },
     tanggal_sk: {
       type: String,
@@ -42,8 +43,8 @@ const tunjanganSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    status: {
-      type: String,
+    masih_menerima: {
+      type: Boolean,
       required: true,
     },
   },
