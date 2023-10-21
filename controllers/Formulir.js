@@ -151,7 +151,31 @@ export const studentCreate = async (req, res) => {
 
     const nama_rombel = rombelData.nama_rombel;
 
-    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp, tb, bb, gol_darah } = req.body;
+    const {
+      nama,
+      jk,
+      nisn,
+      nik,
+      no_kk,
+      tempat_lahir,
+      no_akta,
+      agama,
+      kewarganegaraan,
+      alamat,
+      rt,
+      rw,
+      nama_dusun,
+      kecamatan,
+      kode_pos,
+      transportasi,
+      anak_ke,
+      tinggal_bersama,
+      email,
+      no_telp,
+      tb,
+      bb,
+      gol_darah,
+    } = req.body;
 
     const date = new Date();
     const tanggal_lahir = date.setHours(date.getHours() + 7);
@@ -190,7 +214,23 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
+    const {
+      nama_ayah,
+      nik_ayah,
+      pendidikan_ayah,
+      pekerjaan_ayah,
+      penghasilan_ayah,
+      nama_ibu,
+      nik_ibu,
+      pendidikan_ibu,
+      pekerjaan_ibu,
+      penghasilan_ibu,
+      nama_wali,
+      nik_wali,
+      pendidikan_wali,
+      pekerjaan_wali,
+      penghasilan_wali,
+    } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
@@ -239,10 +279,10 @@ export const reaData = async (req, res) => {
           { path: "rayon_id", model: "Rayon" },
         ],
       })
-      .populate({
-        path: "guru_id",
-        model: "Gtk",
-      })
+      // .populate({
+      //   path: "guru_id",
+      //   model: "Gtk",
+      // })
       .lean();
 
     const result = families.map((family) => {
@@ -348,7 +388,9 @@ export const delData = async (req, res) => {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    const deletedStudent = await Student.findByIdAndDelete(deletedFamily.student_id);
+    const deletedStudent = await Student.findByIdAndDelete(
+      deletedFamily.student_id
+    );
 
     if (!deletedStudent) {
       return res.status(404).json({ message: "Student data not found" });

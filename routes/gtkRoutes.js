@@ -24,6 +24,7 @@ import {
   createTunjangan,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
+import { isGuru } from "../middleware/isGuru.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 
 const routes = express.Router();
@@ -34,28 +35,28 @@ routes.get("/jenis-ptk", isAdmin, getJenis);
 routes.get("/gtk", isAdmin, getData);
 routes.post("/gtk", isAdmin, createGtk);
 
-routes.post("/status-pegawai", createStatus);
-routes.post("/jenis-ptk", createJenis);
+routes.post("/status-pegawai", isGuru, createStatus);
+routes.post("/jenis-ptk", isGuru, createJenis);
 
-routes.put("/anak/:id", updateDataAnak);
+routes.put("/anak/:id", isAdmin, updateDataAnak);
 
-routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
-routes.post("/tambah-anak/:id", appendDataAnak);
+routes.post("/tambahPendidikan/:id", isGuru, tambahDataPendidikan);
+routes.post("/tambah-anak/:id", isGuru, appendDataAnak);
 
-routes.post("/anak/:id", createAnak);
-routes.post("/sertifikasi/:id", createSertifikasi);
-routes.post("/kepegawaian/:id", createKepegawaian);
-routes.post("/pendidikan/:id", createPendidikan);
-routes.post("/beasiswa/:id", createBeasiswa);
-routes.post("/diklat/:id", createDiklat);
-routes.post("/penugasan/:id", createPenugasan);
-routes.post("/tugas/:id", createTugas);
-routes.post("/penghargaan/:id", createPenghargaan);
-routes.post("/jabatan/:id", createJabatan);
-routes.post("/gaji/:id", createGaji);
-routes.post("/inpasssing/:id", createInpassing);
-routes.post("/tunjangan/:id", createTunjangan);
+routes.post("/anak/:id", isGuru, createAnak);
+routes.post("/sertifikasi/:id", isGuru, createSertifikasi);
+routes.post("/kepegawaian/:id", isGuru, createKepegawaian);
+routes.post("/pendidikan/:id", isGuru, createPendidikan);
+routes.post("/beasiswa/:id", isGuru, createBeasiswa);
+routes.post("/diklat/:id", isGuru, createDiklat);
+routes.post("/penugasan/:id", isGuru, createPenugasan);
+routes.post("/tugas/:id", isGuru, createTugas);
+routes.post("/penghargaan/:id", isGuru, createPenghargaan);
+routes.post("/jabatan/:id", isGuru, createJabatan);
+routes.post("/gaji/:id", isGuru, createGaji);
+routes.post("/inpasssing/:id", isGuru, createInpassing);
+routes.post("/tunjangan/:id", isGuru, createTunjangan);
 
-routes.post("/csv", importCsv);
+routes.post("/csv", isAdmin, importCsv);
 
 export default routes;
