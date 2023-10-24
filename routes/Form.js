@@ -11,11 +11,11 @@ import {
 } from "../controllers/Formulir.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { isMurid } from "../middleware/isMurid.js";
-// import { isLogin } from "../middleware/isLogin.js";
+import { isLogin } from "../middleware/isLogin.js";
 import express from "express";
 
 const routes = express.Router();
-// routes.use(isLogin);
+routes.use(isLogin);
 routes.post("/rayon", isMurid, isRayon);
 routes.post("/rombel", isMurid, isRombel);
 routes.post("/create", isMurid, studentCreate);
