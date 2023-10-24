@@ -2,7 +2,7 @@ import User from "../models/User.js";
 
 export const isLogin = async (req, res, next) => {
   try {
-    const userId = req.session.userId;
+    const userId = req.session;
 
     if (!userId) {
       const err = new Error("Not authorized! Go back!");
