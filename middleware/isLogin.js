@@ -3,15 +3,15 @@ import User from "../models/User.js";
 
 export const isLogin = async (req, res, next) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const accessToken = req.cookies.accessToken;
 
-    if (!refreshToken) {
+    if (!accessToken) {
       return res
         .status(401)
-        .json({ message: "Anda harus login atau daftar terlebih dahulu." });
+        .json({ message: "Anda harus login terlebih dahulu." });
     }
 
-    const decoded = jwt.verify(refreshToken, "RefreshToken");
+    const decoded = jwt.verify(accessToken, "AccessToken");
     const user = await User.findById(decoded.userId);
 
     if (!user) {
