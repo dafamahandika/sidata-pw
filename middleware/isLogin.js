@@ -11,21 +11,24 @@ export const isLogin = async (req, res, next) => {
         .json({ message: "Anda harus login terlebih dahulu." });
     }
 
-    const decoded = jwt.verify(accessToken, "AccessToken");
-    const user = await User.findById(decoded.userId);
+    jwt.verify(accessToken, "AccessTokenSecret", async (err, decoded) => {
+      if (err) {
+        return res
+          .status(401)
+          .json({ message: "Token akses tidak valid atau kedaluwarsa." });
+      }
 
-    if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Anda harus login terlebih dahulu." });
-    }
+      const user = await User.findById(decoded.userId);
 
-    if (user.hasAccount) {
+      if (!user) {
+        return res
+          .status(401)
+          .json({ message: "Anda harus login terlebih dahulu." });
+      }
+
       req.user = user;
       next();
-    } else {
-      return res.status(401).json({ message: "Anda belum memiliki akun." });
-    }
+    });
   } catch (error) {
     console.error(error);
     res
