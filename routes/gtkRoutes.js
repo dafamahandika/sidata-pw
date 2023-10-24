@@ -26,10 +26,8 @@ import {
 import { importCsv } from "../controllers/csvController.js";
 import { isGuru } from "../middleware/isGuru.js";
 import { isAdmin } from "../middleware/isAdmin.js";
-import { isLogin } from "../middleware/isLogin.js";
 
 const routes = express.Router();
-routes.use(isLogin);
 routes.get("/status-kepeg", isAdmin, getStatus);
 routes.get("/jenis-ptk", isAdmin, getJenis);
 
