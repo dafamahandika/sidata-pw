@@ -58,24 +58,33 @@ export const refreshToken = async (req, res) => {
       return res.sendStatus(401);
     }
 
-    jwt.verify(refreshToken, "RefreshToken", (err, decoded) => {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
       if (err) {
         console.log(err);
-        return res.status(403).json({ message: "Invalid token" });
+        return res.status(403).json({ message: "Token refresh tidak valid" });
       }
 
       const userId = decoded.userId;
       const userName = decoded.userName;
       const userEmail = decoded.userEmail;
-      const token = jwt.sign({ userId, userName, userEmail }, "Berchanda", {
-        expiresIn: "3h",
-      });
 
-      res.json({ token });
+      const accessToken = jwt.sign(
+        { userId, userName, userEmail },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
+      });
+      res.json({ message: "Token akses berhasil diperbarui" });
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Terjadi kesalahan server" });
   }
 };
 

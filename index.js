@@ -8,9 +8,13 @@ import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
 import cookieParser from "cookie-parser";
+// import config from "dotenv";
 const port = process.env.PORT || 3000;
 
 const app = express();
+
+// const accessTokenSecret = process.env.TOKEN_KEY;
+// const refreshTokenSecret = process.env.REFRESH_TOKEN;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,17 +29,17 @@ app.use(createJenis);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-//   if (req.method === "OPTIONS") {
-//     res.sendStatus(200);
-//   } else {
-//     next();
-//   }
-// });
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 db.on("error", (err) => {
   console.log(err);
