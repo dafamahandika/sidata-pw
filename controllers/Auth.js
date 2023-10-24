@@ -25,26 +25,36 @@ export const Login = async (req, res) => {
     const userEmail = user.email;
     const userName = user.username;
 
-    const token = jwt.sign({ userId: user._id, role: user.role }, "Berchanda", {
-      expiresIn: "3h",
-    });
-
+    // Buat refreshToken
     const refreshToken = jwt.sign(
-      { userId, userEmail, userName },
-      "RefreshToken",
-      {
-        expiresIn: "3h",
-      }
+      { userId, userEmail },
+      process.env.REFRESH_TOKEN,
+      { expiresIn: "7d" }
     );
 
+    // Simpan refreshToken ke database
     await User.updateOne({ _id: userId }, { refreshToken });
 
+    // Buat accessToken
+    const accessToken = jwt.sign(
+      { userId, userName, userEmail },
+      process.env.TOKEN_KEY,
+      { expiresIn: "1h" }
+    );
+
+    // Set refreshToken dalam cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ token, user });
+    // Set accessToken dalam cookie
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ token: accessToken, user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
