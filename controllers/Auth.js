@@ -25,39 +25,29 @@ export const Login = async (req, res) => {
     const userEmail = user.email;
     const userName = user.username;
 
-    // Buat refreshToken
+    const token = jwt.sign({ userId: user._id, role: user.role }, "Berchanda", {
+      expiresIn: "1h",
+    });
+
     const refreshToken = jwt.sign(
-      { userId, userEmail },
-      process.env.REFRESH_TOKEN,
-      { expiresIn: "7d" }
+      { userId, userEmail, userName },
+      "RefreshToken",
+      {
+        expiresIn: "1h",
+      }
     );
 
-    // Simpan refreshToken ke database
     await User.updateOne({ _id: userId }, { refreshToken });
 
-    // Buat accessToken
-    const accessToken = jwt.sign(
-      { userId, userName, userEmail },
-      process.env.TOKEN_KEY,
-      { expiresIn: "1h" }
-    );
-
-    // Set refreshToken dalam cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // Set accessToken dalam cookie
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 1000,
-    });
-
-    res.status(200).json({ token: accessToken, user });
+    res.status(200).json({ token, user });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -68,33 +58,28 @@ export const refreshToken = async (req, res) => {
       return res.sendStatus(401);
     }
 
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
+    jwt.verify(refreshToken, "RefreshToken", (err, decoded) => {
       if (err) {
         console.log(err);
-        return res.status(403).json({ message: "Token refresh tidak valid" });
+        return res.status(403).json({ message: "Invalid token" });
       }
 
       const userId = decoded.userId;
       const userName = decoded.userName;
       const userEmail = decoded.userEmail;
-
-      const accessToken = jwt.sign(
+      const token = jwt.sign(
         { userId, userName, userEmail },
-        process.env.TOKEN_KEY,
+        process.env.REFRESH_TOKEN,
         {
           expiresIn: "1h",
         }
       );
 
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        maxAge: 60 * 60 * 1000,
-      });
-      res.json({ message: "Token akses berhasil diperbarui" });
+      res.json({ token });
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Terjadi kesalahan server" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
