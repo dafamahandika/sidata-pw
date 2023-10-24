@@ -20,8 +20,12 @@ export const isLogin = async (req, res, next) => {
         .json({ message: "Anda harus login terlebih dahulu." });
     }
 
-    req.user = user;
-    next();
+    if (user.hasAccount) {
+      req.user = user;
+      next();
+    } else {
+      return res.status(401).json({ message: "Anda belum memiliki akun." });
+    }
   } catch (error) {
     console.error(error);
     res
