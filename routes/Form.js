@@ -9,21 +9,21 @@ import {
   delData,
   getOnlyGty,
 } from "../controllers/Formulir.js";
-import { isAdmin } from "../middleware/isAdmin.js";
-import { isMurid } from "../middleware/isMurid.js";
+// import { isAdmin } from "../middleware/isAdmin.js";
+// import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
 import express from "express";
 
 const routes = express.Router();
 // routes.use(isLogin);
-routes.post("/rayon", isMurid, isRayon);
-routes.post("/rombel", isMurid, isRombel);
-routes.post("/create", isMurid, studentCreate);
-routes.get("/get", isAdmin, reaData);
-routes.put("/update/:id", isAdmin, updateData);
-routes.delete("/delete/:id", isAdmin, delData);
+routes.post("/rayon", isRayon);
+routes.post("/rombel", isRombel);
+routes.post("/create", studentCreate);
+routes.get("/get", reaData);
+routes.put("/update/:id", updateData);
+routes.delete("/delete/:id", delData);
 
-routes.get("/rayon", isAdmin, getRayon);
-routes.get("/rombel", isAdmin, getRombel);
-routes.get("/gty", isAdmin, getOnlyGty);
+routes.get("/rayon", getRayon);
+routes.get("/rombel", getRombel);
+routes.get("/gty", getOnlyGty);
 export default routes;
