@@ -2,7 +2,7 @@ import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
-import Gtk from "../models/Gtk/Gtk.js";
+// import Gtk from "../models/Gtk/Gtk.js";
 
 export const isRayon = async (req, res) => {
   try {

@@ -6,7 +6,6 @@ import {
   createJenis,
   getStatus,
   getJenis,
-  updateDataAnak,
   tambahDataPendidikan,
   appendDataAnak,
   createKepegawaian,
@@ -36,8 +35,6 @@ routes.post("/gtk", isAdmin, createGtk);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
-
-routes.put("/anak/:id", updateDataAnak);
 
 routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
 routes.post("/tambah-anak/:id", appendDataAnak);

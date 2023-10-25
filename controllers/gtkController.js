@@ -52,6 +52,48 @@ export const createAnak = async (req, res) => {
   }
 };
 
+export const updateAnak = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateAnak = req.body;
+    const updateAnak = await Anak.findByIdAndUpdate(id, formUpdateAnak, {
+      new: true,
+    });
+    if (!updateAnak) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Berhasil Mengubah Data Anak",
+      update_anak: updateAnak,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Anak",
+    });
+  }
+};
+
+export const deleteAnak = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedAnak = await Anak.findByIdAndDelete(id);
+
+    if (!deletedAnak) {
+      console.log(deletedAnak);
+      return res.status(404).json({
+        message: "Data Anak Not Found",
+      });
+    } 
+
+    const deleteAnakId = await Gtk.findByIdAndDelete(deleteAnak.anak_id);
+  } catch (error) {}
+};
+
 export const createBeasiswa = async (req, res) => {
   try {
     const { id } = req.params;
@@ -672,28 +714,6 @@ export const createJenis = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: error.message,
-    });
-  }
-};
-
-export const updateDataAnak = async function (req, res) {
-  try {
-    const { id } = req.params;
-    const updateDataAnak = req.body;
-    const isUpdate = await Anak.findByIdAndUpdate(id, updateDataAnak, {
-      new: true,
-    });
-    if (!isUpdate) {
-      return res.status(404).json({ massage: "Data Tidak Ditemukan" });
-    }
-    return res.status(200).json({
-      message: "Success",
-      isUpdate,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Error",
     });
   }
 };
