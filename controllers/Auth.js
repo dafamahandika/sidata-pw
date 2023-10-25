@@ -25,13 +25,17 @@ export const Login = async (req, res) => {
     const userEmail = user.email;
     const userName = user.username;
 
-    const token = jwt.sign({ userId: user._id, role: user.role }, "Berchanda", {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     const refreshToken = jwt.sign(
       { userId, userEmail, userName },
-      "RefreshToken",
+      process.env.REFRESH_TOKEN,
       {
         expiresIn: "1h",
       }
@@ -58,7 +62,7 @@ export const refreshToken = async (req, res) => {
       return res.sendStatus(401);
     }
 
-    jwt.verify(refreshToken, "RefreshToken", (err, decoded) => {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
       if (err) {
         console.log(err);
         return res.status(403).json({ message: "Invalid token" });

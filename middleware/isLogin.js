@@ -8,10 +8,10 @@ export const isLogin = async (req, res, next) => {
     if (!refreshToken) {
       return res
         .status(401)
-        .json({ message: "Anda harus login atau daftar terlebih dahulu." });
+        .json({ message: "Anda harus login terlebih dahulu." });
     }
 
-    const decoded = jwt.verify(refreshToken, "RefreshToken");
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
     const user = await User.findById(decoded.userId);
 
     if (!user) {
@@ -19,7 +19,6 @@ export const isLogin = async (req, res, next) => {
         .status(401)
         .json({ message: "Anda harus login terlebih dahulu." });
     }
-
     req.user = user;
     next();
   } catch (error) {
