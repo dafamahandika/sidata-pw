@@ -48,6 +48,48 @@ export const getRayon = async (req, res) => {
   }
 };
 
+export const updateRayon = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateDataRayon = req.body;
+    const result = await Rayon.findByIdAndUpdate(id, updateDataRayon, {
+      new: true,
+    });
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
+  }
+};
+
+export const deleteRayon = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await Rayon.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
+  }
+};
+
 export const isRombel = async (req, res) => {
   try {
     const { nama_rombel, tingkat, tahun_ajaran } = req.body;
@@ -64,6 +106,48 @@ export const isRombel = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "error" });
+  }
+};
+
+export const updateRombel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateDataRombel = req.body;
+    const result = await Rombel.findByIdAndUpdate(id, updateDataRombel, {
+      new: true,
+    });
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
+  }
+};
+
+export const deleteRombel = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await Rombel.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
   }
 };
 

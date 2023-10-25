@@ -8,6 +8,10 @@ import {
   updateData,
   delData,
   getOnlyGty,
+  updateRayon,
+  deleteRayon,
+  updateRombel,
+  deleteRombel,
 } from "../controllers/Formulir.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
@@ -24,6 +28,10 @@ routes.put("/update/:id", updateData);
 routes.delete("/delete/:id", delData);
 
 routes.get("/rayon", getRayon);
+routes.put("/update-rayon/:id", updateRayon);
+routes.delete("/delete-rayon/:id", deleteRayon);
 routes.get("/rombel", getRombel);
+routes.put("/update-rombel/:id", updateRombel);
+routes.delete("/delete-rombel/:id", deleteRombel);
 routes.get("/gty", getOnlyGty);
 export default routes;
