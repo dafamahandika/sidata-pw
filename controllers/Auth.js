@@ -41,7 +41,7 @@ export const Login = async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({ token, user });
@@ -67,9 +67,13 @@ export const refreshToken = async (req, res) => {
       const userId = decoded.userId;
       const userName = decoded.userName;
       const userEmail = decoded.userEmail;
-      const token = jwt.sign({ userId, userName, userEmail }, "Berchanda", {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId, userName, userEmail },
+        process.env.REFRESH_TOKEN,
+        {
+          expiresIn: "1h",
+        }
+      );
 
       res.json({ token });
     });

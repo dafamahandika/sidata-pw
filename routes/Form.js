@@ -1,18 +1,37 @@
-import { getRayon, getRombel, isRayon, isRombel, studentCreate, reaData, updateData, delData, getOnlyGty } from "../controllers/Formulir.js";
-import { isAdmin } from "../middleware/isAdmin.js";
-import { isGuru } from "../middleware/isGuru.js";
-import { isMurid } from "../middleware/isMurid.js";
+import {
+  getRayon,
+  getRombel,
+  isRayon,
+  isRombel,
+  studentCreate,
+  reaData,
+  updateData,
+  delData,
+  getOnlyGty,
+  updateRayon,
+  deleteRayon,
+  updateRombel,
+  deleteRombel,
+} from "../controllers/Formulir.js";
+// import { isAdmin } from "../middleware/isAdmin.js";
+// import { isMurid } from "../middleware/isMurid.js";
+// import { isLogin } from "../middleware/isLogin.js";
 import express from "express";
 
 const routes = express.Router();
-routes.post("/rayon", isMurid, isGuru, isAdmin, isRayon);
-routes.post("/rombel", isAdmin, isRombel);
-routes.post("/create", isAdmin, studentCreate);
-routes.get("/get", isAdmin, reaData);
-routes.put("/update/:id", isAdmin, updateData);
-routes.delete("/delete/:id", isAdmin, delData);
+// routes.use(isLogin);
+routes.post("/rayon", isRayon);
+routes.post("/rombel", isRombel);
+routes.post("/create", studentCreate);
+routes.get("/get", reaData);
+routes.put("/update/:id", updateData);
+routes.delete("/delete/:id", delData);
 
-routes.get("/rayon", isAdmin, getRayon);
-routes.get("/rombel", isAdmin, getRombel);
-routes.get("/gty", isAdmin, getOnlyGty);
+routes.get("/rayon", getRayon);
+routes.put("/update-rayon/:id", updateRayon);
+routes.delete("/delete-rayon/:id", deleteRayon);
+routes.get("/rombel", getRombel);
+routes.put("/update-rombel/:id", updateRombel);
+routes.delete("/delete-rombel/:id", deleteRombel);
+routes.get("/gty", getOnlyGty);
 export default routes;

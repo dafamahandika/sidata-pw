@@ -23,15 +23,17 @@ import {
   createTunjangan,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
-import { isAdmin } from "../middleware/isAdmin.js";
+// import { isGuru } from "../middleware/isGuru.js";
+// import { isAdmin } from "../middleware/isAdmin.js";
+// import { isLogin } from "../middleware/isLogin.js";
 
 const routes = express.Router();
+// routes.use(isLogin);
+routes.get("/status-kepeg", getStatus);
+routes.get("/jenis-ptk", getJenis);
 
-routes.get("/status-kepeg", isAdmin, getStatus);
-routes.get("/jenis-ptk", isAdmin, getJenis);
-
-routes.get("/gtk", isAdmin, getData);
-routes.post("/gtk", isAdmin, createGtk);
+routes.get("/gtk", getData);
+routes.post("/gtk", createGtk);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);

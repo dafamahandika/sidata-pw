@@ -48,6 +48,48 @@ export const getRayon = async (req, res) => {
   }
 };
 
+export const updateRayon = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateDataRayon = req.body;
+    const result = await Rayon.findByIdAndUpdate(id, updateDataRayon, {
+      new: true,
+    });
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
+  }
+};
+
+export const deleteRayon = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await Rayon.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
+  }
+};
+
 export const isRombel = async (req, res) => {
   try {
     const { nama_rombel, tingkat, tahun_ajaran } = req.body;
@@ -64,6 +106,48 @@ export const isRombel = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ massage: "error" });
+  }
+};
+
+export const updateRombel = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateDataRombel = req.body;
+    const result = await Rombel.findByIdAndUpdate(id, updateDataRombel, {
+      new: true,
+    });
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
+  }
+};
+
+export const deleteRombel = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await Rombel.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed", error: error });
   }
 };
 
@@ -151,7 +235,31 @@ export const studentCreate = async (req, res) => {
 
     const nama_rombel = rombelData.nama_rombel;
 
-    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp, tb, bb, gol_darah } = req.body;
+    const {
+      nama,
+      jk,
+      nisn,
+      nik,
+      no_kk,
+      tempat_lahir,
+      no_akta,
+      agama,
+      kewarganegaraan,
+      alamat,
+      rt,
+      rw,
+      nama_dusun,
+      kecamatan,
+      kode_pos,
+      transportasi,
+      anak_ke,
+      tinggal_bersama,
+      email,
+      no_telp,
+      tb,
+      bb,
+      gol_darah,
+    } = req.body;
 
     const date = new Date();
     const tanggal_lahir = date.setHours(date.getHours() + 7);
@@ -190,7 +298,23 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
+    const {
+      nama_ayah,
+      nik_ayah,
+      pendidikan_ayah,
+      pekerjaan_ayah,
+      penghasilan_ayah,
+      nama_ibu,
+      nik_ibu,
+      pendidikan_ibu,
+      pekerjaan_ibu,
+      penghasilan_ibu,
+      nama_wali,
+      nik_wali,
+      pendidikan_wali,
+      pekerjaan_wali,
+      penghasilan_wali,
+    } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
@@ -239,10 +363,10 @@ export const reaData = async (req, res) => {
           { path: "rayon_id", model: "Rayon" },
         ],
       })
-      .populate({
-        path: "guru_id",
-        model: "Gtk",
-      })
+      // .populate({
+      //   path: "guru_id",
+      //   model: "Gtk",
+      // })
       .lean();
 
     const result = families.map((family) => {
@@ -348,7 +472,9 @@ export const delData = async (req, res) => {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    const deletedStudent = await Student.findByIdAndDelete(deletedFamily.student_id);
+    const deletedStudent = await Student.findByIdAndDelete(
+      deletedFamily.student_id
+    );
 
     if (!deletedStudent) {
       return res.status(404).json({ message: "Student data not found" });
