@@ -11,7 +11,7 @@ export const isLogin = async (req, res, next) => {
         .json({ message: "Anda harus login terlebih dahulu." });
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+    const decoded = jwt.verify(refreshToken, "sidatawikrama");
     const user = await User.findById(decoded.userId);
 
     if (!user) {
