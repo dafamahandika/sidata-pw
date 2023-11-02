@@ -10,6 +10,7 @@ import {
   appendDataAnak,
   createKepegawaian,
   createAnak,
+  deleteAnak,
   createPendidikan,
   createBeasiswa,
   createSertifikasi,
@@ -42,6 +43,8 @@ routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
 routes.post("/tambah-anak/:id", appendDataAnak);
 
 routes.post("/anak/:id", createAnak);
+routes.delete("/anak/:id", deleteAnak);
+
 routes.post("/sertifikasi/:id", createSertifikasi);
 routes.post("/kepegawaian/:id", createKepegawaian);
 routes.post("/pendidikan/:id", createPendidikan);

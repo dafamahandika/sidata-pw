@@ -100,7 +100,7 @@ export const isRombel = async (req, res) => {
       tahun_ajaran: tahun_ajaran,
     });
 
-    const saveRombel = await rombel.save();
+        const saveRombel = await rombel.save();
 
     res.status(200).json({ massage: "success", saveRombel });
   } catch (error) {
