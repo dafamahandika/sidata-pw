@@ -261,8 +261,8 @@ export const studentCreate = async (req, res) => {
       gol_darah,
     } = req.body;
 
-    const date = new Date();
-    const tanggal_lahir = date.setHours(date.getHours() + 7);
+    const date = req.body.tanggal_lahir;
+    const resultDate = new Date(date);
 
     const newForm = new Student({
       rayon_id: rayonId,
@@ -273,7 +273,7 @@ export const studentCreate = async (req, res) => {
       nik: nik,
       no_kk: no_kk,
       tempat_lahir: tempat_lahir,
-      tanggal_lahir: tanggal_lahir,
+      tanggal_lahir: resultDate,
       no_akta: no_akta,
       agama: agama,
       kewarganegaraan: kewarganegaraan,
