@@ -16,6 +16,7 @@
     "body-parse": "^0.1.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "csv-parse": "^5.5.2",
     "csv-parser": "^3.0.0",
     "csvjson": "^5.1.0",
