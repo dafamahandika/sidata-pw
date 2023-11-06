@@ -6,11 +6,11 @@ import {
   createJenis,
   getStatus,
   getJenis,
-  updateDataAnak,
   tambahDataPendidikan,
   appendDataAnak,
   createKepegawaian,
   createAnak,
+  deleteAnak,
   createPendidikan,
   createBeasiswa,
   createSertifikasi,
@@ -39,12 +39,12 @@ routes.post("/gtk", createGtk);
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
 
-routes.put("/anak/:id", updateDataAnak);
-
 routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
 routes.post("/tambah-anak/:id", appendDataAnak);
 
 routes.post("/anak/:id", createAnak);
+routes.delete("/anak/:id", deleteAnak);
+
 routes.post("/sertifikasi/:id", createSertifikasi);
 routes.post("/kepegawaian/:id", createKepegawaian);
 routes.post("/pendidikan/:id", createPendidikan);

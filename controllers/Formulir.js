@@ -2,7 +2,7 @@ import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
-import Gtk from "../models/Gtk/Gtk.js";
+// import Gtk from "../models/Gtk/Gtk.js";
 
 export const isRayon = async (req, res) => {
   try {
@@ -100,7 +100,7 @@ export const isRombel = async (req, res) => {
       tahun_ajaran: tahun_ajaran,
     });
 
-    const saveRombel = await rombel.save();
+        const saveRombel = await rombel.save();
 
     res.status(200).json({ massage: "success", saveRombel });
   } catch (error) {
@@ -261,8 +261,8 @@ export const studentCreate = async (req, res) => {
       gol_darah,
     } = req.body;
 
-    const date = new Date();
-    const tanggal_lahir = date.setHours(date.getHours() + 7);
+    const date = req.body.tanggal_lahir;
+    const resultDate = new Date(date);
 
     const newForm = new Student({
       rayon_id: rayonId,
@@ -273,7 +273,7 @@ export const studentCreate = async (req, res) => {
       nik: nik,
       no_kk: no_kk,
       tempat_lahir: tempat_lahir,
-      tanggal_lahir: tanggal_lahir,
+      tanggal_lahir: resultDate,
       no_akta: no_akta,
       agama: agama,
       kewarganegaraan: kewarganegaraan,
