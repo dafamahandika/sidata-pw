@@ -2,26 +2,42 @@ import Family from "../models/Student/Family.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
-// import Gtk from "../models/Gtk/Gtk.js";
+import User from "../models/User.js";
+import argon2 from "argon2";
 
-export const isRayon = async (req, res) => {
+export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, ruang_rayon } = req.body;
+    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
 
     const rayon = new Rayon({
       nama_rayon: nama_rayon,
-      ruang_rayon: ruang_rayon,
+      nama_pembimbing: nama_pembimbing,
     });
 
-    const saveRayon = await rayon.save();
+    const savedRayon = await rayon.save();
+
+    const hashedPassword = await argon2.hash(password);
+
+    const accPembimbing = new User({
+      username: username,
+      email: email_pembimbing,
+      password: hashedPassword,
+      role: "guru",
+    });
+
+    const savedAccPemb = await accPembimbing.save();
 
     res.status(200).json({
       massage: "success",
-      saveRayon,
+      rayon: savedRayon,
+      acc: savedAccPemb._id,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ massage: "error" });
+    res.status(500).json({
+      error: error.message,
+      massage: "Error",
+    });
   }
 };
 
@@ -50,14 +66,14 @@ export const getRayon = async (req, res) => {
 
 export const updateRayon = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params;
     const updateDataRayon = req.body;
     const result = await Rayon.findByIdAndUpdate(id, updateDataRayon, {
       new: true,
     });
 
     if (!result) {
-      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+      return res.status(404).json({ message: "Data Not Found" });
     }
 
     return res.status(200).json({
@@ -72,12 +88,12 @@ export const updateRayon = async (req, res) => {
 
 export const deleteRayon = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params;
 
     const result = await Rayon.findByIdAndDelete(id);
 
     if (!result) {
-      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+      return res.status(404).json({ message: "Data Not Found" });
     }
 
     return res.status(200).json({
@@ -90,35 +106,39 @@ export const deleteRayon = async (req, res) => {
   }
 };
 
-export const isRombel = async (req, res) => {
+export const createRombel = async (req, res) => {
   try {
-    const { nama_rombel, tingkat, tahun_ajaran } = req.body;
+    const nama_rombel = req.body;
 
     const rombel = new Rombel({
-      nama_rombel: nama_rombel,
-      tingkat: tingkat,
-      tahun_ajaran: tahun_ajaran,
+      ...nama_rombel,
     });
 
-        const saveRombel = await rombel.save();
+    const saveRombel = await rombel.save();
 
-    res.status(200).json({ massage: "success", saveRombel });
+    res.status(200).json({
+      massage: "success",
+      saveRombel,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ massage: "error" });
+    res.status(500).json({
+      error: error,
+      massage: "Error",
+    });
   }
 };
 
 export const updateRombel = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params;
     const updateDataRombel = req.body;
     const result = await Rombel.findByIdAndUpdate(id, updateDataRombel, {
       new: true,
     });
 
     if (!result) {
-      return res.status(404).json({ message: "Data Tidak Ditemukan" });
+      return res.status(404).json({ message: "Data Not Found" });
     }
 
     return res.status(200).json({
@@ -174,33 +194,40 @@ export const getRombel = async (req, res) => {
   }
 };
 
-export const getOnlyGty = async (req, res) => {
+export const createStudent = async (req, res) => {
   try {
-    const dataGtk = await Gtk.find().populate({
-      path: "kepegawaian_id",
-      model: "Kepegawaian",
+    const { username, password, email, nama, rombel, rayon, nis, jk } = req.body;
+
+    const hashedPassword = await argon2.hash(password);
+
+    const student = new Student({
+      nama: nama,
+      rombel: rombel,
+      rayon: rayon,
+      nis: nis,
+      jk: jk,
     });
 
-    const onlyGty = dataGtk.find({
-      status_kepegawaian: "GTY/PTY ",
+    const savedStudent = await student.save();
+
+    const user = new User({
+      username: username,
+      password: hashedPassword,
+      email: email,
     });
 
-    if (!onlyGty) {
-      console.log(onlyGty);
-      return res.status(404).json({
-        message: "Data onlyGty Not Found",
-      });
-    }
+    const savedUser = await user.save();
 
     res.status(200).json({
-      message: "Get Data onlyGty Success ",
-      only_gty: onlyGty,
+      message: "Berhasil Menambahkan Data Student",
+      student: savedStudent,
+      user: savedUser,
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({
+    res.status(500).json({
       error: error.message,
-      message: "Get Data onlyGty Failed",
+      message: "Gagal Menambahkan Data Student",
     });
   }
 };
@@ -235,31 +262,7 @@ export const studentCreate = async (req, res) => {
 
     const nama_rombel = rombelData.nama_rombel;
 
-    const {
-      nama,
-      jk,
-      nisn,
-      nik,
-      no_kk,
-      tempat_lahir,
-      no_akta,
-      agama,
-      kewarganegaraan,
-      alamat,
-      rt,
-      rw,
-      nama_dusun,
-      kecamatan,
-      kode_pos,
-      transportasi,
-      anak_ke,
-      tinggal_bersama,
-      email,
-      no_telp,
-      tb,
-      bb,
-      gol_darah,
-    } = req.body;
+    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp, tb, bb, gol_darah } = req.body;
 
     const date = req.body.tanggal_lahir;
     const resultDate = new Date(date);
@@ -298,23 +301,7 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const {
-      nama_ayah,
-      nik_ayah,
-      pendidikan_ayah,
-      pekerjaan_ayah,
-      penghasilan_ayah,
-      nama_ibu,
-      nik_ibu,
-      pendidikan_ibu,
-      pekerjaan_ibu,
-      penghasilan_ibu,
-      nama_wali,
-      nik_wali,
-      pendidikan_wali,
-      pekerjaan_wali,
-      penghasilan_wali,
-    } = req.body;
+    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
@@ -348,6 +335,31 @@ export const studentCreate = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: "Gagal" });
+  }
+};
+
+export const searchStudent = async (req, res) => {
+  try {
+    const keyword = req.params;
+    const student = await Student.find({ nama: keyword });
+
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    res.status(200).json({
+      student: student,
+      message: "Berhasil mencari data student",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal mencari data student",
+    });
   }
 };
 
@@ -472,9 +484,7 @@ export const delData = async (req, res) => {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    const deletedStudent = await Student.findByIdAndDelete(
-      deletedFamily.student_id
-    );
+    const deletedStudent = await Student.findByIdAndDelete(deletedFamily.student_id);
 
     if (!deletedStudent) {
       return res.status(404).json({ message: "Student data not found" });

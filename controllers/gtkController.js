@@ -946,11 +946,6 @@ export const getData = async (req, res) => {
         message: "Data GTK Not Found",
       });
     }
-
-    gtk.forEach((data) => {
-      console.log(data.anak_id);
-    });
-
     res.status(201).json({
       message: "Success",
       datas: gtk,

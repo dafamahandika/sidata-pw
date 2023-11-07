@@ -5,16 +5,11 @@ const rayonSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ruang_rayon: {
+  nama_pembimbing: {
     type: String,
     required: true,
   },
 });
 
-rayonSchema.virtual("students", {
-  ref: "Student",
-  localField: "rayon_id",
-  foreignField: "_id",
-});
 const Rayon = mongoose.model("Rayon", rayonSchema);
 export default Rayon;
