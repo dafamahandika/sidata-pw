@@ -87,6 +87,14 @@ const studentSchema = new mongoose.Schema({
     required: true,
     default: null,
   },
+  nama_kota: {
+    type: String,
+    required: true,
+  },
+  provinsi: {
+    type: String,
+    required: true,
+  },
   kode_pos: {
     type: String,
     required: true,

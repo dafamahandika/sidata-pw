@@ -68,13 +68,9 @@ export const refreshToken = async (req, res) => {
       const userId = decoded.userId;
       const userName = decoded.userName;
       const userEmail = decoded.userEmail;
-      const token = jwt.sign(
-        { userId, userName, userEmail },
-        process.env.REFRESH_TOKEN,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const token = jwt.sign({ userId, userName, userEmail }, "sidatawikrama", {
+        expiresIn: "1h",
+      });
 
       res.json({ token });
     });
