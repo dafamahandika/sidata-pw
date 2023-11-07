@@ -66,7 +66,7 @@ export const getRayon = async (req, res) => {
 
 export const updateRayon = async (req, res) => {
   try {
-    const id = req.params;
+    const { id } = req.params;
     const updateDataRayon = req.body;
     const result = await Rayon.findByIdAndUpdate(id, updateDataRayon, {
       new: true,
@@ -82,13 +82,13 @@ export const updateRayon = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed", error: error });
+    res.status(500).json({ message: "Failed", error: error.message });
   }
 };
 
 export const deleteRayon = async (req, res) => {
   try {
-    const id = req.params;
+    const { id } = req.params;
 
     const result = await Rayon.findByIdAndDelete(id);
 
@@ -108,10 +108,10 @@ export const deleteRayon = async (req, res) => {
 
 export const createRombel = async (req, res) => {
   try {
-    const nama_rombel = req.body;
+    const { nama_rombel } = req.body;
 
     const rombel = new Rombel({
-      ...nama_rombel,
+      nama_rombel,
     });
 
     const saveRombel = await rombel.save();
@@ -131,7 +131,7 @@ export const createRombel = async (req, res) => {
 
 export const updateRombel = async (req, res) => {
   try {
-    const id = req.params;
+    const { id } = req.params;
     const updateDataRombel = req.body;
     const result = await Rombel.findByIdAndUpdate(id, updateDataRombel, {
       new: true,
