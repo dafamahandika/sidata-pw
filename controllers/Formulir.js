@@ -100,7 +100,7 @@ export const isRombel = async (req, res) => {
       tahun_ajaran: tahun_ajaran,
     });
 
-        const saveRombel = await rombel.save();
+    const saveRombel = await rombel.save();
 
     res.status(200).json({ massage: "success", saveRombel });
   } catch (error) {
@@ -250,6 +250,8 @@ export const studentCreate = async (req, res) => {
       rw,
       nama_dusun,
       kecamatan,
+      nama_kota,
+      provinsi,
       kode_pos,
       transportasi,
       anak_ke,
@@ -282,6 +284,8 @@ export const studentCreate = async (req, res) => {
       rw: rw,
       nama_dusun: nama_dusun,
       kecamatan: kecamatan,
+      nama_kota: nama_kota,
+      provinsi: provinsi,
       kode_pos: kode_pos,
       transportasi: transportasi,
       anak_ke: anak_ke,
