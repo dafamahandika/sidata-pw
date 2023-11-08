@@ -5,7 +5,7 @@ const documentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  image_smp: {
+  image: {
     type: String,
     required: true,
   },
