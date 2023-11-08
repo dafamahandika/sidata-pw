@@ -3,7 +3,7 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
-import isResult from "../models/Student/docImage.js";
+import Dokumen from "../models/Student/Dokumen.js";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
@@ -111,10 +111,9 @@ export const deleteRayon = async (req, res) => {
     const { id } = req.params;
 
     const rayon = await Rayon.findById(id);
-
     const pembimbing_id = rayon.pembimbing_id;
 
-    const user = await User.findOneAndDelete({ pembimbing_id });
+    const user = await User.findByIdAndDelete(pembimbing_id);
     const result = await Rayon.findByIdAndDelete(id);
 
     if (!result) {
@@ -276,7 +275,12 @@ export const createStudent = async (req, res) => {
 
 export const getStudent = async (req, res) => {
   try {
-    const students = await Student.find().populate({ path: "keluarga_id", model: "Family" }).lean();
+    const students = await Student.find()
+      .populate([
+        { path: "keluarga_id", model: "Family" },
+        { path: "dokumen_id", model: "Dokumen" },
+      ])
+      .lean();
     if (!students) {
       console.log(student);
       return res.status(404).json({
@@ -422,6 +426,8 @@ export const searchStudent = async (req, res) => {
 
 export const uploadImage = async (req, res) => {
   try {
+    const { id } = req.params;
+
     if (!req.file) {
       res.status(500).json({ message: "Error" });
       console.error();
@@ -435,13 +441,22 @@ export const uploadImage = async (req, res) => {
       return;
     }
 
-    const result = new isResult({
+    const result = new Dokumen({
       title: title,
       image: image,
     });
 
     const saveResult = await result.save();
-    res.status(200).json({ massage: "Behasil", data: saveResult });
+
+    const dokumen_id = {
+      dokumen_id: saveResult._id,
+    };
+
+    const student = await Student.findByIdAndUpdate(id, dokumen_id, {
+      new: true,
+    });
+
+    res.status(200).json({ massage: "Behasil", data: saveResult, dokumen_id: student.dokumen_id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });

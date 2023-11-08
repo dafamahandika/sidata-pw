@@ -7,6 +7,11 @@ const studentSchema = new mongoose.Schema(
       default: null,
       ref: "Family",
     },
+    dokumen_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+      ref: "Dokumen",
+    },
     nama: {
       type: String,
       required: true,
