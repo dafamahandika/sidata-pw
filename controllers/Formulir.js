@@ -3,11 +3,18 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
+import isResult from "../models/Student/docImage.js";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      username,
+      password,
+      email_pembimbing,
+    } = req.body;
 
     const rayon = new Rayon({
       nama_rayon: nama_rayon,
@@ -196,7 +203,8 @@ export const getRombel = async (req, res) => {
 
 export const createStudent = async (req, res) => {
   try {
-    const { username, password, email, nama, rombel, rayon, nis, jk } = req.body;
+    const { username, password, email, nama, rombel, rayon, nis, jk } =
+      req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -262,7 +270,31 @@ export const studentCreate = async (req, res) => {
 
     const nama_rombel = rombelData.nama_rombel;
 
-    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp, tb, bb, gol_darah } = req.body;
+    const {
+      nama,
+      jk,
+      nisn,
+      nik,
+      no_kk,
+      tempat_lahir,
+      no_akta,
+      agama,
+      kewarganegaraan,
+      alamat,
+      rt,
+      rw,
+      nama_dusun,
+      kecamatan,
+      kode_pos,
+      transportasi,
+      anak_ke,
+      tinggal_bersama,
+      email,
+      no_telp,
+      tb,
+      bb,
+      gol_darah,
+    } = req.body;
 
     const date = req.body.tanggal_lahir;
     const resultDate = new Date(date);
@@ -305,7 +337,23 @@ export const studentCreate = async (req, res) => {
 
     const savedForm = await newForm.save();
 
-    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
+    const {
+      nama_ayah,
+      nik_ayah,
+      pendidikan_ayah,
+      pekerjaan_ayah,
+      penghasilan_ayah,
+      nama_ibu,
+      nik_ibu,
+      pendidikan_ibu,
+      pekerjaan_ibu,
+      penghasilan_ibu,
+      nama_wali,
+      nik_wali,
+      pendidikan_wali,
+      pekerjaan_wali,
+      penghasilan_wali,
+    } = req.body;
 
     const newFamily = new Family({
       student_id: savedForm._id,
@@ -488,7 +536,9 @@ export const delData = async (req, res) => {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    const deletedStudent = await Student.findByIdAndDelete(deletedFamily.student_id);
+    const deletedStudent = await Student.findByIdAndDelete(
+      deletedFamily.student_id
+    );
 
     if (!deletedStudent) {
       return res.status(404).json({ message: "Student data not found" });
@@ -498,5 +548,33 @@ export const delData = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const uploadImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      res.status(500).json({ message: "Error" });
+      console.error();
+    }
+
+    const title = req.body.title;
+    const image = req.file.path;
+
+    if (!title || !image) {
+      res.status(400).json({ message: "Title and image are required" });
+      return;
+    }
+
+    const result = new isResult({
+      title: title,
+      image: image,
+    });
+
+    const saveResult = await result.save();
+    res.status(200).json({ massage: "Behasil", data: saveResult });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error" });
   }
 };

@@ -8,6 +8,7 @@ import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 const port = process.env.PORT || 3000;
 
 const app = express();
@@ -21,6 +22,25 @@ app.use(
   })
 );
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().getTime() + "-" + file.originalname);
+  },
+});
+const fileFilter = (req, file, cb) => {
+  const allowedMimetypes = ["image/png", "image/jpg", "image/jpeg"];
+  if (allowedMimetypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 app.use(express.json());
 app.use(cookieParser());
 
