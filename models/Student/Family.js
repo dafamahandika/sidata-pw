@@ -89,5 +89,5 @@ const familySchema = new mongoose.Schema(
   }
 );
 
-const family = mongoose.model("Family", familySchema);
-export default family;
+const Family = mongoose.model("Family", familySchema);
+export default Family;
