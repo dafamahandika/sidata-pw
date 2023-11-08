@@ -3,18 +3,11 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
-import argon2 from "argon2";
+import argon2, { hash } from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
     const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
-
-    const rayon = new Rayon({
-      nama_rayon: nama_rayon,
-      nama_pembimbing: nama_pembimbing,
-    });
-
-    const savedRayon = await rayon.save();
 
     const hashedPassword = await argon2.hash(password);
 
@@ -26,6 +19,14 @@ export const createRayon = async (req, res) => {
     });
 
     const savedAccPemb = await accPembimbing.save();
+
+    const rayon = new Rayon({
+      pembimbing_id: savedAccPemb._id,
+      nama_rayon: nama_rayon,
+      nama_pembimbing: nama_pembimbing,
+    });
+
+    const savedRayon = await rayon.save();
 
     res.status(200).json({
       massage: "success",
@@ -43,7 +44,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find();
+    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -67,18 +68,36 @@ export const getRayon = async (req, res) => {
 export const updateRayon = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateDataRayon = req.body;
-    const result = await Rayon.findByIdAndUpdate(id, updateDataRayon, {
+
+    const rayon = await Rayon.findById(id);
+
+    const pembimbing_id = rayon.pembimbing_id;
+
+    const updateDataRayon = {
+      nama_rayon: req.body.nama_rayon,
+      nama_pembimbing: req.body.nama_pembimbing,
+    };
+    const resultRayon = await Rayon.findByIdAndUpdate(id, updateDataRayon, {
       new: true,
     });
 
-    if (!result) {
-      return res.status(404).json({ message: "Data Not Found" });
-    }
+    const password = req.body.password;
 
-    return res.status(200).json({
+    const hashedPassword = await argon2.hash(password);
+
+    const updateAccPemb = {
+      username: req.body.username,
+      password: hashedPassword,
+    };
+
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
+
+    res.status(200).json({
       message: "Success",
-      result,
+      resultRayon,
+      resultAccPemb,
     });
   } catch (error) {
     console.log(error);
@@ -90,6 +109,11 @@ export const deleteRayon = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const rayon = await Rayon.findById(id);
+
+    const pembimbing_id = rayon.pembimbing_id;
+
+    const user = await User.findOneAndDelete({ pembimbing_id });
     const result = await Rayon.findByIdAndDelete(id);
 
     if (!result) {
@@ -99,6 +123,7 @@ export const deleteRayon = async (req, res) => {
     return res.status(200).json({
       message: "Success",
       result,
+      user,
     });
   } catch (error) {
     console.log(error);
@@ -196,16 +221,30 @@ export const getRombel = async (req, res) => {
 
 export const createStudent = async (req, res) => {
   try {
+    const family = new Family();
+    const savedFamily = await family.save();
+
     const { username, password, email, nama, rombel, rayon, nis, jk } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
+    const existingStudent = await Student.findOne({ nis });
+
+    if (existingStudent) {
+      return res.status(500).json({
+        message: "Student Sudah Terdaftar",
+      });
+    }
+
     const student = new Student({
+      keluarga_id: savedFamily._id,
       nama: nama,
       rombel: rombel,
       rayon: rayon,
       nis: nis,
       jk: jk,
+      email: email,
+      status: "Pending",
     });
 
     const savedStudent = await student.save();
@@ -214,6 +253,7 @@ export const createStudent = async (req, res) => {
       username: username,
       password: hashedPassword,
       email: email,
+      role: "student",
     });
 
     const savedUser = await user.save();
@@ -221,7 +261,8 @@ export const createStudent = async (req, res) => {
     res.status(200).json({
       message: "Berhasil Menambahkan Data Student",
       student: savedStudent,
-      user: savedUser,
+      family: savedFamily,
+      user: savedUser.username,
     });
   } catch (error) {
     console.log(error);
@@ -232,113 +273,125 @@ export const createStudent = async (req, res) => {
   }
 };
 
-export const studentCreate = async (req, res) => {
+export const getStudent = async (req, res) => {
   try {
-    const rayonId = req.body.rayon_id;
-    const rayon = await Rayon.findById(rayonId);
-    if (!rayon) {
-      return res.status(404).json({ message: "Rayon tidak ditemukan" });
+    const students = await Student.find().populate({ path: "keluarga_id", model: "Family" }).lean();
+    if (!students) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student is Empty",
+      });
     }
 
-    const rayonData = await Rayon.findById(rayonId);
-    if (!rayonData) {
-      return res.status(404).json({ message: "Rayon tidak ditemukan" });
-    }
-
-    const nama_rayon = rayonData.nama_rayon;
-
-    const rombelId = req.body.rombel_id;
-
-    const rombel = await Rombel.findById(rombelId);
-    if (!rombel) {
-      return res.status(404).json({ message: "Rombel tidak ditemukan" });
-    }
-
-    const rombelData = await Rombel.findById(rombelId);
-
-    if (!rombelData) {
-      return res.status(404).json({ message: "Rombel tidak ditemukan" });
-    }
-
-    const nama_rombel = rombelData.nama_rombel;
-
-    const { nama, jk, nisn, nik, no_kk, tempat_lahir, no_akta, agama, kewarganegaraan, alamat, rt, rw, nama_dusun, kecamatan, kode_pos, transportasi, anak_ke, tinggal_bersama, email, no_telp, tb, bb, gol_darah } = req.body;
-
-    const date = req.body.tanggal_lahir;
-    const resultDate = new Date(date);
-    // const date = new Date();
-    // const tanggal_lahir = date.setHours(date.getHours() + 7);
-
-    const newForm = new Student({
-      rayon_id: rayonId,
-      rombel_id: rombelId,
-      nama: nama,
-      jk: jk,
-      nisn: nisn,
-      nik: nik,
-      no_kk: no_kk,
-      tempat_lahir: tempat_lahir,
-      tanggal_lahir: resultDate,
-      no_akta: no_akta,
-      agama: agama,
-      kewarganegaraan: kewarganegaraan,
-      alamat: alamat,
-      rt: rt,
-      rw: rw,
-      nama_dusun: nama_dusun,
-      kecamatan: kecamatan,
-      nama_kota: nama_kota,
-      provinsi: provinsi,
-      kode_pos: kode_pos,
-      transportasi: transportasi,
-      anak_ke: anak_ke,
-      tinggal_bersama: tinggal_bersama,
-      email: email,
-      no_telp: no_telp,
-      tb: tb,
-      bb: bb,
-      gol_darah: gol_darah,
-      nama_rombel: nama_rombel,
-      nama_rayon: nama_rayon,
-      createdAt: date,
-    });
-
-    const savedForm = await newForm.save();
-
-    const { nama_ayah, nik_ayah, pendidikan_ayah, pekerjaan_ayah, penghasilan_ayah, nama_ibu, nik_ibu, pendidikan_ibu, pekerjaan_ibu, penghasilan_ibu, nama_wali, nik_wali, pendidikan_wali, pekerjaan_wali, penghasilan_wali } = req.body;
-
-    const newFamily = new Family({
-      student_id: savedForm._id,
-      nama_ayah: nama_ayah,
-      nik_ayah: nik_ayah,
-      tanggal_lahir_ayah: resultDate,
-      pendidikan_ayah: pendidikan_ayah,
-      pekerjaan_ayah: pekerjaan_ayah,
-      penghasilan_ayah: penghasilan_ayah,
-      nama_ibu: nama_ibu,
-      nik_ibu: nik_ibu,
-      tanggal_lahir_ibu: resultDate,
-      pendidikan_ibu: pendidikan_ibu,
-      pekerjaan_ibu: pekerjaan_ibu,
-      penghasilan_ibu: penghasilan_ibu,
-      nama_wali: nama_wali,
-      nik_wali: nik_wali,
-      tanggal_lahir_wali: resultDate,
-      pendidikan_wali: pendidikan_wali,
-      pekerjaan_wali: pekerjaan_wali,
-      penghasilan_wali: penghasilan_wali,
-    });
-
-    const savedFamily = await newFamily.save();
-
-    res.status(201).json({
-      message: "Formulir created successfully",
-      savedForm,
-      savedFamily,
+    res.status(200).json({
+      message: "Succes To Get Data Student",
+      students: students,
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({ message: "Gagal" });
+    res.status(500).json({
+      error: error.message,
+      message: "Failed To Get Data Student",
+    });
+  }
+};
+
+export const updateStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await findById(id);
+
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    const family_id = student.keluarga_id;
+
+    const formStudent = {
+      nisn: req.body.nisn,
+      nik: req.body.nik,
+      no_kk: req.body.no_kk,
+      tempat_lahir: req.body.tempat_lahir,
+      tanggal_lahir: req.body.tanggal_lahir,
+      no_akta: req.body.no_akta,
+      agama: req.body.agama,
+      kewarganegaraan: req.body.kewarganegaraan,
+      alamat: req.body.alamat,
+      rt: req.body.rt,
+      rw: req.body.rw,
+      nama_dusun: req.body.nama_dusun,
+      kecamatan: req.body.kecamatan,
+      nama_kota: req.body.nama_kota,
+      provinsi: req.body.provinsi,
+      kode_pos: req.body.kode_pos,
+      transportasi: req.body.transportasi,
+      anak_ke: req.body.anak_ke,
+      tinggal_bersama: req.body.tinggal_bersama,
+      no_telp: req.body.no_telp,
+      tb: req.body.tb,
+      bb: req.body.bb,
+      gol_darah: req.body.gol_darah,
+      asal_smp: req.body.asal_smp,
+      no_ijazah_smp: req.body.no_ijazah_smp,
+      skhun: req.body.skhun,
+      no_un: req.body.no_un,
+    };
+    const updateStudent = await Student.findByIdAndUpdate(id, formStudent, {
+      new: true,
+    });
+
+    if (!updateStudent) {
+      console.log(updateStudent);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    const formFamily = {
+      nama_ayah: req.body.nama_ayah,
+      nik_ayah: req.body.nik_ayah,
+      tanggal_lahir_ayah: req.body.tanggal_lahir_ayah,
+      pendidikan_ayah: req.body.pendidikan_ayah,
+      pekerjaan_ayah: req.body.pekerjaan_ayah,
+      penghasilan_ayah: req.body.penghasilan_ayah,
+      nama_ibu: req.body.nama_ibu,
+      nik_ibu: req.body.nik_ibu,
+      tanggal_lahir_ibu: req.body.tanggal_lahir_ibu,
+      pendidikan_ibu: req.body.pendidikan_ibu,
+      pekerjaan_ibu: req.body.pekerjaan_ibu,
+      penghasilan_ibu: req.body.penghasilan_ibu,
+      nama_wali: req.body.nama_wali,
+      nik_wali: req.body.nik_wali,
+      tanggal_lahir_wali: req.body.tanggal_lahir_wali,
+      pendidikan_wali: req.body.pendidikan_wali,
+      pekerjaan_wali: req.body.pekerjaan_wali,
+      penghasilan_wali: req.body.penghasilan_wali,
+    };
+    const updatedFamily = await Family.findByIdAndUpdate(family_id, formFamily, {
+      new: true,
+    });
+
+    if (!updatedFamily) {
+      console.log(updateStudent);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Berhasil Update Data Student",
+      student: updateStudent,
+      family: updatedFamily,
+    });
+  } catch (error) {
+    console.loh(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Update Data Student",
+    });
   }
 };
 

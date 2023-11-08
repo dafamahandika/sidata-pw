@@ -1,4 +1,4 @@
-import { getRayon, getRombel, createRayon, createRombel, createStudent, reaData, updateData, delData, updateRayon, deleteRayon, updateRombel, deleteRombel, searchStudent } from "../controllers/Formulir.js";
+import { getRayon, getRombel, createRayon, createRombel, createStudent, getStudent, updateData, delData, updateRayon, deleteRayon, updateRombel, deleteRombel, searchStudent } from "../controllers/Formulir.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -15,10 +15,10 @@ routes.post("/rombel", createRombel);
 routes.put("/update-rombel/:id", updateRombel);
 routes.delete("/delete-rombel/:id", deleteRombel);
 
-routes.post("/create", createStudent);
-routes.get("/get", reaData);
-routes.put("/update/:id", updateData);
-routes.delete("/delete/:id", delData);
-routes.get("/search-student/:keyword", searchStudent);
+routes.get("/student", getStudent);
+routes.post("/student/create", createStudent);
+routes.put("/student/update/:id", updateData);
+routes.delete("/student/delete/:id", delData);
+routes.get("/student/search/:keyword", searchStudent);
 
 export default routes;
