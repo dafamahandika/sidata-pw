@@ -436,7 +436,7 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
-export const uploadImage = async (req, res) => {
+export const uploadFile = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -472,5 +472,30 @@ export const uploadImage = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
+  }
+};
+
+export const verifikasi = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const verifikasi = {
+      status: "Verifikasi",
+    };
+
+    const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Berhasil Verifikasi",
+      student_status: updateStatus.status,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Verifikasi",
+    });
   }
 };
