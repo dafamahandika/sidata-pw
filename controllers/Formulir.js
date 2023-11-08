@@ -399,10 +399,10 @@ export const updateStudent = async (req, res) => {
   }
 };
 
-export const searchStudent = async (req, res) => {
+export const deleteStudent = async (req, res) => {
   try {
-    const keyword = req.params;
-    const student = await Student.find({ nama: keyword });
+    const { id } = req.params;
+    const student = await Student.findById(id);
 
     if (!student) {
       console.log(student);
@@ -411,15 +411,27 @@ export const searchStudent = async (req, res) => {
       });
     }
 
+    const family_id = student.keluarga_id;
+    const dokumen_id = student.dokumen_id;
+    const nis = student.nis;
+
+    const deleteFamily = await Family.findByIdAndDelete(family_id);
+    const deleteDokumen = await Dokumen.findByIdAndDelete(dokumen_id);
+    const deleteAcc = await User.findOneAndDelete({ username: nis });
+    const deleteStudent = await Student.findByIdAndDelete(id);
+
     res.status(200).json({
-      student: student,
-      message: "Berhasil mencari data student",
+      message: "Berhasil Menghapus Data Student",
+      student: deleteStudent,
+      family: deleteFamily,
+      dokumen: deleteDokumen,
+      user: deleteAcc,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: error.message,
-      message: "Gagal mencari data student",
+      error: error.massage,
+      message: "Gagal Menghapus Data Student",
     });
   }
 };
