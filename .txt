@@ -15,7 +15,7 @@ import {
   uploadFile,
   verifikasi,
 } from "../controllers/Formulir.js";
-import upload from "../middleware/uploads.js";
+import upload from "../middleware/uploadFile.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -50,16 +50,16 @@ routes.post(
     try {
       const files = req.files;
 
-      res.status(200).json({ message: "File berhasil diupload", data: files });
+      res.status(200).json({ message: "File berhasil diupload", files: files });
     } catch (error) {
       console.error(error);
       res
         .status(500)
         .json({ message: "Terjadi kesalahan dalam pemrosesan file" });
     }
-  }
+  },
+  uploadFile
 );
-// routes.post("/upload/:id", uploadFile);
 routes.post("/verifikasi/:id", verifikasi);
 
 export default routes;

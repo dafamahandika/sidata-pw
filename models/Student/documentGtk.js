@@ -1,39 +1,35 @@
 import mongoose from "mongoose";
 
-const documentSchema = mongoose.Schema({
-  fieldname: {
+const docGtkSchema = mongoose.Schema({
+  ijazah_sd: {
     type: String,
     required: true,
   },
-  originalname: {
+  ijazah_smp: {
     type: String,
     required: true,
   },
-  encoding: {
+  ijazah_sma: {
     type: String,
     required: true,
   },
-  mimetype: {
+  ijazah_univ: {
     type: String,
     required: true,
   },
-  destination: {
+  ktp: {
     type: String,
     required: true,
   },
-  filename: {
+  kk: {
     type: String,
     required: true,
   },
-  path: {
+  akte: {
     type: String,
-    required: true,
-  },
-  size: {
-    type: Number,
     required: true,
   },
 });
 
-const Dokumen = mongoose.model("Dokumen", documentSchema);
-export default Dokumen;
+const resultGtkDocument = mongoose.model("resultGtkDocument", docGtkSchema);
+export default resultGtkDocument;

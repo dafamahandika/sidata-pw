@@ -294,7 +294,7 @@ export const getStudent = async (req, res) => {
       ])
       .lean();
     if (!students) {
-      console.log(student);
+      console.log(students);
       return res.status(404).json({
         message: "Data Student is Empty",
       });
@@ -523,19 +523,7 @@ export const uploadFile = async (req, res) => {
       console.log(student);
       return res.status(404).json({
         message: "Data Student Not Found",
-      });   
-    }
-
-    // Add null check before accessing the 'dokumen_id' property
-    if (student.dokumen_id) {
-      const updateStudent = { dokumen_id: saveResult._id }; // Update the 'dokumen_id' property
-      await Student.findByIdAndUpdate(id, updateStudent, { new: true });
-    } else {
-      const updateStudent = {
-        ...student.toObject(),
-        dokumen_id: saveResult._id,
-      }; // Add the 'dokumen_id' property
-      await Student.findByIdAndUpdate(id, updateStudent, { new: true });
+      });
     }
 
     res.status(200).json({
@@ -548,6 +536,7 @@ export const uploadFile = async (req, res) => {
     res.status(500).json({ message: "Error" });
   }
 };
+
 export const verifikasi = async (req, res) => {
   try {
     const { id } = req.params;
