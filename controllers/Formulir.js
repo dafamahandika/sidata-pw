@@ -281,7 +281,7 @@ export const getStudent = async (req, res) => {
       ])
       .lean();
     if (!students) {
-      console.log(student);
+      console.log(students);
       return res.status(404).json({
         message: "Data Student is Empty",
       });
@@ -527,6 +527,7 @@ export const uploadFile = async (req, res) => {
     res.status(500).json({ message: "Error" });
   }
 };
+
 export const verifikasi = async (req, res) => {
   try {
     const { id } = req.params;
