@@ -244,7 +244,6 @@ export const createStudent = async (req, res) => {
       nis: nis,
       jk: jk,
       email: email,
-      status: "Pending",
     });
 
     const savedStudent = await student.save();

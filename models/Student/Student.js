@@ -134,8 +134,7 @@ const studentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "Verifikasi"],
-      default: null,
+      default: "Pending",
     },
     asal_smp: {
       type: String,
