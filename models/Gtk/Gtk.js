@@ -1,7 +1,13 @@
+import { MongoParseError } from "mongodb";
 import mongoose from "mongoose";
 
 const gtkSchema = new mongoose.Schema(
   {
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
     kepegawaian_id: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -116,42 +122,55 @@ const gtkSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    nama_ibu: {
-      type: String,
-      requied: true,
-    },
-    alamat: {
-      type: String,
-      required: true,
-    },
-    rt: {
-      type: String,
-      required: true,
-    },
-    rw: {
-      type: String,
-      required: true,
-    },
-    nama_dusun: {
-      type: String,
-      required: true,
-    },
-    nama_kelurahan: {
-      type: String,
-      required: true,
-    },
-    kecamatan: {
-      type: String,
-      required: true,
-    },
-    no_kk: {
+    nip: {
       type: String,
       required: true,
       unique: true,
     },
+    nama_ibu: {
+      type: String,
+      default: null,
+    },
+    alamat: {
+      type: String,
+      default: null,
+    },
+    rt: {
+      type: String,
+      default: null,
+    },
+    rw: {
+      type: String,
+      default: null,
+    },
+    nama_dusun: {
+      type: String,
+      default: null,
+    },
+    nama_kelurahan: {
+      type: String,
+      default: null,
+    },
+    kecamatan: {
+      type: String,
+      default: null,
+    },
+    kota_kab: {
+      type: String,
+      default: null,
+    },
+    provinsi: {
+      type: String,
+      default: null,
+    },
+    no_kk: {
+      type: String,
+      default: null,
+      unique: true,
+    },
     kode_pos: {
       type: String,
-      required: true,
+      default: null,
     },
     agama: {
       type: String,
@@ -160,34 +179,33 @@ const gtkSchema = new mongoose.Schema(
     },
     kewarganegaraan: {
       type: String,
-      required: true,
+      default: null,
     },
     npwp: {
       type: String,
-      required: true,
+      default: null,
       unique: true,
     },
     nama_wajib_pajak: {
       type: String,
-      required: true,
+      default: null,
       unique: true,
     },
     status_kawin: {
       type: String,
-      enum: ["Kawin", "Belum Kawin", "Duda/Janda"],
-      required: true,
+      default: null,
     },
     nama_istri_suami: {
       type: String,
-      required: false,
+      default: null,
     },
     nip_istri_suami: {
       type: String,
-      required: false,
+      default: null,
     },
     pekerjaan_istri_suami: {
       type: String,
-      required: false,
+      default: null,
     },
     no_telp: {
       type: String,
@@ -195,7 +213,7 @@ const gtkSchema = new mongoose.Schema(
     },
     no_telp_rumah: {
       type: String,
-      required: false,
+      default: null,
     },
     email: {
       type: String,
@@ -204,15 +222,15 @@ const gtkSchema = new mongoose.Schema(
     },
     bb: {
       type: String,
-      required: true,
+      default: null,
     },
     tb: {
       type: String,
-      required: true,
+      default: null,
     },
     gol_darah: {
       type: String,
-      required: true,
+      default: null,
     },
   },
   {

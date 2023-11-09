@@ -10,11 +10,6 @@ const kepegawaianSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    nip: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     niy: {
       type: String,
       required: true,

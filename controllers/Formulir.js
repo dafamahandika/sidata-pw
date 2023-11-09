@@ -300,6 +300,35 @@ export const getStudent = async (req, res) => {
   }
 };
 
+export const getOneStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await Student.findById(id)
+      .populate([
+        { path: "keluarga_id", model: "Family" },
+        { path: "dokumen_id", model: "Dokumen" },
+      ])
+      .lean();
+
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success to Get One Student",
+      student: student,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Failed to Get One Student",
+    });
+  }
+};
+
 export const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;

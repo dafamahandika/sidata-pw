@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  getData,
+  getGtk,
   createGtk,
   createStatus,
   createJenis,
@@ -33,7 +33,7 @@ const routes = express.Router();
 routes.get("/status-kepeg", getStatus);
 routes.get("/jenis-ptk", getJenis);
 
-routes.get("/gtk", getData);
+routes.get("/gtk", getGtk);
 routes.post("/gtk", createGtk);
 
 routes.post("/status-pegawai", createStatus);

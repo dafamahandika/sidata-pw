@@ -14,7 +14,10 @@ import RiwayatJabatan from "../models/Gtk/RiwayatJabatan.js";
 import RiwayatGaji from "../models/Gtk/RiwayatGaji.js";
 import Inpassing from "../models/Gtk/Inpassing.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
-
+import argon2 from "argon2";
+import User from "../models/User.js";
+// All method for model Anak
+// Create Data
 export const createAnak = async (req, res) => {
   try {
     const { id } = req.params;
@@ -51,7 +54,7 @@ export const createAnak = async (req, res) => {
     });
   }
 };
-
+// Update Data
 export const updateAnak = async function (req, res) {
   try {
     const { id } = req.params;
@@ -66,7 +69,7 @@ export const updateAnak = async function (req, res) {
     }
     res.status(201).json({
       message: "Berhasil Mengubah Data Anak",
-      update_anak: updateAnak,
+      update: updateAnak,
     });
   } catch (error) {
     console.log(error);
@@ -76,7 +79,7 @@ export const updateAnak = async function (req, res) {
     });
   }
 };
-
+// Delete Data
 export const deleteAnak = async (req, res) => {
   try {
     const { id } = req.params;
@@ -139,6 +142,32 @@ export const createBeasiswa = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updateBeasiswa = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateBeasiswa = req.body;
+    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(id, formUpdateBeasiswa, {
+      new: true,
+    });
+    if (!updateBeasiswa) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Beasiswa",
+      update: updateBeasiswa,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Beasiswa",
+    });
+  }
+};
+
 // Delete Data
 export const deleteBeasiswa = async (req, res) => {
   try {
@@ -200,6 +229,32 @@ export const createKepegawaian = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updateKepegawaian = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateKepegawaian = req.body;
+    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(id, formUpdateKepegawaian, {
+      new: true,
+    });
+    if (!updateKepegawaian) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Kepegawaian",
+      update: updateKepegawaian,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Kepegawaian",
+    });
+  }
+};
+
 // Delete Data
 export const deleteKepegawaian = async (req, res) => {
   try {
@@ -263,6 +318,32 @@ export const createPendidikan = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updatePendidikan = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdatePendidikan = req.body;
+    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(id, formUpdatePendidikan, {
+      new: true,
+    });
+    if (!updatePendidikan) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Riwayat Pendidikan",
+      update: updatePendidikan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Riwayat Pendidikan",
+    });
+  }
+};
+
 // Delete Data
 export const deletePendidikan = async (req, res) => {
   try {
@@ -322,10 +403,36 @@ export const createSertifikasi = async (req, res) => {
     console.log(error);
     res.status(500).json({
       error: error.message,
-      message: "Gagal Menambahkan Data Riwayat Pendidikan",
+      message: "Gagal Menambahkan Data Sertifikasi",
     });
   }
 };
+// Update Data
+export const updateSertifikasi = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateSertifikasi = req.body;
+    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(id, formUpdateSertifikasi, {
+      new: true,
+    });
+    if (!updateSertifikasi) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Sertifikasi",
+      update: updateSertifikasi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Sertifikasi",
+    });
+  }
+};
+
 // Delete Data
 export const deleteSertifikasi = async (req, res) => {
   try {
@@ -385,6 +492,32 @@ export const createDiklat = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updateDiklat = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateDiklat = req.body;
+    const updateDiklat = await Diklat.findByIdAndUpdate(id, formUpdateDiklat, {
+      new: true,
+    });
+    if (!updateDiklat) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Diklat",
+      update: updateDiklat,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Diklat",
+    });
+  }
+};
+
 // Delete Data
 export const deleteDiklat = async (req, res) => {
   try {
@@ -446,6 +579,31 @@ export const createPenugasan = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updatePenugasan = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdatePenugasan = req.body;
+    const updatePenugasan = await Penugasan.findByIdAndUpdate(id, formUpdatePenugasan, {
+      new: true,
+    });
+    if (!updatePenugasan) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Diklat",
+      update: updatePenugasan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Diklat",
+    });
+  }
+};
 // Delete Penugasana
 export const deletePenugasan = async (req, res) => {
   try {
@@ -504,6 +662,31 @@ export const createTugas = async (req, res) => {
     res.status(500).json({
       error: error.message,
       message: "Gagal Menambahkan Data Tugas Tambahan",
+    });
+  }
+};
+// Update Data
+export const updateTugas = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateTugas = req.body;
+    const updateTugas = await TugasTambahan.findByIdAndUpdate(id, formUpdateTugas, {
+      new: true,
+    });
+    if (!updateTugas) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Tugas Tambahan",
+      update: updateTugas,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Tugas Tambahan",
     });
   }
 };
@@ -569,7 +752,31 @@ export const createPenghargaan = async (req, res) => {
     });
   }
 };
-
+// Update Data
+export const updatePenghargaan = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdatePenghargaan = req.body;
+    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(id, formUpdatePenghargaan, {
+      new: true,
+    });
+    if (!updatePenghargaan) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Penghargaan",
+      update: updatePenghargaan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Penghargaan",
+    });
+  }
+};
 // Delete Data
 export const deletePenghargaan = async (req, res) => {
   try {
@@ -627,6 +834,31 @@ export const createJabatan = async (req, res) => {
     res.status(500).json({
       error: error.message,
       message: "Gagal Menambahkan Data Riwayat Jabatan",
+    });
+  }
+};
+// Update Data
+export const updateJabatan = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateJabatan = req.body;
+    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(id, formUpdateJabatan, {
+      new: true,
+    });
+    if (!updateJabatan) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Riwayat Jabatan",
+      update: updateJabatan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Riwayat Jabatan",
     });
   }
 };
@@ -689,6 +921,31 @@ export const createGaji = async (req, res) => {
     res.status(500).json({
       error: error.message,
       message: "Gagal Menambahkan Data Riwayat Gaji",
+    });
+  }
+};
+// Update Data
+export const updateGaji = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateGaji = req.body;
+    const updateGaji = await RiwayatGaji.findByIdAndUpdate(id, formUpdateGaji, {
+      new: true,
+    });
+    if (!updateGaji) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Riwayat Gaji",
+      update: updateGaji,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Riwayat Jabatan",
     });
   }
 };
@@ -755,6 +1012,31 @@ export const createInpassing = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updateInpassing = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateInpassing = req.body;
+    const updateInpassing = await Inpassing.findByIdAndUpdate(id, formUpdateInpassing, {
+      new: true,
+    });
+    if (!updateInpassing) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Inpassing",
+      update: updateInpassing,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Inpassing",
+    });
+  }
+};
 
 // Delete Data
 export const deleteInpassing = async (req, res) => {
@@ -817,6 +1099,31 @@ export const createTunjangan = async (req, res) => {
     });
   }
 };
+// Update Data
+export const updateTunjangan = async function (req, res) {
+  try {
+    const { id } = req.params;
+    const formUpdateTunjangan = req.body;
+    const updateTunjangan = await Tunjangan.findByIdAndUpdate(id, formUpdateTunjangan, {
+      new: true,
+    });
+    if (!updateTunjangan) {
+      return res.status(404).json({
+        massage: "Data Anak Not Found",
+      });
+    }
+    res.status(201).json({
+      message: "Berhasil Mengubah Data Tunjangan",
+      update: updateTunjangan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Mengubah Data Tunjangan",
+    });
+  }
+};
 
 // Delete Data
 export const deleteTunjangan = async (req, res) => {
@@ -844,84 +1151,144 @@ export const deleteTunjangan = async (req, res) => {
 
 // All methods for model GTK
 // Create Data
+// export const createGtk = async (req, res) => {
+//   try {
+//     const {
+//       nama_lengkap,
+//       nik,
+//       jk,
+//       tempat_lahir,
+//       tanggal_lahir,
+//       nama_ibu,
+//       alamat,
+//       rt,
+//       rw,
+//       nama_dusun,
+//       nama_kelurahan,
+//       kecamatan,
+//       no_kk,
+//       kode_pos,
+//       agama,
+//       kewarganegaraan,
+//       npwp,
+//       nama_wajib_pajak,
+//       status_kawin,
+//       nama_istri_suami,
+//       nip_istri_suami,
+//       pekerjaan_istri_suami,
+//       no_telp,
+//       no_telp_rumah,
+//       email,
+//       bb,
+//       tb,
+//       gol_darah,
+//       password,
+//     } = req.body;
+
+//     const gtk = new Gtk({
+//       nama_lengkap,
+//       nik,
+//       jk,
+//       tempat_lahir,
+//       tanggal_lahir,
+//       nama_ibu,
+//       alamat,
+//       rt,
+//       rw,
+//       nama_dusun,
+//       nama_kelurahan,
+//       kecamatan,
+//       no_kk,
+//       kode_pos,
+//       agama,
+//       kewarganegaraan,
+//       npwp,
+//       nama_wajib_pajak,
+//       status_kawin,
+//       nama_istri_suami,
+//       nip_istri_suami,
+//       pekerjaan_istri_suami,
+//       no_telp,
+//       no_telp_rumah,
+//       email,
+//       bb,
+//       tb,
+//       gol_darah,
+//     });
+
+//     const hashedPassword = await argon2.hash(password);
+//     const user = new User({
+//       username: nama_lengkap,
+//       email: email,
+//       password: hashedPassword,
+//       role: "guru",
+//     });
+
+//     const savedGtk = await gtk.save();
+
+//     res.status(201).json({
+//       message: "Berhasil Menambahkan Data GTK",
+//       gtk: savedGtk,
+//       user: user.username,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+// Create Data
 export const createGtk = async (req, res) => {
   try {
-    const {
-      nama_lengkap,
-      nik,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
-      nama_ibu,
-      alamat,
-      rt,
-      rw,
-      nama_dusun,
-      nama_kelurahan,
-      kecamatan,
-      no_kk,
-      kode_pos,
-      agama,
-      kewarganegaraan,
-      npwp,
-      nama_wajib_pajak,
-      status_kawin,
-      nama_istri_suami,
-      nip_istri_suami,
-      pekerjaan_istri_suami,
-      no_telp,
-      no_telp_rumah,
-      email,
-      bb,
-      tb,
-      gol_darah,
-    } = req.body;
+    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
+    const hashNip = await argon2.hash(nip);
+
+    const user = new User({
+      username: nama_lengkap,
+      email: email,
+      password: hashNip,
+      role: "guru",
+    });
+    const saveUser = await user.save();
 
     const gtk = new Gtk({
-      nama_lengkap,
-      nik,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
-      nama_ibu,
-      alamat,
-      rt,
-      rw,
-      nama_dusun,
-      nama_kelurahan,
-      kecamatan,
-      no_kk,
-      kode_pos,
-      agama,
-      kewarganegaraan,
-      npwp,
-      nama_wajib_pajak,
-      status_kawin,
-      nama_istri_suami,
-      nip_istri_suami,
-      pekerjaan_istri_suami,
-      no_telp,
-      no_telp_rumah,
-      email,
-      bb,
-      tb,
-      gol_darah,
+      user_id: saveUser._id,
+      nama_lengkap: nama_lengkap,
+      nik: nik,
+      jk: jk,
+      tempat_lahir: tempat_lahir,
+      tanggal_lahir: tanggal_lahir,
+      agama: agama,
+      no_telp: no_telp,
+      email: email,
+      nip: nip,
     });
 
     const savedGtk = await gtk.save();
 
-    res.status(201).json({
-      message: "Berhasil Menambahkan Data GTK",
+    res.status(200).json({
+      message: "Berhasil Menambahkan Data GTk",
       gtk: savedGtk,
+      user: saveUser._id,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Menambahkan Data GTK",
+    });
   }
 };
+// Update Data
+// export const updateGtk = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//   } catch (error) {}
+// };
 
 // Read Data
-export const getData = async (req, res) => {
+export const getGtk = async (req, res) => {
   try {
     const gtk = await Gtk.find()
       .populate([
