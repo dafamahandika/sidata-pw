@@ -8,13 +8,20 @@ import {
   updateRombel,
   deleteRombel,
   getStudent,
+<<<<<<< Updated upstream
   getOneStudent,
+=======
+>>>>>>> Stashed changes
   createStudent,
   updateStudent,
   deleteStudent,
   uploadFile,
   verifikasi,
 } from "../controllers/Formulir.js";
+<<<<<<< Updated upstream
+=======
+import file from "../middleware/uploadFile.js";
+>>>>>>> Stashed changes
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
