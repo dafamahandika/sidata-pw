@@ -41,6 +41,8 @@ const fileFilter = (req, file, cb) => {
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
+
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(cookieParser());
 
