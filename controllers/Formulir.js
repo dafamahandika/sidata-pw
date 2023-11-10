@@ -335,8 +335,8 @@ export const getOneStudent = async (req, res) => {
     const { id } = req.params;
     const student = await Student.findById(id)
       .populate([
-        { path: "keluarga_id", model: "Family" },
         { path: "dokumen_id", model: "Dokumen" },
+        { path: "keluarga_id", model: "Family" },
       ])
       .lean();
 
