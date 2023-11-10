@@ -74,6 +74,36 @@ export const getRayon = async (req, res) => {
   }
 };
 
+export const getOneRayon = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const rayon = await Rayon.findById(id)
+      .populate({
+        path: "pembimbing_id",
+        model: "User",
+      })
+      .lean();
+
+    if (!rayon) {
+      console.log(rayon);
+      return res.status(404).json({
+        message: "Data Rayon Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Get One Rayon Success",
+      rayon: rayon,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Get One Rayon Failed",
+    });
+  }
+};
+
 export const updateRayon = async (req, res) => {
   try {
     const { id } = req.params;
