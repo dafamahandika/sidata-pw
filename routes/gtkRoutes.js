@@ -8,8 +8,6 @@ import {
   createJenis,
   getStatus,
   getJenis,
-  tambahDataPendidikan,
-  appendDataAnak,
   createKepegawaian,
   createAnak,
   deleteAnak,
@@ -42,9 +40,6 @@ routes.put("/gtk/update/:id", updateGtk);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
-
-routes.post("/tambahPendidikan/:id", tambahDataPendidikan);
-routes.post("/tambah-anak/:id", appendDataAnak);
 
 routes.post("/anak/:id", createAnak);
 routes.delete("/anak/:id", deleteAnak);

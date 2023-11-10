@@ -224,9 +224,9 @@ export const createStudent = async (req, res) => {
     const family = new Family();
     const savedFamily = await family.save();
 
-    const { username, password, email, nama, rombel, rayon, nis, jk } = req.body;
+    const { email, nama, rombel, rayon, nis, jk } = req.body;
 
-    const hashedPassword = await argon2.hash(password);
+    const hashNis = await argon2.hash(nis);
 
     const existingStudent = await Student.findOne({ nis });
 
@@ -249,8 +249,8 @@ export const createStudent = async (req, res) => {
     const savedStudent = await student.save();
 
     const user = new User({
-      username: username,
-      password: hashedPassword,
+      username: nama,
+      password: hashNis,
       email: email,
       role: "student",
     });
