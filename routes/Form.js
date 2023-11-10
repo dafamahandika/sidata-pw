@@ -1,5 +1,6 @@
 import {
   getRayon,
+  getOneRayon,
   createRayon,
   deleteRayon,
   updateRayon,
@@ -23,6 +24,7 @@ import express from "express";
 
 const routes = express.Router();
 routes.get("/rayon", getRayon);
+routes.get("/rayon/:id", getOneRayon);
 routes.post("/rayon", createRayon);
 routes.put("/update-rayon/:id", updateRayon);
 routes.delete("/delete-rayon/:id", deleteRayon);
@@ -53,13 +55,10 @@ routes.post(
       res.status(200).json({ message: "File berhasil diupload", data: files });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({ message: "Terjadi kesalahan dalam pemrosesan file" });
+      res.status(500).json({ message: "Terjadi kesalahan dalam pemrosesan file" });
     }
   }
 );
-// routes.post("/upload/:id", uploadFile);
 routes.post("/verifikasi/:id", verifikasi);
 
 export default routes;
