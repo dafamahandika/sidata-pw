@@ -19,5 +19,5 @@ const docGtkSchema = mongoose.Schema({
   },
 });
 
-const resultGtkDocument = mongoose.model("resultGtkDocument", docGtkSchema);
-export default resultGtkDocument;
+const Dokumen = mongoose.model("Dokumen", docGtkSchema);
+export default Dokumen;
