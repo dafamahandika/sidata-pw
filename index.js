@@ -6,6 +6,7 @@ import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
+import upload from "./routes/upload.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const port = process.env.PORT || 3000;
@@ -20,7 +21,11 @@ app.use(
     credentials: true,
   })
 );
-app.use("/uploads", express.static("uploads"));
+
+app.use(express.static("public"));
+app.use("/image", express.static("image"));
+app.use("/upload/", upload);
+
 app.use(express.json());
 app.use(cookieParser());
 

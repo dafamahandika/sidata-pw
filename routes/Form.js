@@ -15,7 +15,6 @@ import {
   uploadFile,
   verifikasi,
 } from "../controllers/Formulir.js";
-import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -38,28 +37,7 @@ routes.post("/student/create", createStudent);
 routes.put("/student/update/:id", updateStudent);
 routes.delete("/student/delete/:id", deleteStudent);
 
-routes.post(
-  "/upload/:id",
-  upload.fields([
-    { name: "ijazah", maxCount: 1 },
-    { name: "akte_kelahiran", maxCount: 1 },
-    { name: "skhun", maxCount: 1 },
-    { name: "kk", maxCount: 1 },
-  ]),
-  (req, res) => {
-    try {
-      const files = req.files;
-
-      res.status(200).json({ message: "File berhasil diupload", data: files });
-    } catch (error) {
-      console.error(error);
-      res
-        .status(500)
-        .json({ message: "Terjadi kesalahan dalam pemrosesan file" });
-    }
-  }
-);
-// routes.post("/upload/:id", uploadFile);
+routes.post("/upload/:id", uploadFile);
 routes.post("/verifikasi/:id", verifikasi);
 
 export default routes;
