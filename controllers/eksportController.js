@@ -24,7 +24,13 @@ export const exportGtkData = async (req, res) => {
     const page = pdfDoc.addPage();
     page.drawText("Gtk Data", { x: 50, y: 50, size: 24 });
     for (const gtk of gtkData) {
-      page.drawText(`Name: ${gtk.name}, Age: ${gtk.age}`, { x: 50, y: 50 });
+      page.drawText(
+        `Nama: ${gtk.nama_lengkap}, No_Nik: ${gtk.nik}, Email: ${gtk.email}, Nip: ${gtk.nip}, Tgl_Lahir: ${gtk.tanggal_lahir}, Tempat_Lahir: ${gtk.tempat_lahir}, Agama: ${gtk.agama}, No_Telp: ${gtk.no_telp}`,
+        {
+          x: 50,
+          y: 50,
+        }
+      );
     }
     const pdfBytes = await pdfDoc.save();
     const pdfData = pdfBytes.toString("base64");
@@ -57,10 +63,13 @@ export const exportStudentData = async (req, res) => {
     const page = pdfDoc.addPage();
     page.drawText("Students", { x: 50, y: 50, size: 24 });
     for (const student of studentData) {
-      page.drawText(`Name: ${student.name}, Age: ${student.age}`, {
-        x: 50,
-        y: 50,
-      });
+      page.drawText(
+        `Name: ${student.nama}, Email: ${student.email}, Nis: ${student.nis}, Rombel: ${student.rombel}, Rayon: ${student.rayon}, `,
+        {
+          x: 50,
+          y: 50,
+        }
+      );
     }
     const pdfBytes = await pdfDoc.save();
     const pdfData = pdfBytes.toString("base64");
