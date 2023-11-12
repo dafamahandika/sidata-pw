@@ -18,6 +18,9 @@ app.use(
     origin: "http://172.232.225.139:3001",
     methods: "*",
     allowedHeaders: "*",
+    exposedHeaders: "*",
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
     credentials: true,
   })
 );
