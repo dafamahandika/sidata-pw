@@ -6,7 +6,7 @@ import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
-import upload from "./routes/upload.js";
+// import upload from "./routes/upload.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const port = process.env.PORT || 3000;
@@ -15,7 +15,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://172.232.225.139:3001/",
     methods: "*",
     allowedHeaders: "*",
     credentials: true,
@@ -24,7 +24,7 @@ app.use(
 
 app.use(express.static("public"));
 app.use("/image", express.static("image"));
-app.use("/upload/", upload);
+// app.use("/upload/", upload);
 
 app.use(express.json());
 app.use(cookieParser());
