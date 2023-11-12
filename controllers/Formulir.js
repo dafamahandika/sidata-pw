@@ -4,17 +4,11 @@ import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
 import argon2 from "argon2";
-import resultGtkDocument from "../models/Student/documentGtk.js";
+import resultGtkDocument from "../models/Student/Dokumen.js";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      username,
-      password,
-      email_pembimbing,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -51,9 +45,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find()
-      .populate({ path: "pembimbing_id", model: "User" })
-      .lean();
+    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -129,13 +121,9 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(
-      pembimbing_id,
-      updateAccPemb,
-      {
-        new: true,
-      }
-    );
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Success",
@@ -266,8 +254,7 @@ export const createStudent = async (req, res) => {
     const family = new Family();
     const savedFamily = await family.save();
 
-    const { username, password, email, nama, rombel, rayon, nis, jk } =
-      req.body;
+    const { username, password, email, nama, rombel, rayon, nis, jk } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -348,8 +335,8 @@ export const getOneStudent = async (req, res) => {
     const { id } = req.params;
     const student = await Student.findById(id)
       .populate([
-        { path: "keluarga_id", model: "Family" },
         { path: "dokumen_id", model: "Dokumen" },
+        { path: "keluarga_id", model: "Family" },
       ])
       .lean();
 
@@ -446,13 +433,9 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(
-      family_id,
-      updatedFamily,
-      {
-        new: true,
-      }
-    );
+    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
+      new: true,
+    });
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -532,7 +515,7 @@ export const uploadFile = async (req, res) => {
     //   return;
     // }
 
-    const result = await resultGtkDocument.create({
+    const result = await Dokumen.create({
       ijazah_smp,
       akte,
       skhun,
