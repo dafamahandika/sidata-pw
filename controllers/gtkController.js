@@ -1271,7 +1271,7 @@ export const getGtk = async (req, res) => {
         message: "Data GTK Not Found",
       });
     }
-    res.status(201).json({
+    res.status(200).json({
       message: "Get Data GTK Success",
       gtks: gtk,
     });
@@ -1323,18 +1323,47 @@ export const getOneGtk = async (req, res) => {
   }
 };
 
-// export const deleteGtk = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const gtk = await Gtk.findById(id);
-//     const user_id = gtk.user_id._id;
-//     const kepegawaian_id = gtk.kepegawaian_id._id;
-//     const pendidikan_id = gtk.pendidikan_id._id;
+export const getOneGtkLogin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const gtk = await Gtk.findOne({ user_id: id })
+      .populate([ 
+        { path: "user_id", model: "User" },
+        { path: "kepegawaian_id", model: "Kepegawaian" },
+        { path: "pendidikan_id", model: "RiwayatPendidikan" },
+        { path: "anak_id", model: "Anak" },
+        { path: "beasiswa_id", model: "Beasiswa" },
+        { path: "sertifikasi_id", model: "Sertifikasi" },
+        { path: "diklat_id", model: "Diklat" },
+        { path: "penugasan_id", model: "Penugasan" },
+        { path: "tugas_tambahan_id", model: "TugasTambahan" },
+        { path: "penghargaan_id", model: "Penghargaan" },
+        { path: "jabatan_id", model: "RiwayatJabatan" },
+        { path: "gaji_id", model: "RiwayatGaji" },
+        { path: "inpassing_id", model: "Inpassing" },
+        { path: "tunjangan_id", model: "Tunjangan" },
+      ])
+      .lean();  
 
-//     const anak_id = gtk.anak_id._id;
-//     anak_id.forEach((id) => {});
-//   } catch (error) {}
-// };
+    if (!gtk) {
+      console.log(gtk);
+      return res.status(404).json({
+        message: "Data GTK Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Get Data Success",
+      gtk: gtk,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Get Data Failed",
+      error: error.message,
+    });
+  }
+};
 
 // All methods for model Status Kepegawaian
 

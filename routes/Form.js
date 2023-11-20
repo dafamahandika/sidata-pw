@@ -1,6 +1,5 @@
 import {
   getRayon,
-  getOneRayon,
   createRayon,
   deleteRayon,
   updateRayon,
@@ -9,6 +8,7 @@ import {
   updateRombel,
   deleteRombel,
   getStudent,
+  getOneRayon,
   getOneStudent,
   getOneStudentLogin,
   createStudent,
