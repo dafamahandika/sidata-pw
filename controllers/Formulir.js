@@ -7,7 +7,13 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      username,
+      password,
+      email_pembimbing,
+    } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -44,7 +50,9 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
+    const dataRayon = await Rayon.find()
+      .populate({ path: "pembimbing_id", model: "User" })
+      .lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -120,9 +128,13 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
-      new: true,
-    });
+    const resultAccPemb = await User.findByIdAndUpdate(
+      pembimbing_id,
+      updateAccPemb,
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json({
       message: "Success",
@@ -253,7 +265,8 @@ export const createStudent = async (req, res) => {
     const family = new Family();
     const savedFamily = await family.save();
 
-    const { email, nama, rombel, rayon, nis, jk } = req.body;
+    const { email, nama, rombel, rayon, nis, jk } =
+      req.body;
 
     const hashedPassword = await argon2.hash(nis);
 
@@ -464,9 +477,13 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
-      new: true,
-    });
+    const resultFamily = await Family.findByIdAndUpdate(
+      family_id,
+      updatedFamily,
+      {
+        new: true,
+      }
+    );
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -534,63 +551,35 @@ export const uploadFile = async (req, res) => {
     //   console.error();
     // }
 
-    // const title = req.body.title;
+    const title = req.body.title;
+    const image = req.file.path;
 
-    const { ijazah_smp } = req.body;
-    const { akte } = req.body;
-    const { skhun } = req.body;
-    const { kk } = req.body;
+    if (!title || !image) {
+      res.status(400).json({ message: "Title and image are required" });
+      return;
+    }
 
-    // if (!title || !image || !ijazah || !akte_kelahiran || !skhun || !kk) {
-    //   res.status(400).json({ message: "is Required" });
-    //   return;
-    // }
-
-    const result = await Dokumen.create({
-      ijazah_smp,
-      akte,
-      skhun,
-      kk,
+    const result = new Dokumen({
+      title: title,
+      image: image,
     });
 
     // const saveResult = await result.save();
 
-    const student = await Student.findById(id);
+    const dokumen_id = {
+      dokumen_id: saveResult._id,
+    };
 
-    if (!student) {
-      console.log(student);
-      return res.status(404).json({
-        message: "Data Student Not Found",
-      });
-    }
-
-    // Add null check before accessing the 'dokumen_id' property
-    // if (student.dokumen_id) {
-    //   const updateStudent = { dokumen_id: result._id }; // Update the 'dokumen_id' property
-    //   await Student.findByIdAndUpdate(id, updateStudent, { new: true });
-    // } else {
-    //   const updateStudent = {
-    //     ...student.toObject(),
-    //     dokumen_id: result._id,
-    //   }; // Add the 'dokumen_id' property
-    //   await Student.findByIdAndUpdate(id, updateStudent, { new: true });
-    // }
-
-    await student.updateOne({
-      dokumen_id: result._id,
+    const student = await Student.findByIdAndUpdate(id, dokumen_id, {
+      new: true,
     });
 
-    return res.status(200).json({
-      message: "Behasil",
-      data: result,
-      dokumen_id: student.dokumen_id,
-    });
+    res.status(200).json({ massage: "Behasil", data: saveResult, dokumen_id: student.dokumen_id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
   }
 };
-
 export const verifikasi = async (req, res) => {
   try {
     const { id } = req.params;

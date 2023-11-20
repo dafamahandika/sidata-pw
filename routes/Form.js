@@ -1,6 +1,5 @@
 import {
   getRayon,
-  getOneRayon,
   createRayon,
   deleteRayon,
   updateRayon,
@@ -9,14 +8,13 @@ import {
   updateRombel,
   deleteRombel,
   getStudent,
-  getOneStudent,
-  getOneStudentLogin,
   createStudent,
   updateStudent,
   deleteStudent,
   uploadFile,
   verifikasi,
 } from "../controllers/Formulir.js";
+import file from "../middleware/uploadFile.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
