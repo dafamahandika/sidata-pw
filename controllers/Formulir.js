@@ -574,7 +574,13 @@ export const uploadFile = async (req, res) => {
       new: true,
     });
 
-    res.status(200).json({ massage: "Behasil", data: saveResult, dokumen_id: student.dokumen_id });
+    res
+      .status(200)
+      .json({
+        massage: "Behasil",
+        data: saveResult,
+        dokumen_id: student.dokumen_id,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
