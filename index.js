@@ -16,7 +16,8 @@ const app = express();
 app.use(
   cors({
     // origin: "http://172.232.225.139:3001",
-    origin: "https://dashing-logical-redbird.ngrok-free.app",
+    // origin: "https://dashing-logical-redbird.ngrok-free.app",
+    origin: "*",
     methods: "*",
     allowedHeaders: "*",
     exposedHeaders: "*",
