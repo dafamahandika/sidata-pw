@@ -32,7 +32,7 @@ routes.delete("/delete-rayon/:id", deleteRayon);
 routes.get("/rombel", getRombel);
 routes.post("/rombel", createRombel);
 routes.put("/update-rombel/:id", updateRombel);
-routes.delete("/delete-rombel/:id", deleteRombel);
+routes.delete("/gidelete-rombel/:id", deleteRombel);
 
 routes.get("/student", getStudent);
 routes.get("/student/:id", getOneStudent);
