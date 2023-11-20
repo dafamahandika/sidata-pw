@@ -3,6 +3,7 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
+import Dokumen from "../models/Student/Dokumen.js";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
