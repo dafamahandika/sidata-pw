@@ -2,6 +2,7 @@ import express from "express";
 import {
   getGtk,
   getOneGtk,
+  getOneGtkLogin,
   createGtk,
   updateGtk,
   createStatus,
@@ -37,6 +38,7 @@ routes.get("/gtk", getGtk);
 routes.get("/gtk/:id", getOneGtk);
 routes.post("/gtk", createGtk);
 routes.put("/gtk/update/:id", updateGtk);
+routes.get("/dashboard/gtk/:id", getOneGtkLogin);
 
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
