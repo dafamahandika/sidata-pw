@@ -8,13 +8,7 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      username,
-      password,
-      email_pembimbing,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -51,9 +45,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find()
-      .populate({ path: "pembimbing_id", model: "User" })
-      .lean();
+    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -129,13 +121,9 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(
-      pembimbing_id,
-      updateAccPemb,
-      {
-        new: true,
-      }
-    );
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Success",
@@ -266,8 +254,7 @@ export const createStudent = async (req, res) => {
     const family = new Family();
     const savedFamily = await family.save();
 
-    const { email, nama, rombel, rayon, nis, jk } =
-      req.body;
+    const { email, nama, rombel, rayon, nis, jk } = req.body;
 
     const hashedPassword = await argon2.hash(nis);
 
@@ -478,13 +465,9 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(
-      family_id,
-      updatedFamily,
-      {
-        new: true,
-      }
-    );
+    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
+      new: true,
+    });
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -575,13 +558,11 @@ export const uploadFile = async (req, res) => {
       new: true,
     });
 
-    res
-      .status(200)
-      .json({
-        massage: "Behasil",
-        data: saveResult,
-        dokumen_id: student.dokumen_id,
-      });
+    res.status(200).json({
+      massage: "Behasil",
+      data: saveResult,
+      dokumen_id: student.dokumen_id,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
