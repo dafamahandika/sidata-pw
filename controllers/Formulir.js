@@ -4,7 +4,6 @@ import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
 import argon2 from "argon2";
-import resultGtkDocument from "../models/Student/Dokumen.js";
 
 export const createRayon = async (req, res) => {
   try {
@@ -337,7 +336,7 @@ export const getOneStudent = async (req, res) => {
       .populate([
         { path: "dokumen_id", model: "Dokumen" },
         { path: "keluarga_id", model: "Family" },
-        // { path: "user_id", model: "User" },
+        { path: "user_id", model: "User" },
       ])
       .lean();
 
