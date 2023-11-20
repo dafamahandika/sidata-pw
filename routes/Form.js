@@ -10,6 +10,7 @@ import {
   deleteRombel,
   getStudent,
   getOneStudent,
+  getOneStudentLogin,
   createStudent,
   updateStudent,
   deleteStudent,
@@ -38,6 +39,7 @@ routes.get("/student/:id", getOneStudent);
 routes.post("/student/create", createStudent);
 routes.put("/student/update/:id", updateStudent);
 routes.delete("/student/delete/:id", deleteStudent);
+routes.get("/dashboard/student/:id", getOneStudentLogin);
 
 routes.post("/upload/:id", uploadFile);
 routes.post("/verifikasi/:id", verifikasi);

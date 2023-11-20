@@ -254,9 +254,9 @@ export const createStudent = async (req, res) => {
     const family = new Family();
     const savedFamily = await family.save();
 
-    const { username, password, email, nama, rombel, rayon, nis, jk } = req.body;
+    const { email, nama, rombel, rayon, nis, jk } = req.body;
 
-    const hashedPassword = await argon2.hash(password);
+    const hashedPassword = await argon2.hash(nis);
 
     const existingStudent = await Student.findOne({ nis });
 
@@ -265,9 +265,18 @@ export const createStudent = async (req, res) => {
         message: "Student Sudah Terdaftar",
       });
     }
+    const user = new User({
+      username: nis,
+      password: hashedPassword,
+      email: email,
+      role: "student",
+    });
+
+    const savedUser = await user.save();
 
     const student = new Student({
       keluarga_id: savedFamily._id,
+      user_id: savedUser._id,
       nama: nama,
       rombel: rombel,
       rayon: rayon,
@@ -277,15 +286,6 @@ export const createStudent = async (req, res) => {
     });
 
     const savedStudent = await student.save();
-
-    const user = new User({
-      username: username,
-      password: hashedPassword,
-      email: email,
-      role: "student",
-    });
-
-    const savedUser = await user.save();
 
     res.status(200).json({
       message: "Berhasil Menambahkan Data Student",
@@ -337,6 +337,7 @@ export const getOneStudent = async (req, res) => {
       .populate([
         { path: "dokumen_id", model: "Dokumen" },
         { path: "keluarga_id", model: "Family" },
+        // { path: "user_id", model: "User" },
       ])
       .lean();
 
@@ -355,6 +356,37 @@ export const getOneStudent = async (req, res) => {
     res.status(500).json({
       error: error.message,
       message: "Failed to Get One Student",
+    });
+  }
+};
+
+export const getOneStudentLogin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await Student.findOne({ user_id: id })
+      .populate([
+        { path: "dokumen_id", model: "Dokumen" },
+        { path: "keluarga_id", model: "Family" },
+        { path: "user_id", model: "User" },
+      ])
+      .lean();
+
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Student Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Get Data Success",
+      student: student,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Get Data Failed",
+      error: error.message,
     });
   }
 };

@@ -12,6 +12,11 @@ const studentSchema = new mongoose.Schema(
       default: null,
       ref: "Dokumen",
     },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
     nama: {
       type: String,
       required: true,
