@@ -1,4 +1,5 @@
 import Family from "../models/Student/Family.js";
+import Dokumen from "../models/Student/Dokumen.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
@@ -265,8 +266,7 @@ export const createStudent = async (req, res) => {
     const family = new Family();
     const savedFamily = await family.save();
 
-    const { email, nama, rombel, rayon, nis, jk } =
-      req.body;
+    const { email, nama, rombel, rayon, nis, jk } = req.body;
 
     const hashedPassword = await argon2.hash(nis);
 
@@ -574,13 +574,11 @@ export const uploadFile = async (req, res) => {
       new: true,
     });
 
-    res
-      .status(200)
-      .json({
-        massage: "Behasil",
-        data: saveResult,
-        dokumen_id: student.dokumen_id,
-      });
+    res.status(200).json({
+      massage: "Behasil",
+      data: saveResult,
+      dokumen_id: student.dokumen_id,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
