@@ -551,32 +551,54 @@ export const uploadFile = async (req, res) => {
     //   console.error();
     // }
 
-    const title = req.body.title;
-    const image = req.file.path;
+    // const title = req.body.title;
+    const { ijazah_smp } = req.body;
+    const { akte_kelahiran } = req.body;
+    const { skhun } = req.body;
+    const { kk } = req.body;
 
-    if (!title || !image) {
-      res.status(400).json({ message: "Title and image are required" });
-      return;
-    }
+    // if (!title || !image || !ijazah || !akte_kelahiran || !skhun || !kk) {
+    //   res.status(400).json({ message: "is Required" });
+    //   return;
+    // }
 
-    const result = new Dokumen({
-      title: title,
-      image: image,
+    const result = await resultGtkDocument.create({
+      ijazah_smp,
+      akte_kelahiran,
+      skhun,
+      kk,
     });
 
     // const saveResult = await result.save();
 
-    const dokumen_id = {
-      dokumen_id: saveResult._id,
-    };
+    const student = await Student.findById(id);
 
-    const student = await Student.findByIdAndUpdate(id, dokumen_id, {
-      new: true,
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    // Add null check before accessing the 'dokumen_id' property
+    // if (student.dokumen_id) {
+    //   const updateStudent = { dokumen_id: result._id }; // Update the 'dokumen_id' property
+    //   await Student.findByIdAndUpdate(id, updateStudent, { new: true });
+    // } else {
+    //   const updateStudent = {
+    //     ...student.toObject(),
+    //     dokumen_id: result._id,
+    //   }; // Add the 'dokumen_id' property
+    //   await Student.findByIdAndUpdate(id, updateStudent, { new: true });
+    // }
+
+    await student.updateOne({
+      dokumen_id: result._id,
     });
 
-    res.status(200).json({
-      massage: "Behasil",
-      data: saveResult,
+    return res.status(200).json({
+      message: "Behasil",
+      data: result,
       dokumen_id: student.dokumen_id,
     });
   } catch (error) {
