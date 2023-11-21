@@ -16,7 +16,33 @@ import Inpassing from "../models/Gtk/Inpassing.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
 import User from "../models/User.js";
 import argon2 from "argon2";
+import { ServerOpeningEvent } from "mongodb";
 // All method for model Anak
+// Get Data
+export const getAnak = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const anak = await Anak.findById(id);
+    if (!anak) {
+      console.log(anak);
+      return res.status(404).json({
+        message: "Data Anak Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Anak",
+      anak: anak,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Anak",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createAnak = async (req, res) => {
   try {
@@ -104,7 +130,33 @@ export const deleteAnak = async (req, res) => {
     });
   }
 };
+
 // All method for model Beasiswa
+// Get Data
+export const getBeasiswa = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const beasiswa = await Beasiswa.findById(id);
+    if (!beasiswa) {
+      console.log(beasiswa);
+      return res.status(404).json({
+        message: "Data Beasiswa Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Beasiswa",
+      beasiswa: beasiswa,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Beasiswa",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createBeasiswa = async (req, res) => {
   try {
@@ -193,6 +245,31 @@ export const deleteBeasiswa = async (req, res) => {
   }
 };
 // All method for models Kepegawaian
+// Get Data
+export const getKepagawaian = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const beasiswa = await Beasiswa.findById(id);
+    if (!beasiswa) {
+      console.log(beasiswa);
+      return res.status(404).json({
+        message: "Data Beasiswa Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Beasiswa",
+      beasiswa: beasiswa,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Beasiswa",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createKepegawaian = async (req, res) => {
   try {
@@ -281,6 +358,31 @@ export const deleteKepegawaian = async (req, res) => {
   }
 };
 // All method for model Riwayat Pendidikan
+// Get Data
+export const getPendidikan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pendidikan = await RiwayatPendidikan.findById(id);
+    if (!pendidikan) {
+      console.log(pendidikan);
+      return res.status(404).json({
+        message: "Data Riwayat Pendidikan Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Riwayat Pendidikan",
+      pendidikan: pendidikan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Riwayat Pendidikan",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createPendidikan = async (req, res) => {
   try {
@@ -347,9 +449,9 @@ export const updatePendidikan = async function (req, res) {
 // Delete Data
 export const deletePendidikan = async (req, res) => {
   try {
-    const idPendidikan = req.params;
+    const { id } = req.params;
 
-    const deletedPendidikan = await RiwayatPendidikan.findByIdAndDelete(idPendidikan);
+    const deletedPendidikan = await RiwayatPendidikan.findByIdAndDelete(id);
 
     if (!deletedPendidikan) {
       console.log(deletedPendidikan);
@@ -370,6 +472,31 @@ export const deletePendidikan = async (req, res) => {
   }
 };
 // All method for model Sertifikasi
+// Get Data
+export const getSertifikasi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sertifikasi = await Sertifikasi.findById(id);
+    if (!sertifikasi) {
+      console.log(sertifikasi);
+      return res.status(404).json({
+        message: "Data Sertifikasi Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Sertifikasi",
+      sertifikasi: sertifikasi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Sertifikasi",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createSertifikasi = async (req, res) => {
   try {
@@ -436,9 +563,9 @@ export const updateSertifikasi = async function (req, res) {
 // Delete Data
 export const deleteSertifikasi = async (req, res) => {
   try {
-    const idSertifikasi = req.params;
+    const { id } = req.params;
 
-    const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(idSertifikasi);
+    const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(id);
 
     if (deletedSertifikasi) {
       console.log(deletedSertifikasi);
@@ -459,6 +586,30 @@ export const deleteSertifikasi = async (req, res) => {
   }
 };
 // All method for model Diklat
+// Get Data
+export const getDiklat = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const diklat = await Diklat.findById(id);
+    if (!diklat) {
+      console.log(diklat);
+      return res.status(404).json({
+        message: "Data Diklat Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Succes to Get Data Diklat",
+      diklat: diklat,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Dat Diklat",
+      error: error.message,
+    });
+  }
+};
 // Create Data
 export const createDiklat = async (req, res) => {
   try {
@@ -521,9 +672,9 @@ export const updateDiklat = async function (req, res) {
 // Delete Data
 export const deleteDiklat = async (req, res) => {
   try {
-    const idDiklat = req.params;
+    const { id } = req.params;
 
-    const deletedDiklat = await Diklat.findByIdAndDelete(idDiklat);
+    const deletedDiklat = await Diklat.findByIdAndDelete(id);
 
     if (!deletedDiklat) {
       console.log(deletedDiklat);
@@ -607,9 +758,9 @@ export const updatePenugasan = async function (req, res) {
 // Delete Penugasana
 export const deletePenugasan = async (req, res) => {
   try {
-    const idPenugasan = req.params;
+    const { id } = req.params;
 
-    const deletedPenugasan = await Penugasan.findByIdAndDelete(idPenugasan);
+    const deletedPenugasan = await Penugasan.findByIdAndDelete(id);
 
     if (!deletedPenugasan) {
       console.log(deletedPenugasan);
@@ -694,9 +845,9 @@ export const updateTugas = async function (req, res) {
 // Delete Data
 export const deleteTugas = async (req, res) => {
   try {
-    const idTugas = req.params;
+    const { id } = req.params;
 
-    const deletedTugas = await TugasTambahan.findByIdAndDelete(idTugas);
+    const deletedTugas = await TugasTambahan.findByIdAndDelete(id);
 
     if (!deletedTugas) {
       console.log(deletedTugas);
@@ -780,9 +931,9 @@ export const updatePenghargaan = async function (req, res) {
 // Delete Data
 export const deletePenghargaan = async (req, res) => {
   try {
-    const idPenghargaan = req.params;
+    const { id } = req.params;
 
-    const deletedPenghargaan = await Penghargaan.findByIdAndDelete(idPenghargaan);
+    const deletedPenghargaan = await Penghargaan.findByIdAndDelete(id);
 
     if (!deletedPenghargaan) {
       return res.status(404).json({
@@ -866,9 +1017,9 @@ export const updateJabatan = async function (req, res) {
 // Delete Data
 export const deleteJabatan = async (req, res) => {
   try {
-    const idJabatan = req.params;
+    const { id } = req.params;
 
-    const deletedJabatan = await RiwayatJabatan.findByIdAndDelete(idJabatan);
+    const deletedJabatan = await RiwayatJabatan.findByIdAndDelete(id);
 
     if (!deletedJabatan) {
       console.log(deletedJabatan);
@@ -953,9 +1104,9 @@ export const updateGaji = async function (req, res) {
 // Delete Data
 export const deleteGaji = async (req, res) => {
   try {
-    const idGaji = req.params;
+    const { id } = req.params;
 
-    const deletedGaji = await RiwayatGaji.findByIdAndDelete(idGaji);
+    const deletedGaji = await RiwayatGaji.findByIdAndDelete(id);
 
     if (!deletedGaji) {
       console.log(deleteGaji);
@@ -1041,9 +1192,9 @@ export const updateInpassing = async function (req, res) {
 // Delete Data
 export const deleteInpassing = async (req, res) => {
   try {
-    const idInpassing = req.params;
+    const { id } = req.params;
 
-    const deletedInpassing = await Inpassing.findByIdAndDelete(idInpassing);
+    const deletedInpassing = await Inpassing.findByIdAndDelete(id);
     if (!deletedInpassing) {
       console.log(deletedInpassing);
       return res.status(404).json({
@@ -1327,7 +1478,7 @@ export const getOneGtkLogin = async (req, res) => {
   try {
     const { id } = req.params;
     const gtk = await Gtk.findOne({ user_id: id })
-      .populate([ 
+      .populate([
         { path: "user_id", model: "User" },
         { path: "kepegawaian_id", model: "Kepegawaian" },
         { path: "pendidikan_id", model: "RiwayatPendidikan" },
@@ -1343,7 +1494,7 @@ export const getOneGtkLogin = async (req, res) => {
         { path: "inpassing_id", model: "Inpassing" },
         { path: "tunjangan_id", model: "Tunjangan" },
       ])
-      .lean();  
+      .lean();
 
     if (!gtk) {
       console.log(gtk);

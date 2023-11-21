@@ -318,7 +318,7 @@ export const getStudent = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Succes To Get Data Student",
+      message: "Success To Get Data Student",
       students: students,
     });
   } catch (error) {
@@ -625,7 +625,7 @@ export const verifikasiDokumen = async (req, res) => {
 
     const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
       new: true,
-    });
+    }); 
 
     res.status(200).json({
       message: "Berhasil Verifikasi",
