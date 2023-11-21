@@ -405,6 +405,7 @@ export const updateStudent = async (req, res) => {
     }
 
     const updateStudent = {
+      nama: req.body.nama,
       nisn: req.body.nisn,
       nik: req.body.nik,
       no_kk: req.body.no_kk,
