@@ -562,7 +562,7 @@ export const uploadFile = async (req, res) => {
     //   return;
     // }
 
-    const result = await resultGtkDocument.create({
+    const result = await Dokumen.create({
       ijazah_smp,
       akte_kelahiran,
       skhun,
