@@ -1,14 +1,20 @@
 import Family from "../models/Student/Family.js";
+import Dokumen from "../models/Student/Dokumen.js";
 import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
-import Dokumen from "../models/Student/Dokumen.js";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      username,
+      password,
+      email_pembimbing,
+    } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -45,7 +51,9 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
+    const dataRayon = await Rayon.find()
+      .populate({ path: "pembimbing_id", model: "User" })
+      .lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -121,9 +129,13 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
-      new: true,
-    });
+    const resultAccPemb = await User.findByIdAndUpdate(
+      pembimbing_id,
+      updateAccPemb,
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json({
       message: "Success",
@@ -465,9 +477,13 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
-      new: true,
-    });
+    const resultFamily = await Family.findByIdAndUpdate(
+      family_id,
+      updatedFamily,
+      {
+        new: true,
+      }
+    );
 
     if (!resultFamily) {
       console.log(resultFamily);
