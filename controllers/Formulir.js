@@ -5,6 +5,7 @@ import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
 import argon2 from "argon2";
+import { relative } from "path";
 
 export const createRayon = async (req, res) => {
   try {
@@ -537,10 +538,10 @@ export const uploadFile = async (req, res) => {
     const { kk } = req.body;
 
     const result = await Dokumen.create({
-      ijazah_smp,
-      akte_kelahiran,
-      skhun,
-      kk,
+      ijazah_smp: ijazah_smp,
+      akte_kelahiran: akte_kelahiran,
+      skhun: skhun,
+      kk: kk,
     });
 
     const student = await Student.findById(id);
@@ -559,19 +560,20 @@ export const uploadFile = async (req, res) => {
     return res.status(200).json({
       message: "Behasil",
       data: result,
-      dokumen_id: student.dokumen_id,
+      dokumen_id: result._id,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
   }
 };
-export const verifikasi = async (req, res) => {
+
+export const verifikasiData = async (req, res) => {
   try {
     const { id } = req.params;
 
     const verifikasi = {
-      status: "Verifikasi",
+      status_data_diri: "Verifikasi",
     };
 
     const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
@@ -580,7 +582,55 @@ export const verifikasi = async (req, res) => {
 
     res.status(200).json({
       message: "Berhasil Verifikasi",
-      student_status: updateStatus.status,
+      status: updateStatus.status_data_diri,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Verifikasi",
+    });
+  }
+};
+
+export const verifikasiFamily = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const verifikasi = {
+      status_data_family: "Verifikasi",
+    };
+
+    const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Berhasil Verifikasi",
+      status: updateStatus.status_data_family,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Verifikasi",
+    });
+  }
+};
+
+export const verifikasiDokumen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const verifikasi = {
+      status_data_dokumen: "Verifikasi",
+    };
+
+    const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Berhasil Verifikasi",
+      status: updateStatus.status_data_dokumen,
     });
   } catch (error) {
     console.log(error);
