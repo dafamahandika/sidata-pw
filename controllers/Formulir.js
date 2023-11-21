@@ -58,7 +58,7 @@ export const getRayon = async (req, res) => {
       message: "Success Get Data Rayon",
     });
   } catch (error) {
-    console.log(error);
+    console.log(error); 
     res.status(404).json({
       error: error.message,
       message: "Failed Get Data Rayon",
@@ -406,7 +406,7 @@ export const updateStudent = async (req, res) => {
 
     const updateStudent = {
       nisn: req.body.nisn,
-      nik: req.body.nik,
+      nik: req.body.nik, 
       no_kk: req.body.no_kk,
       tempat_lahir: req.body.tempat_lahir,
       tanggal_lahir: req.body.tanggal_lahir,
