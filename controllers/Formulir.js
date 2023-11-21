@@ -5,7 +5,6 @@ import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
 import argon2 from "argon2";
-import { relative } from "path";
 
 export const createRayon = async (req, res) => {
   try {
