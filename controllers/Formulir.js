@@ -8,13 +8,7 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      username,
-      password,
-      email_pembimbing,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -51,9 +45,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find()
-      .populate({ path: "pembimbing_id", model: "User" })
-      .lean();
+    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -129,13 +121,9 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(
-      pembimbing_id,
-      updateAccPemb,
-      {
-        new: true,
-      }
-    );
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Success",
@@ -330,7 +318,7 @@ export const getStudent = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Succes To Get Data Student",
+      message: "Success To Get Data Student",
       students: students,
     });
   } catch (error) {
@@ -417,6 +405,12 @@ export const updateStudent = async (req, res) => {
     }
 
     const updateStudent = {
+      nama: req.body.nama,
+      rombel: req.body.rombel,
+      rayon: req.body.rayon,
+      nis: req.body.nis,
+      jk: req.body.jk,
+      email: req.body.email,
       nisn: req.body.nisn,
       nik: req.body.nik,
       no_kk: req.body.no_kk,
@@ -477,13 +471,9 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(
-      family_id,
-      updatedFamily,
-      {
-        new: true,
-      }
-    );
+    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
+      new: true,
+    });
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -546,50 +536,48 @@ export const uploadFile = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // if (!req.file) {
-    //   res.status(500).json({ message: "Error" });
-    //   console.error();
-    // }
+    const { ijazah_smp } = req.body;
+    const { akte_kelahiran } = req.body;
+    const { skhun } = req.body;
+    const { kk } = req.body;
 
-    const title = req.body.title;
-    const image = req.file.path;
+    const result = await Dokumen.create({
+      ijazah_smp: ijazah_smp,
+      akte_kelahiran: akte_kelahiran,
+      skhun: skhun,
+      kk: kk,
+    });
 
-    if (!title || !image) {
-      res.status(400).json({ message: "Title and image are required" });
-      return;
+    const student = await Student.findById(id);
+
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
     }
 
-    const result = new Dokumen({
-      title: title,
-      image: image,
+    await student.updateOne({
+      dokumen_id: result._id,
     });
 
-    // const saveResult = await result.save();
-
-    const dokumen_id = {
-      dokumen_id: saveResult._id,
-    };
-
-    const student = await Student.findByIdAndUpdate(id, dokumen_id, {
-      new: true,
-    });
-
-    res.status(200).json({
-      massage: "Behasil",
-      data: saveResult,
-      dokumen_id: student.dokumen_id,
+    return res.status(200).json({
+      message: "Behasil",
+      data: result,
+      dokumen_id: result._id,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error" });
   }
 };
-export const verifikasi = async (req, res) => {
+
+export const verifikasiData = async (req, res) => {
   try {
     const { id } = req.params;
 
     const verifikasi = {
-      status: "Verifikasi",
+      status_data_diri: "Verifikasi",
     };
 
     const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
@@ -598,7 +586,55 @@ export const verifikasi = async (req, res) => {
 
     res.status(200).json({
       message: "Berhasil Verifikasi",
-      student_status: updateStatus.status,
+      status: updateStatus.status_data_diri,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Verifikasi",
+    });
+  }
+};
+
+export const verifikasiFamily = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const verifikasi = {
+      status_data_family: "Verifikasi",
+    };
+
+    const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Berhasil Verifikasi",
+      status: updateStatus.status_data_family,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Gagal Verifikasi",
+    });
+  }
+};
+
+export const verifikasiDokumen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const verifikasi = {
+      status_data_dokumen: "Verifikasi",
+    };
+
+    const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Berhasil Verifikasi",
+      status: updateStatus.status_data_dokumen,
     });
   } catch (error) {
     console.log(error);
