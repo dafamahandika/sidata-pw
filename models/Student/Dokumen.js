@@ -1,23 +1,23 @@
 import mongoose from "mongoose";
 
-const docGtkSchema = mongoose.Schema({
-  ijazah_smp: {
-    type: String,
+const DokumenSchema = new mongoose.Schema({
+  documentIjazah: {
+    type: [String],
     required: true,
   },
-  akte_kelahiran: {
-    type: String,
+  documentAkte: {
+    type: [String],
     required: true,
   },
-  skhun: {
-    type: String,
+  documentSkhun: {
+    type: [String],
     required: true,
   },
-  kk: {
-    type: String,
+  documentKk: {
+    type: [String],
     required: true,
   },
 });
 
-const Dokumen = mongoose.model("Dokumen", docGtkSchema);
+const Dokumen = mongoose.model("Dokumen", DokumenSchema);
 export default Dokumen;

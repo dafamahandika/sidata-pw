@@ -4,11 +4,18 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
+import path from "path";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      username,
+      password,
+      email_pembimbing,
+    } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -45,7 +52,9 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
+    const dataRayon = await Rayon.find()
+      .populate({ path: "pembimbing_id", model: "User" })
+      .lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -121,9 +130,13 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
-      new: true,
-    });
+    const resultAccPemb = await User.findByIdAndUpdate(
+      pembimbing_id,
+      updateAccPemb,
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json({
       message: "Success",
@@ -466,9 +479,13 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
-      new: true,
-    });
+    const resultFamily = await Family.findByIdAndUpdate(
+      family_id,
+      updatedFamily,
+      {
+        new: true,
+      }
+    );
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -527,22 +544,119 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
+// export const uploadFile = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     // const { ijazah_smp } = req.file;
+//     // const { akte_kelahiran } = req.file;
+//     // const { skhun } = req.file;
+//     // const { kk } = req.file;
+
+//     // const result = await Dokumen.create({
+//     //   ijazah_smp,
+//     //   akte_kelahiran,
+//     //   skhun,
+//     //   kk,
+//     // });
+
+//     let ijazah_smp = [];
+//     let akte_kelahiran = [];
+//     let skhun = [];
+//     let kk = [];
+
+//     if (req.files) {
+//       if (req.files && req.files["ijazah_smp"]) {
+//         req.files["ijazah_smp"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           ijazah_smp.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["akte_kelahiran"]) {
+//         req.files["akte_kelahiran"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           akte_kelahiran.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["skhun"]) {
+//         req.files["skhun"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           skhun.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["kk"]) {
+//         req.files["kk"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           kk.push(filePath);
+//         });
+//       }
+//     }
+
+//     const result = await Dokumen.create({
+//       ijazah_smp: ijazah_smp,
+//       akte_kelahiran: akte_kelahiran,
+//       skhun: skhun,
+//       kk: kk,
+//     });
+
+//     const student = await Student.findById(id);
+
+//     if (!student) {
+//       console.log(student);
+//       return res.status(404).json({
+//         message: "Data Student Not Found",
+//       });
+//     }
+
+//     await student.updateOne({
+//       dokumen_id: result._id,
+//     });
+
+//     return res.status(200).json({
+//       message: "Behasil",
+//       data: result,
+//       dokumen_id: student.dokumen_id,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Error" });
+//   }
+// };
+
 export const uploadFile = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { ijazah_smp } = req.body;
-    const { akte_kelahiran } = req.body;
-    const { skhun } = req.body;
-    const { kk } = req.body;
+    const documentIjazah = [];
+    const documentAkte = [];
+    const documentSkhun = [];
+    const documentKk = [];
 
+    if (Array.isArray(req.files)) {
+      req.files.forEach((file) => {
+        const ijazah = `${file.filename}`;
+        const akte = `${file.filename}`;
+        const skhun = `${file.filename}`;
+        const kk = `${file.filename}`;
+        documentIjazah.push(ijazah);
+        documentAkte.push(akte);
+        documentSkhun.push(skhun);
+        documentKk.push(kk);
+      });
+    }
+
+    // Membuat dokumen baru dengan data berkas yang diunggah
     const result = await Dokumen.create({
-      ijazah_smp,
-      akte_kelahiran,
-      skhun,
-      kk,
+      documentIjazah: documentIjazah,
+      documentAkte: documentAkte,
+      documentSkhun: documentSkhun,
+      documentKk: documentKk,
     });
 
+    // Menghubungkan dokumen dengan mahasiswa menggunakan ID mahasiswa
     const student = await Student.findById(id);
 
     if (!student) {
@@ -552,13 +666,17 @@ export const uploadFile = async (req, res) => {
       });
     }
 
+    // Menyimpan ID dokumen yang baru dibuat ke dalam data mahasiswa
     await student.updateOne({
       dokumen_id: result._id,
     });
 
+    // Mengembalikan respons ke klien
     return res.status(200).json({
-      message: "Behasil",
-      data: result,
+      message: "Berhasil",
+      data: {
+        documentStudent: result,
+      },
       dokumen_id: student.dokumen_id,
     });
   } catch (error) {
@@ -566,6 +684,7 @@ export const uploadFile = async (req, res) => {
     res.status(500).json({ message: "Error" });
   }
 };
+
 export const verifikasi = async (req, res) => {
   try {
     const { id } = req.params;

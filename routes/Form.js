@@ -17,6 +17,7 @@ import {
   uploadFile,
   verifikasi,
 } from "../controllers/Formulir.js";
+import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -41,7 +42,8 @@ routes.put("/student/update/:id", updateStudent);
 routes.delete("/student/delete/:id", deleteStudent);
 routes.get("/dashboard/student/:id", getOneStudentLogin);
 
-routes.post("/upload/:id", uploadFile);
+// routes.post("/upload/:id", upload.array("gambar", 3), uploadFile);
+routes.post("/upload/:id", upload.array("file"), uploadFile);
 routes.post("/verifikasi/:id", verifikasi);
 
 export default routes;
