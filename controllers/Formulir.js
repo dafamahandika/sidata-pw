@@ -497,7 +497,7 @@ export const updateStudent = async (req, res) => {
       family: resultFamily,
     });
   } catch (error) {
-    console.loh(error);
+    console.log(error);
     res.status(500).json({
       error: error.message,
       message: "Gagal Update Data Student",
