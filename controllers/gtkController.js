@@ -16,7 +16,6 @@ import Inpassing from "../models/Gtk/Inpassing.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
 import User from "../models/User.js";
 import argon2 from "argon2";
-import { ServerOpeningEvent } from "mongodb";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -694,7 +693,31 @@ export const deleteDiklat = async (req, res) => {
     });
   }
 };
+
 // All method for model Penugasan
+// Get Data
+export const getPenugasan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const penugasan = await Penugasan.findById(id);
+    if (!penugasan) {
+      console.log(penugasan);
+      return res.status(404).json({
+        message: "Data Penugasan Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Penugasan",
+      penugasan: penugasan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Penugasan",
+    });
+  }
+};
 // Create Penugasan
 export const createPenugasan = async (req, res) => {
   try {
@@ -781,6 +804,31 @@ export const deletePenugasan = async (req, res) => {
 };
 
 //  All methods for models Tugas Tambahan
+// Get Data
+export const getTugas = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tugas_tambahan = await TugasTambahan.findById(id);
+    if (!tugas_tambahan) {
+      console.log(tugas_tambahan);
+      return res.status(404).json({
+        message: "Data Tugas Tambahan Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Tugas Tambahan",
+      tugas_tambahan: tugas_tambahan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Tugas Tambahan",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createTugas = async (req, res) => {
   try {
@@ -953,6 +1001,30 @@ export const deletePenghargaan = async (req, res) => {
 };
 
 // All methods for model Riwayat Jabatan
+// Get Data
+export const getJabatan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const riwayat_jabatan = await RiwayatJabatan.findById(id);
+    if (!riwayat_jabatan) {
+      console.log(riwayat_jabatan);
+      return res.status(404).json({
+        message: "Data Riwayat Jabatan Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Riwayat Jabatan",
+      riwayat_jabatan: riwayat_jabatan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Riwayat Jabatan",
+      error: error.message,
+    });
+  }
+};
 // Create Data
 export const createJabatan = async (req, res) => {
   try {
@@ -1040,6 +1112,30 @@ export const deleteJabatan = async (req, res) => {
 };
 
 // All methods for model Riwayat Gaji
+// Get Data
+export const getGaji = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const riwayat_gaji = await RiwayatGaji.findById(id);
+    if (!riwayat_gaji) {
+      console.log(riwayat_gaji);
+      return res.status(404).json({
+        message: "Data Riwayat Gaji Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Riwayat Gaji",
+      riwayat_gaji: riwayat_gaji,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Riwayat Gaji",
+      error: error.message,
+    });
+  }
+};
 // Create Data
 export const createGaji = async (req, res) => {
   try {
@@ -1128,6 +1224,30 @@ export const deleteGaji = async (req, res) => {
 };
 
 // All methods for model Inpassing
+// Get Data
+export const getInpassing = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const inpassing = await Inpassing.findById(id);
+    if (!inpassing) {
+      console.log(inpassing);
+      return res.status(404).json({
+        message: "Data Inpassing Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Inpassing",
+      inpassing: inpassing,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Inpassing",
+      error: error.message,
+    });
+  }
+};
 // Create Data
 export const createInpassing = async (req, res) => {
   try {
@@ -1214,7 +1334,31 @@ export const deleteInpassing = async (req, res) => {
   }
 };
 
-// All methods for model Tunjangan
+// All methods for model Tunjangan\
+// Get Data
+export const getTunjangan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tunjangan = await Tunjangan.findById(id);
+    if (!tunjangan) {
+      console.log(tunjangan);
+      return res.status(200).json({
+        message: "Data Tunjangan Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Tunjangan",
+      tunjangan: tunjangan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Tunjangan",
+      error: error.message,
+    });
+  }
+};
 // Create Data
 export const createTunjangan = async (req, res) => {
   try {

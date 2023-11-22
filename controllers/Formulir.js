@@ -406,6 +406,11 @@ export const updateStudent = async (req, res) => {
 
     const updateStudent = {
       nama: req.body.nama,
+      rombel: req.body.rombel,
+      rayon: req.body.rayon,
+      nis: req.body.nis,
+      jk: req.body.jk,
+      email: req.body.email,
       nisn: req.body.nisn,
       nik: req.body.nik,
       no_kk: req.body.no_kk,
@@ -625,7 +630,7 @@ export const verifikasiDokumen = async (req, res) => {
 
     const updateStatus = await Student.findByIdAndUpdate(id, verifikasi, {
       new: true,
-    }); 
+    });
 
     res.status(200).json({
       message: "Berhasil Verifikasi",

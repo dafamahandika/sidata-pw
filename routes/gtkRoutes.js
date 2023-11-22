@@ -12,11 +12,9 @@ import {
   createKepegawaian,
   createAnak,
   deleteAnak,
-
   createPendidikan,
   updatePendidikan,
   deletePendidikan,
-
   createBeasiswa,
   createSertifikasi,
   createDiklat,
