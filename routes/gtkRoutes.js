@@ -13,6 +13,8 @@ import {
   createAnak,
   deleteAnak,
   createPendidikan,
+  updatePendidikan,
+  deletePendidikan,
   createBeasiswa,
   createSertifikasi,
   createDiklat,
@@ -48,7 +50,11 @@ routes.delete("/anak/:id", deleteAnak);
 
 routes.post("/sertifikasi/:id", createSertifikasi);
 routes.post("/kepegawaian/:id", createKepegawaian);
+
 routes.post("/pendidikan/:id", createPendidikan);
+routes.put("/update/pendidikan/:id", updatePendidikan);
+routes.delete("/delete/pendidikan/:id", deletePendidikan);
+
 routes.post("/beasiswa/:id", createBeasiswa);
 routes.post("/diklat/:id", createDiklat);
 routes.post("/penugasan/:id", createPenugasan);

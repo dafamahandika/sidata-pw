@@ -15,7 +15,9 @@ import {
   updateStudent,
   deleteStudent,
   uploadFile,
-  verifikasi,
+  verifikasiData,
+  verifikasiFamily,
+  verifikasiDokumen,
 } from "../controllers/Formulir.js";
 import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -33,7 +35,7 @@ routes.delete("/delete-rayon/:id", deleteRayon);
 routes.get("/rombel", getRombel);
 routes.post("/rombel", createRombel);
 routes.put("/update-rombel/:id", updateRombel);
-routes.delete("/delete-rombel/:id", deleteRombel);
+routes.delete("/gidelete-rombel/:id", deleteRombel);
 
 routes.get("/student", getStudent);
 routes.get("/student/:id", getOneStudent);
@@ -42,8 +44,9 @@ routes.put("/student/update/:id", updateStudent);
 routes.delete("/student/delete/:id", deleteStudent);
 routes.get("/dashboard/student/:id", getOneStudentLogin);
 
-// routes.post("/upload/:id", upload.array("gambar", 3), uploadFile);
-routes.post("/upload/:id", upload.array("file"), uploadFile);
-routes.post("/verifikasi/:id", verifikasi);
+routes.post("/upload/:id", upload.array("document", 4), uploadFile);
+routes.post("/verifikasi-data/:id", verifikasiData);
+routes.post("/verifikasi-family/:id", verifikasiFamily);
+routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
 export default routes;
