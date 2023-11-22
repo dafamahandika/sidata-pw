@@ -465,13 +465,7 @@ export const deletePendidikan = async (req, res) => {
   try {
     const { id } = req.params;
 
-<<<<<<< HEAD
-    const deletedPendidikan = await RiwayatPendidikan.findByIdAndDelete(
-      idPendidikan
-    );
-=======
     const deletedPendidikan = await RiwayatPendidikan.findByIdAndDelete(id);
->>>>>>> 04323dc28f07f37db3ce572c10fb1b82b71594b3
 
     if (!deletedPendidikan) {
       console.log(deletedPendidikan);
@@ -589,13 +583,7 @@ export const deleteSertifikasi = async (req, res) => {
   try {
     const { id } = req.params;
 
-<<<<<<< HEAD
-    const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(
-      idSertifikasi
-    );
-=======
     const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(id);
->>>>>>> 04323dc28f07f37db3ce572c10fb1b82b71594b3
 
     if (deletedSertifikasi) {
       console.log(deletedSertifikasi);
@@ -1024,13 +1012,7 @@ export const deletePenghargaan = async (req, res) => {
   try {
     const { id } = req.params;
 
-<<<<<<< HEAD
-    const deletedPenghargaan = await Penghargaan.findByIdAndDelete(
-      idPenghargaan
-    );
-=======
     const deletedPenghargaan = await Penghargaan.findByIdAndDelete(id);
->>>>>>> 04323dc28f07f37db3ce572c10fb1b82b71594b3
 
     if (!deletedPenghargaan) {
       return res.status(404).json({
@@ -1827,7 +1809,6 @@ export const getJenis = async (req, res) => {
       message: "Get Data Jenis PTK Failed",
     });
   }
-<<<<<<< HEAD
 };
 
 export const uploadGtk = async (req, res) => {
@@ -1873,6 +1854,3 @@ export const uploadGtk = async (req, res) => {
     res.status(500).json({ message: "Error" });
   }
 };
-=======
-};
->>>>>>> 04323dc28f07f37db3ce572c10fb1b82b71594b3
