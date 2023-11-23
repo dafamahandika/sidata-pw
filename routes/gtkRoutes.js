@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  gtkGroupRayon,
   getGtk,
   getOneGtk,
   getOneGtkLogin,
@@ -37,6 +38,7 @@ routes.get("/status-kepeg", getStatus);
 routes.get("/jenis-ptk", getJenis);
 
 routes.get("/gtk", getGtk);
+routes.get("/gtk/group-rayon/:id", gtkGroupRayon);
 routes.get("/gtk/:id", getOneGtk);
 routes.post("/gtk", createGtk);
 routes.put("/gtk/update/:id", updateGtk);
