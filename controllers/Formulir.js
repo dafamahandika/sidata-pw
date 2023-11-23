@@ -447,6 +447,9 @@ export const updateStudent = async (req, res) => {
       no_ijazah_smp: req.body.no_ijazah_smp,
       skhun: req.body.skhun,
       no_un: req.body.no_un,
+      status_data_diri: req.body.status_data_diri,
+      status_data_family: req.body.status_data_family,
+      status_data_dokumen: req.body.status_data_dokumen,
     };
     const resultStudent = await Student.findByIdAndUpdate(id, updateStudent, {
       new: true,
