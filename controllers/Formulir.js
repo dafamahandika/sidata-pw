@@ -157,17 +157,17 @@ export const deleteRayon = async (req, res) => {
     const rayon = await Rayon.findById(id);
     const pembimbing_id = rayon.pembimbing_id;
 
-    const user = await User.findByIdAndDelete(pembimbing_id);
-    const result = await Rayon.findByIdAndDelete(id);
+    const deleteUser = await User.findByIdAndDelete(pembimbing_id);
+    const deletedRayon = await Rayon.findByIdAndDelete(id);
 
-    if (!result) {
+    if (!deletedRayon) {
       return res.status(404).json({ message: "Data Not Found" });
     }
 
     return res.status(200).json({
       message: "Success",
-      result,
-      user,
+      deleteUser,
+      deletedRayon,
     });
   } catch (error) {
     console.log(error);
