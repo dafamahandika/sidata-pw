@@ -139,7 +139,7 @@ const studentSchema = new mongoose.Schema(
     },
     status_data_diri: {
       type: String,
-      default: "Pending", 
+      default: "Pending",
     },
     status_data_family: {
       type: String,
@@ -164,6 +164,15 @@ const studentSchema = new mongoose.Schema(
     no_un: {
       type: String,
       default: null,
+    },
+    tahun_ajaran: {
+      type: String,
+      required: true,
+      default: null,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   {

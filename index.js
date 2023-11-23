@@ -6,8 +6,8 @@ import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
-// import upload from "./routes/upload.js";
-// import uploadRoutes from "./middleware/uploads.js";
+// import uploadRoutes from "./middleware/uploads.js"; // Import uploadRoutes
+
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const port = process.env.PORT || 3000;
@@ -28,11 +28,9 @@ app.use(
   })
 );
 
-// app.use("/api", uploadRoutes);
-
 // app.use(express.static("public"));
 // app.use("/image", express.static("image"));
-app.use(express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -43,6 +41,7 @@ app.use(Login);
 app.use(refreshToken);
 app.use(createStatus);
 app.use(createJenis);
+// app.use(uploadRoutes); // Use uploadRoutes
 
 db.on("error", (err) => {
   console.log(err);
