@@ -627,25 +627,104 @@ export const deleteStudent = async (req, res) => {
 //   }
 // };
 
-export const uploadMiddleware = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-      cb(
-        null,
-        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-      );
-    },
-  }),
-  limits: { fileSize: 10000000000 }, // 1 MB limit
+// export const uploadMiddleware = multer({
+//   storage: multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, "uploads/");
+//     },
+//     filename: (req, file, cb) => {
+//       cb(
+//         null,
+//         file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+//       );
+//     },
+//   }),
+//   limits: { fileSize: 10000000000 }, // 10 GB limit
+// }).fields([
+//   { name: "documentIjazah", maxCount: 1 },
+//   { name: "documentAkte", maxCount: 1 },
+//   { name: "documentSkhun", maxCount: 1 },
+//   { name: "documentKk", maxCount: 1 },
+// ]);
+
+// export const uploadImage = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     uploadMiddleware(req, res, async (err) => {
+//       if (err) {
+//         return res.status(500).json({ message: err.message });
+//       }
+
+//       const newImages = {};
+
+//       // Iterate over the fields and map the paths of the uploaded files
+//       Object.keys(req.files).forEach((field) => {
+//         newImages[field] = req.files[field].map((file) => file.path);
+//       });
+
+//       console.log(req.files);
+
+//       const student = await Student.findById(id);
+
+//       if (!student) {
+//         return res.status(404).json({
+//           message: "Data Student Not Found",
+//         });
+//       }
+
+//       try {
+//         const images = await Dokumen.create(newImages);
+
+//         // Create a response object with the desired structure
+//         const response = {
+//           message: "Files uploaded successfully",
+//           documents: {
+//             documentIjazah: images.documentIjazah || [],
+//             documentAkte: images.documentAkte || [],
+//             documentSkhun: images.documentSkhun || [],
+//             documentKk: images.documentKk || [],
+//             _id: images._id,
+//             __v: images.__v,
+//           },
+//           dokumen_id: images._id,
+//         };
+
+//         return res.json(response);
+//       } catch (error) {
+//         return res.status(500).json({ message: error.message });
+//       }
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/image/");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+// Multer middleware for handling multiple files
+const uploadMiddleware = multer({
+  storage: storage,
+  limits: { fileSize: 17000000000000 }, // Adjust the limit as needed
 }).fields([
   { name: "documentIjazah", maxCount: 1 },
   { name: "documentAkte", maxCount: 1 },
   { name: "documentSkhun", maxCount: 1 },
   { name: "documentKk", maxCount: 1 },
 ]);
+
+console.log(uploadMiddleware);
 
 export const uploadImage = async (req, res) => {
   try {
@@ -660,37 +739,36 @@ export const uploadImage = async (req, res) => {
         req.files;
 
       console.log(req.files);
-
-      const newImages = {
-        documentIjazah: documentIjazah
-          ? documentIjazah.map((file) => file.path)
-          : [],
-        documentAkte: documentAkte ? documentAkte.map((file) => file.path) : [],
-        documentSkhun: documentSkhun
-          ? documentSkhun.map((file) => file.path)
-          : [],
-        documentKk: documentKk ? documentKk.map((file) => file.path) : [],
-      };
-
-      const student = await Student.findById(id);
-
-      if (!student) {
-        return res.status(404).json({
-          message: "Data Student Not Found",
-        });
-      }
-
       try {
+        const student = await Student.findById(id);
+
+        if (!student) {
+          return res.status(404).json({
+            message: "Data Student Not Found",
+          });
+        }
+
+        const newImages = {
+          documentIjazah: documentIjazah
+            ? documentIjazah.map((file) => file.path)
+            : [],
+          documentAkte: documentAkte
+            ? documentAkte.map((file) => file.path)
+            : [],
+          documentSkhun: documentSkhun
+            ? documentSkhun.map((file) => file.path)
+            : [],
+          documentKk: documentKk ? documentKk.map((file) => file.path) : [],
+        };
+
         const images = await Dokumen.create(newImages);
 
-        // Create a response object with the desired structure
+        // Update student with the new document ID
+        await Student.updateOne({ _id: id }, { dokumen_id: images._id });
+
         const response = {
           message: "Files uploaded successfully",
           documents: {
-            documentIjazah: images.documentIjazah || [],
-            documentAkte: images.documentAkte || [],
-            documentSkhun: images.documentSkhun || [],
-            documentKk: images.documentKk || [],
             _id: images._id,
             __v: images.__v,
           },
