@@ -4,11 +4,19 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
+import path from "path";
+import multer from "multer";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, username, password, email_pembimbing } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      username,
+      password,
+      email_pembimbing,
+    } = req.body;
 
     const hashedPassword = await argon2.hash(password);
 
@@ -45,7 +53,9 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
+    const dataRayon = await Rayon.find()
+      .populate({ path: "pembimbing_id", model: "User" })
+      .lean();
     if (!dataRayon) {
       console.log(dataRayon);
       return res.status(404).json({
@@ -121,9 +131,13 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
-      new: true,
-    });
+    const resultAccPemb = await User.findByIdAndUpdate(
+      pembimbing_id,
+      updateAccPemb,
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json({
       message: "Success",
@@ -318,7 +332,7 @@ export const getStudent = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Success To Get Data Student",
+      message: "Succes To Get Data Student",
       students: students,
     });
   } catch (error) {
@@ -406,11 +420,6 @@ export const updateStudent = async (req, res) => {
 
     const updateStudent = {
       nama: req.body.nama,
-      rombel: req.body.rombel,
-      rayon: req.body.rayon,
-      nis: req.body.nis,
-      jk: req.body.jk,
-      email: req.body.email,
       nisn: req.body.nisn,
       nik: req.body.nik,
       no_kk: req.body.no_kk,
@@ -471,9 +480,13 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
-      new: true,
-    });
+    const resultFamily = await Family.findByIdAndUpdate(
+      family_id,
+      updatedFamily,
+      {
+        new: true,
+      }
+    );
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -532,43 +545,166 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
-export const uploadFile = async (req, res) => {
+// export const uploadFile = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     // const { ijazah_smp } = req.file;
+//     // const { akte_kelahiran } = req.file;
+//     // const { skhun } = req.file;
+//     // const { kk } = req.file;
+
+//     // const result = await Dokumen.create({
+//     //   ijazah_smp,
+//     //   akte_kelahiran,
+//     //   skhun,
+//     //   kk,
+//     // });
+
+//     let ijazah_smp = [];
+//     let akte_kelahiran = [];
+//     let skhun = [];
+//     let kk = [];
+
+//     if (req.files) {
+//       if (req.files && req.files["ijazah_smp"]) {
+//         req.files["ijazah_smp"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           ijazah_smp.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["akte_kelahiran"]) {
+//         req.files["akte_kelahiran"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           akte_kelahiran.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["skhun"]) {
+//         req.files["skhun"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           skhun.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["kk"]) {
+//         req.files["kk"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           kk.push(filePath);
+//         });
+//       }
+//     }
+
+//     const result = await Dokumen.create({
+//       ijazah_smp: ijazah_smp,
+//       akte_kelahiran: akte_kelahiran,
+//       skhun: skhun,
+//       kk: kk,
+//     });
+
+//     const student = await Student.findById(id);
+
+//     if (!student) {
+//       console.log(student);
+//       return res.status(404).json({
+//         message: "Data Student Not Found",
+//       });
+//     }
+
+//     await student.updateOne({
+//       dokumen_id: result._id,
+//     });
+
+//     return res.status(200).json({
+//       message: "Behasil",
+//       data: result,
+//       dokumen_id: student.dokumen_id,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Error" });
+//   }
+// };
+
+export const uploadMiddleware = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "uploads/");
+    },
+    filename: (req, file, cb) => {
+      cb(
+        null,
+        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+      );
+    },
+  }),
+  limits: { fileSize: 10000000000 }, // 1 MB limit
+}).fields([
+  { name: "documentIjazah", maxCount: 1 },
+  { name: "documentAkte", maxCount: 1 },
+  { name: "documentSkhun", maxCount: 1 },
+  { name: "documentKk", maxCount: 1 },
+]);
+
+export const uploadImage = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { ijazah_smp } = req.body;
-    const { akte_kelahiran } = req.body;
-    const { skhun } = req.body;
-    const { kk } = req.body;
+    uploadMiddleware(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
 
-    const result = await Dokumen.create({
-      ijazah_smp: ijazah_smp,
-      akte_kelahiran: akte_kelahiran,
-      skhun: skhun,
-      kk: kk,
-    });
+      const { documentIjazah, documentAkte, documentSkhun, documentKk } =
+        req.files;
 
-    const student = await Student.findById(id);
+      console.log(req.files);
 
-    if (!student) {
-      console.log(student);
-      return res.status(404).json({
-        message: "Data Student Not Found",
-      });
-    }
+      const newImages = {
+        documentIjazah: documentIjazah
+          ? documentIjazah.map((file) => file.path)
+          : [],
+        documentAkte: documentAkte ? documentAkte.map((file) => file.path) : [],
+        documentSkhun: documentSkhun
+          ? documentSkhun.map((file) => file.path)
+          : [],
+        documentKk: documentKk ? documentKk.map((file) => file.path) : [],
+      };
 
-    await student.updateOne({
-      dokumen_id: result._id,
-    });
+      const student = await Student.findById(id);
 
-    return res.status(200).json({
-      message: "Behasil",
-      data: result,
-      dokumen_id: result._id,
+      if (!student) {
+        return res.status(404).json({
+          message: "Data Student Not Found",
+        });
+      }
+
+      try {
+        const images = await Dokumen.create(newImages);
+
+        // Create a response object with the desired structure
+        const response = {
+          message: "Files uploaded successfully",
+          documents: {
+            documentIjazah: images.documentIjazah || [],
+            documentAkte: images.documentAkte || [],
+            documentSkhun: images.documentSkhun || [],
+            documentKk: images.documentKk || [],
+            _id: images._id,
+            __v: images.__v,
+          },
+          dokumen_id: images._id,
+        };
+
+        return res.json(response);
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error" });
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -14,12 +14,12 @@ import {
   createStudent,
   updateStudent,
   deleteStudent,
-  uploadFile,
+  uploadImage,
   verifikasiData,
   verifikasiFamily,
   verifikasiDokumen,
 } from "../controllers/Formulir.js";
-import upload from "../middleware/uploads.js";
+// import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -44,7 +44,7 @@ routes.put("/student/update/:id", updateStudent);
 routes.delete("/student/delete/:id", deleteStudent);
 routes.get("/dashboard/student/:id", getOneStudentLogin);
 
-routes.post("/upload/:id", upload.array("document", 4), uploadFile);
+routes.post("/upload/:id", uploadImage);
 routes.post("/verifikasi-data/:id", verifikasiData);
 routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
