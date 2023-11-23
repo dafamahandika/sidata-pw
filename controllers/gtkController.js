@@ -1564,7 +1564,6 @@ export const gtkGroupRayon = async (req, res) => {
         message: "Data Student Not Found",
       });
     }
-    console.log(nama_rayon);
     res.status(200).json({
       message: "Success to Get Data Student",
       student: student,
