@@ -447,6 +447,7 @@ export const updateStudent = async (req, res) => {
       no_ijazah_smp: req.body.no_ijazah_smp,
       skhun: req.body.skhun,
       no_un: req.body.no_un,
+      tahun_ajaran: req.body.tahun_ajaran,
       status_data_diri: req.body.status_data_diri,
       status_data_family: req.body.status_data_family,
       status_data_dokumen: req.body.status_data_dokumen,
@@ -859,5 +860,30 @@ export const verifikasiDokumen = async (req, res) => {
       error: error.message,
       message: "Gagal Verifikasi",
     });
+  }
+};
+
+export const addNewTahunAjran = async (req, res) => {
+  const { newTahunAjaran } = req.body;
+
+  try {
+    const oldestStudent = await Student.findOne(
+      { isDeleted: false },
+      {},
+      { sort: { tahun_ajaran: 1 } }
+    );
+    if (oldestStudent) {
+      oldestStudent.isDeleted = true;
+      await oldestStudent.save();
+    }
+    const newStudent = new Student({
+      tahun_ajaran: newTahunAjaran,
+    });
+    await newStudent.save();
+
+    return res.json({ message: "New tahun ajaran added successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };

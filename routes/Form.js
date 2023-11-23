@@ -18,6 +18,7 @@ import {
   verifikasiData,
   verifikasiFamily,
   verifikasiDokumen,
+  addNewTahunAjran,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -49,4 +50,5 @@ routes.post("/verifikasi-data/:id", verifikasiData);
 routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
+routes.post("/tahun-ajaran/:id", addNewTahunAjran);
 export default routes;
