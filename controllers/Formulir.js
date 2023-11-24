@@ -11,7 +11,18 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      nip,
+      email,
+      nik,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+      agama,
+      no_telp,
+    } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -63,11 +74,16 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find()
+    const dataRayonArray = await Rayon.find()
       .populate({ path: "pembimbing_id", model: "User" })
       .lean();
-    if (!dataRayon) {
-      console.log(dataRayon);
+    const dataRayon = dataRayonArray.reduce((acc, curr) => {
+      acc[curr._id] = curr;
+      return acc;
+    }, {});
+
+    if (!dataRayonArray.length) {
+      console.log(dataRayonArray);
       return res.status(404).json({
         message: "Data Rayon Not Found",
       });
@@ -252,9 +268,15 @@ export const deleteRombel = async (req, res) => {
 
 export const getRombel = async (req, res) => {
   try {
-    const rombel = await Rombel.find();
-    if (!rombel) {
-      console.log(rombel);
+    const rombelArray = await Rombel.find().lean();
+
+    const rombel = rombelArray.reduce((acc, curr) => {
+      acc[curr._id] = curr;
+      return acc;
+    }, {});
+
+    if (!rombelArray.length) {
+      console.log(rombelArray);
       return res.status(404).json({
         message: "Data Rombel Not Found",
       });
