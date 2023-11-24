@@ -19,6 +19,7 @@ import DocumentGTK from "../models/Gtk/documentGtk.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import argon2 from "argon2";
+import { refreshToken } from "./Auth.js";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -1458,7 +1459,7 @@ export const createGtk = async (req, res) => {
         message: "Data GTK Already Exists",
       });
     }
-     
+
     const hashNip = await argon2.hash(nip);
 
     const user = new User({
@@ -1668,6 +1669,55 @@ export const getOneGtk = async (req, res) => {
 export const getOneGtkLogin = async (req, res) => {
   try {
     const { id } = req.params;
+    const rayon = await Rayon.findOne({ pembimbing_id: id });
+
+    if (rayon) {
+      const gtk = await Gtk.findOne({ user_id: id })
+        .populate([
+          { path: "user_id", model: "User" },
+          { path: "kepegawaian_id", model: "Kepegawaian" },
+          { path: "pendidikan_id", model: "RiwayatPendidikan" },
+          { path: "anak_id", model: "Anak" },
+          { path: "beasiswa_id", model: "Beasiswa" },
+          { path: "sertifikasi_id", model: "Sertifikasi" },
+          { path: "diklat_id", model: "Diklat" },
+          { path: "penugasan_id", model: "Penugasan" },
+          { path: "tugas_tambahan_id", model: "TugasTambahan" },
+          { path: "penghargaan_id", model: "Penghargaan" },
+          { path: "jabatan_id", model: "RiwayatJabatan" },
+          { path: "gaji_id", model: "RiwayatGaji" },
+          { path: "inpassing_id", model: "Inpassing" },
+          { path: "tunjangan_id", model: "Tunjangan" },
+        ])
+        .lean();
+      if (!gtk) {
+        console.log(gtk);
+        return res.status(404).json({
+          message: "Data Gtk Not Found",
+        });
+      }
+
+      const nama_rayon = rayon.nama_rayon;
+      const student = await Student.find({ rayon: nama_rayon })
+        .populate([
+          { path: "dokumen_id", model: "Dokumen" },
+          { path: "keluarga_id", model: "Family" },
+          { path: "user_id", model: "User" },
+        ])
+        .lean();
+
+      if (!student) {
+        console.log(student);
+        return res.status(404).json({
+          message: "Data Student Not Found",
+        });
+      }
+      res.status(200).json({
+        message: "Get Data Success",
+        gtk: gtk,
+        student: student,
+      });
+    }
     const gtk = await Gtk.findOne({ user_id: id })
       .populate([
         { path: "user_id", model: "User" },
