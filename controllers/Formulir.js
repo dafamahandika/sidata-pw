@@ -280,7 +280,7 @@ export const createStudent = async (req, res) => {
       });
     }
     const user = new User({
-      username: nis,
+      username: nama,
       password: hashedPassword,
       email: email,
       role: "student",

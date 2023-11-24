@@ -167,7 +167,6 @@ const studentSchema = new mongoose.Schema(
     },
     tahun_ajaran: {
       type: String,
-      required: true,
       default: null,
     },
     isDeleted: {
