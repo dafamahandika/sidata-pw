@@ -6,6 +6,8 @@ import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
+// import authGoogle from "./routes/Login.js";
+// import passport from "./controllers/Auth.js";
 // import uploadRoutes from "./middleware/uploads.js"; // Import uploadRoutes
 
 import cors from "cors";
@@ -41,7 +43,11 @@ app.use(Login);
 app.use(refreshToken);
 app.use(createStatus);
 app.use(createJenis);
+// app.use("/auth", authRoutes);
 // app.use(uploadRoutes); // Use uploadRoutes
+
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 db.on("error", (err) => {
   console.log(err);

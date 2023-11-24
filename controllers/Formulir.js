@@ -80,8 +80,8 @@ export const getRayon = async (req, res) => {
     }
 
     res.status(200).json({
-      rayon: dataRayon,
       message: "Success Get Data Rayon",
+      rayon: dataRayon,
     });
   } catch (error) {
     console.log(error);
@@ -254,23 +254,17 @@ export const deleteRombel = async (req, res) => {
 
 export const getRombel = async (req, res) => {
   try {
-    const rombelArray = await Rombel.find().lean();
-
-    const rombel = rombelArray.reduce((acc, curr) => {
-      acc[curr._id] = curr;
-      return acc;
-    }, {});
-
-    if (!rombelArray.length) {
-      console.log(rombelArray);
+    const rombel = await Rombel.find().lean();
+    if (!rombel) {
+      console.log(rombel);
       return res.status(404).json({
         message: "Data Rombel Not Found",
       });
     }
 
     res.status(200).json({
-      rombel: rombel,
       message: "Success Get Data Rombel",
+      rombel: rombel,
     });
   } catch (error) {
     console.log(error);
