@@ -74,24 +74,19 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayonArray = await Rayon.find()
+    const dataRayon = await Rayon.find()
       .populate({ path: "pembimbing_id", model: "User" })
       .lean();
-    const dataRayon = dataRayonArray.reduce((acc, curr) => {
-      acc[curr.nama_pembimbing] = curr;
-      return acc;
-    }, {});
-
-    if (!dataRayonArray.length) {
-      console.log(dataRayonArray);
+    if (!dataRayon) {
+      console.log(dataRayon);
       return res.status(404).json({
         message: "Data Rayon Not Found",
       });
     }
 
     res.status(200).json({
-      rayon: dataRayon,
       message: "Success Get Data Rayon",
+      rayon: dataRayon,
     });
   } catch (error) {
     console.log(error);
@@ -268,23 +263,17 @@ export const deleteRombel = async (req, res) => {
 
 export const getRombel = async (req, res) => {
   try {
-    const rombelArray = await Rombel.find().lean();
-
-    const rombel = rombelArray.reduce((acc, curr) => {
-      acc[curr.nama_rombel] = curr;
-      return acc;
-    }, {});
-
-    if (!rombelArray.length) {
-      console.log(rombelArray);
+    const rombel = await Rombel.find().lean();
+    if (!rombel) {
+      console.log(rombel);
       return res.status(404).json({
         message: "Data Rombel Not Found",
       });
     }
 
     res.status(200).json({
-      rombel: rombel,
       message: "Success Get Data Rombel",
+      rombel: rombel,
     });
   } catch (error) {
     console.log(error);
