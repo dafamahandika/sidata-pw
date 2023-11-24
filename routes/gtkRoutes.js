@@ -10,10 +10,15 @@ import {
   createJenis,
   getStatus,
   getJenis,
+  getKepagawaian,
+  updateKepegawaian,
   createKepegawaian,
+  deleteKepegawaian,
   getAnak,
   createAnak,
+  updateAnak,
   deleteAnak,
+  getPendidikan,
   createPendidikan,
   updatePendidikan,
   deletePendidikan,
@@ -49,15 +54,21 @@ routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
 
 routes.get("/anak/:id", getAnak);
-routes.post("/anak/:id", createAnak);
-routes.delete("/anak/:id", deleteAnak);
+routes.post("/anak/create/:id", createAnak);
+routes.put("/anak/update/:id", updateAnak);
+routes.delete("/anak/delete/:id", deleteAnak);
 
 routes.post("/sertifikasi/:id", createSertifikasi);
-routes.post("/kepegawaian/:id", createKepegawaian);
 
-routes.post("/pendidikan/:id", createPendidikan);
-routes.put("/update/pendidikan/:id", updatePendidikan);
-routes.delete("/delete/pendidikan/:id", deletePendidikan);
+routes.get("/kepegawaian/:id", getKepagawaian);
+routes.post("/kepegawaian/create/:id", createKepegawaian);
+routes.put("/kepegawaian/update/:id", updateKepegawaian);
+routes.delete("/kepegawaian/delete/:id", deleteKepegawaian);
+
+routes.get("/pendidikan/:id", getPendidikan);
+routes.post("/pendidikan/create/:id", createPendidikan);
+routes.put("/pendidikan/update/:id", updatePendidikan);
+routes.delete("/pendidikan/delete/:id", deletePendidikan);
 
 routes.post("/beasiswa/:id", createBeasiswa);
 routes.post("/diklat/:id", createDiklat);

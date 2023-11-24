@@ -251,17 +251,17 @@ export const deleteBeasiswa = async (req, res) => {
 export const getKepagawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const beasiswa = await Beasiswa.findById(id);
-    if (!beasiswa) {
-      console.log(beasiswa);
+    const kepegawaian = await Kepegawaian.findById(id);
+    if (!kepegawaian) {
+      console.log(kepegawaian);
       return res.status(404).json({
-        message: "Data Beasiswa Not Found",
+        message: "Data Kepegawaian Not Found",
       });
     }
 
     res.status(200).json({
       message: "Success to Get Data Beasiswa",
-      beasiswa: beasiswa,
+      kepegawaian: kepegawaian,
     });
   } catch (error) {
     console.log(error);
@@ -281,8 +281,7 @@ export const createKepegawaian = async (req, res) => {
     if (!dataGtk) {
       console.log(dataGtk);
       return res.status(404).json({
-        error: "Data GTK Not Found",
-        message: "Data GTK Tidak di Temukan",
+        message: "Data GTK Not Found",
       });
     }
 
