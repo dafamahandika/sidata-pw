@@ -19,7 +19,6 @@ import DocumentGTK from "../models/Gtk/documentGtk.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import argon2 from "argon2";
-import { refreshToken } from "./Auth.js";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -1451,7 +1450,7 @@ export const deleteTunjangan = async (req, res) => {
 // Create Data
 export const createGtk = async (req, res) => {
   try {
-    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
+    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip, npwp, no_kk, nama_wajib_pajak } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
     if (existingGtk) {
@@ -1481,6 +1480,9 @@ export const createGtk = async (req, res) => {
       no_telp: no_telp,
       email: email,
       nip: nip,
+      npwp: npwp,
+      no_kk: no_kk,
+      nama_wajib_pajak,
     });
 
     const savedGtk = await gtk.save();
@@ -1616,7 +1618,7 @@ export const getGtk = async (req, res) => {
     }
     res.status(200).json({
       message: "Get Data GTK Success",
-      gtks: gtk,
+      gtk: gtk,
     });
   } catch (error) {
     console.log(error);

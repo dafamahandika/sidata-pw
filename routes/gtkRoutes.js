@@ -11,6 +11,7 @@ import {
   getStatus,
   getJenis,
   createKepegawaian,
+  getAnak,
   createAnak,
   deleteAnak,
   createPendidikan,
@@ -47,6 +48,7 @@ routes.get("/dashboard/gtk/:id", getOneGtkLogin);
 routes.post("/status-pegawai", createStatus);
 routes.post("/jenis-ptk", createJenis);
 
+routes.get("/anak/:id", getAnak);
 routes.post("/anak/:id", createAnak);
 routes.delete("/anak/:id", deleteAnak);
 

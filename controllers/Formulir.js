@@ -11,18 +11,7 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      nip,
-      email,
-      nik,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
-      agama,
-      no_telp,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, npwp, no_kk, nama_wajib_pajak } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -54,6 +43,9 @@ export const createRayon = async (req, res) => {
       no_telp: no_telp,
       email: email,
       nip: nip,
+      npwp: npwp,
+      no_kk: no_kk,
+      nama_wajib_pajak: nama_wajib_pajak,
     });
 
     const savedGtk = await gtk.save();
@@ -74,9 +66,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayonArray = await Rayon.find()
-      .populate({ path: "pembimbing_id", model: "User" })
-      .lean();
+    const dataRayonArray = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
     const dataRayon = dataRayonArray.reduce((acc, curr) => {
       acc[curr._id] = curr;
       return acc;
@@ -157,13 +147,9 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(
-      pembimbing_id,
-      updateAccPemb,
-      {
-        new: true,
-      }
-    );
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Success",
@@ -516,13 +502,9 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = await Family.findByIdAndUpdate(
-      family_id,
-      updatedFamily,
-      {
-        new: true,
-      }
-    );
+    const resultFamily = await Family.findByIdAndUpdate(family_id, updatedFamily, {
+      new: true,
+    });
 
     if (!resultFamily) {
       console.log(resultFamily);
@@ -742,10 +724,7 @@ const storage = multer.diskStorage({
     cb(null, "public/image/");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -771,8 +750,7 @@ export const uploadImage = async (req, res) => {
         return res.status(500).json({ message: err.message });
       }
 
-      const { documentIjazah, documentAkte, documentSkhun, documentKk } =
-        req.files;
+      const { documentIjazah, documentAkte, documentSkhun, documentKk } = req.files;
 
       console.log(req.files);
       try {
@@ -785,15 +763,9 @@ export const uploadImage = async (req, res) => {
         }
 
         const newImages = {
-          documentIjazah: documentIjazah
-            ? documentIjazah.map((file) => file.path)
-            : [],
-          documentAkte: documentAkte
-            ? documentAkte.map((file) => file.path)
-            : [],
-          documentSkhun: documentSkhun
-            ? documentSkhun.map((file) => file.path)
-            : [],
+          documentIjazah: documentIjazah ? documentIjazah.map((file) => file.path) : [],
+          documentAkte: documentAkte ? documentAkte.map((file) => file.path) : [],
+          documentSkhun: documentSkhun ? documentSkhun.map((file) => file.path) : [],
           documentKk: documentKk ? documentKk.map((file) => file.path) : [],
         };
 
@@ -899,11 +871,7 @@ export const addNewTahunAjran = async (req, res) => {
   const { newTahunAjaran } = req.body;
 
   try {
-    const oldestStudent = await Student.findOne(
-      { isDeleted: false },
-      {},
-      { sort: { tahun_ajaran: 1 } }
-    );
+    const oldestStudent = await Student.findOne({ isDeleted: false }, {}, { sort: { tahun_ajaran: 1 } });
     if (oldestStudent) {
       oldestStudent.isDeleted = true;
       await oldestStudent.save();
