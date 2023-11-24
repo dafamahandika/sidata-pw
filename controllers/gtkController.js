@@ -1451,6 +1451,14 @@ export const deleteTunjangan = async (req, res) => {
 export const createGtk = async (req, res) => {
   try {
     const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
+    const existingGtk = await Gtk.findOne({ nik: nik });
+
+    if (existingGtk) {
+      return res.status(409).json({
+        message: "Data GTK Already Exists",
+      });
+    }
+     
     const hashNip = await argon2.hash(nip);
 
     const user = new User({

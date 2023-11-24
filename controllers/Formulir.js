@@ -4,26 +4,21 @@ import Student from "../models/Student/Student.js";
 import Rombel from "../models/Student/Rombel.js";
 import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
+import Gtk from "../models/Gtk/Gtk.js";
 import path from "path";
 import multer from "multer";
 import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      username,
-      password,
-      email_pembimbing,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
 
-    const hashedPassword = await argon2.hash(password);
+    const hashedNip = await argon2.hash(nip);
 
     const accPembimbing = new User({
-      username: username,
-      email: email_pembimbing,
-      password: hashedPassword,
+      username: nama_pembimbing,
+      email: email,
+      password: hashedNip,
       role: "guru",
     });
 
@@ -37,10 +32,25 @@ export const createRayon = async (req, res) => {
 
     const savedRayon = await rayon.save();
 
+    const gtk = new Gtk({
+      user_id: savedAccPemb._id,
+      nama_lengkap: nama_pembimbing,
+      nik: nik,
+      jk: jk,
+      tempat_lahir: tempat_lahir,
+      tanggal_lahir: tanggal_lahir,
+      agama: agama,
+      no_telp: no_telp,
+      email: email,
+      nip: nip,
+    });
+
+    const savedGtk = await gtk.save();
     res.status(200).json({
       massage: "success",
       rayon: savedRayon,
       acc: savedAccPemb._id,
+      gtk: savedGtk,
     });
   } catch (error) {
     console.log(error);
