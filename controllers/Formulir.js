@@ -78,7 +78,7 @@ export const getRayon = async (req, res) => {
       .populate({ path: "pembimbing_id", model: "User" })
       .lean();
     const dataRayon = dataRayonArray.reduce((acc, curr) => {
-      acc[curr._id] = curr;
+      acc[curr.nama_pembimbing] = curr;
       return acc;
     }, {});
 
@@ -271,7 +271,7 @@ export const getRombel = async (req, res) => {
     const rombelArray = await Rombel.find().lean();
 
     const rombel = rombelArray.reduce((acc, curr) => {
-      acc[curr._id] = curr;
+      acc[curr.nama_rombel] = curr;
       return acc;
     }, {});
 
