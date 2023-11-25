@@ -21,7 +21,7 @@ const chatController = {
       const chatMessages = await Chat.find().populate(
         "sender receiver",
         "username"
-      ); // Gantilah 'username' dengan field yang sesuai
+      );
       return chatMessages;
     } catch (error) {
       throw error;
