@@ -1,8 +1,6 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
-// import passport from "passport";
-// import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 export const Login = async (req, res) => {
   const { email, password } = req.body;
@@ -101,51 +99,3 @@ export const isLogout = (req, res, next) => {
     next(new Error("Error logging out"));
   }
 };
-
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: process.env.CALL_BACK,
-//     },
-//     async (accessToken, refreshToken, profile, done) => {
-//       try {
-//         const customAccessToken = process.env.TOKEN_KEY || "sidata";
-//         const customRefreshToken = process.env.REFRESH_TOKEN || "sidatawikrama";
-
-//         let user = await User.findOne({ email: profile._json.email });
-
-//         if (!user) {
-//           user = await User.create({
-//             email: profile._json.email,
-//             name: profile.displayName,
-//           });
-//         }
-
-//         const userData = {
-//           _id: user._id,
-//           email: user.email,
-//           name: user.name,
-//           accessToken: customAccessToken,
-//           refreshToken: customRefreshToken,
-//         };
-
-//         return done(null, userData);
-//       } catch (error) {
-//         console.error(error);
-//         return done(error, null);
-//       }
-//     }
-//   )
-// );
-
-// passport.serializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// passport.deserializeUser((user, done) => {
-//   done(null, user);
-// });
-
-// export default passport;

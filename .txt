@@ -1575,3 +1575,22 @@ export const verifikasiDokumen = async (req, res) => {
     });
   }
 };
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+import User from "../models/User.js";
+
+const isLogin = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user);
+    if (user.refreshToken === null || user.refreshToken === "")
+      return res.status(403).json({ msg: "You must logged in" });
+
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default isLogin;
