@@ -1758,8 +1758,7 @@ export const getOneGtkLogin = async (req, res) => {
   }
 };
 
-// All methods for model Status Kepegawaian
-
+// All methods for model Status Kepegawaian 
 // Create Data
 export const createStatus = async (req, res) => {
   try {
