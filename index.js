@@ -6,9 +6,9 @@ import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
-// import authGoogle from "./routes/Login.js";
-// import passport from "./controllers/Auth.js";
-// import uploadRoutes from "./middleware/uploads.js"; // Import uploadRoutes
+import passport from "passport";
+import session from "express-session";
+import googleStrategy from "./controllers/authGoogle.js";
 
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -18,9 +18,8 @@ const app = express();
 
 app.use(
   cors({
-    // origin: "http://172.232.225.139:3001",
-    // origin: "https://dashing-logical-redbird.ngrok-free.app",
-    origin: "*",
+    origin: process.env.PORT,
+    // origin: "*",
     methods: "*",
     allowedHeaders: "*",
     exposedHeaders: "*",
@@ -30,9 +29,19 @@ app.use(
   })
 );
 
-// app.use(express.static("public"));
-// app.use("/image", express.static("image"));
+app.use(
+  session({
+    secret: "SIDATA",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.use("/uploads", express.static("uploads"));
+
+passport.use(googleStrategy);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -43,11 +52,6 @@ app.use(Login);
 app.use(refreshToken);
 app.use(createStatus);
 app.use(createJenis);
-// app.use("/auth", authRoutes);
-// app.use(uploadRoutes); // Use uploadRoutes
-
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 db.on("error", (err) => {
   console.log(err);
