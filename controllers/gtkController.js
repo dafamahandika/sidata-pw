@@ -201,9 +201,13 @@ export const updateBeasiswa = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateBeasiswa = req.body;
-    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(id, formUpdateBeasiswa, {
-      new: true,
-    });
+    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(
+      id,
+      formUpdateBeasiswa,
+      {
+        new: true,
+      }
+    );
     if (!updateBeasiswa) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -312,9 +316,13 @@ export const updateKepegawaian = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateKepegawaian = req.body;
-    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(id, formUpdateKepegawaian, {
-      new: true,
-    });
+    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(
+      id,
+      formUpdateKepegawaian,
+      {
+        new: true,
+      }
+    );
     if (!updateKepegawaian) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -338,7 +346,9 @@ export const deleteKepegawaian = async (req, res) => {
   try {
     const idKepegawaian = req.params;
 
-    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(idKepegawaian);
+    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(
+      idKepegawaian
+    );
 
     if (!deletedKepegawaian) {
       console.log(deletedKepegawaian);
@@ -426,9 +436,13 @@ export const updatePendidikan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePendidikan = req.body;
-    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(id, formUpdatePendidikan, {
-      new: true,
-    });
+    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(
+      id,
+      formUpdatePendidikan,
+      {
+        new: true,
+      }
+    );
     if (!updatePendidikan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -540,9 +554,13 @@ export const updateSertifikasi = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateSertifikasi = req.body;
-    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(id, formUpdateSertifikasi, {
-      new: true,
-    });
+    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(
+      id,
+      formUpdateSertifikasi,
+      {
+        new: true,
+      }
+    );
     if (!updateSertifikasi) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -760,9 +778,13 @@ export const updatePenugasan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePenugasan = req.body;
-    const updatePenugasan = await Penugasan.findByIdAndUpdate(id, formUpdatePenugasan, {
-      new: true,
-    });
+    const updatePenugasan = await Penugasan.findByIdAndUpdate(
+      id,
+      formUpdatePenugasan,
+      {
+        new: true,
+      }
+    );
     if (!updatePenugasan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -871,9 +893,13 @@ export const updateTugas = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateTugas = req.body;
-    const updateTugas = await TugasTambahan.findByIdAndUpdate(id, formUpdateTugas, {
-      new: true,
-    });
+    const updateTugas = await TugasTambahan.findByIdAndUpdate(
+      id,
+      formUpdateTugas,
+      {
+        new: true,
+      }
+    );
     if (!updateTugas) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -919,6 +945,28 @@ export const deleteTugas = async (req, res) => {
 };
 
 // All methods for model Penghargaan
+export const getPenghargaan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resultPenghargaan = await Penghargaan.findById(id);
+
+    if (!resultPenghargaan) {
+      console.log(resultPenghargaan);
+      res.status(404).json({ massaged: "Not Found data" });
+    }
+    res.status(200).json({
+      message: "Success to Get Data Riwayat Pendidikan",
+      pendidikan: resultPenghargaan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to Get Data Riwayat Pendidikan",
+      error: error.message,
+    });
+  }
+};
+
 // Create Data
 export const createPenghargaan = async (req, res) => {
   try {
@@ -958,9 +1006,13 @@ export const updatePenghargaan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePenghargaan = req.body;
-    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(id, formUpdatePenghargaan, {
-      new: true,
-    });
+    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(
+      id,
+      formUpdatePenghargaan,
+      {
+        new: true,
+      }
+    );
     if (!updatePenghargaan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1067,9 +1119,13 @@ export const updateJabatan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateJabatan = req.body;
-    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(id, formUpdateJabatan, {
-      new: true,
-    });
+    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(
+      id,
+      formUpdateJabatan,
+      {
+        new: true,
+      }
+    );
     if (!updateJabatan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1290,9 +1346,13 @@ export const updateInpassing = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateInpassing = req.body;
-    const updateInpassing = await Inpassing.findByIdAndUpdate(id, formUpdateInpassing, {
-      new: true,
-    });
+    const updateInpassing = await Inpassing.findByIdAndUpdate(
+      id,
+      formUpdateInpassing,
+      {
+        new: true,
+      }
+    );
     if (!updateInpassing) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1401,9 +1461,13 @@ export const updateTunjangan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateTunjangan = req.body;
-    const updateTunjangan = await Tunjangan.findByIdAndUpdate(id, formUpdateTunjangan, {
-      new: true,
-    });
+    const updateTunjangan = await Tunjangan.findByIdAndUpdate(
+      id,
+      formUpdateTunjangan,
+      {
+        new: true,
+      }
+    );
     if (!updateTunjangan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1449,7 +1513,20 @@ export const deleteTunjangan = async (req, res) => {
 // Create Data
 export const createGtk = async (req, res) => {
   try {
-    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip, npwp, no_kk, nama_wajib_pajak } = req.body;
+    const {
+      nama_lengkap,
+      nik,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+      agama,
+      no_telp,
+      email,
+      nip,
+      npwp,
+      no_kk,
+      nama_wajib_pajak,
+    } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
     if (existingGtk) {
@@ -1758,7 +1835,7 @@ export const getOneGtkLogin = async (req, res) => {
   }
 };
 
-// All methods for model Status Kepegawaian 
+// All methods for model Status Kepegawaian
 // Create Data
 export const createStatus = async (req, res) => {
   try {
@@ -1790,7 +1867,9 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+      return res
+        .status(404)
+        .json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(201).json({

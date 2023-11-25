@@ -63,7 +63,7 @@ import {
   updateTunjangan,
   deleteTunjangan,
 } from "../controllers/gtkController.js";
-import { importCsv } from "../controllers/csvController.js";
+import { importFiles } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -148,6 +148,6 @@ routes.post("/tunjangan/create/:id", createTunjangan);
 routes.put("/tunjangan/updte/:id", updateTunjangan);
 routes.delete("/tunjangan/delete/:id", deleteTunjangan);
 
-routes.post("/csv", importCsv);
+routes.post("/csv", importFiles);
 
 export default routes;
