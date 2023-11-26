@@ -17,7 +17,6 @@ router.post("/chat", async (req, res) => {
   }
 });
 
-// Route untuk mengambil semua pesan chat
 router.get("/chat", async (req, res) => {
   try {
     const chatMessages = await chatController.getAllChatMessages();
