@@ -19,7 +19,6 @@ const app = express();
 app.use(
   cors({
     origin: process.env.PORT,
-    // origin: "*",
     methods: "*",
     allowedHeaders: "*",
     exposedHeaders: "*",
