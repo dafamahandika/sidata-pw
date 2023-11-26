@@ -19,6 +19,7 @@ import DocumentGTK from "../models/Gtk/documentGtk.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import argon2 from "argon2";
+import { refreshToken } from "./Auth.js";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -255,17 +256,17 @@ export const deleteBeasiswa = async (req, res) => {
 export const getKepagawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const kepegawaian = await Kepegawaian.findById(id);
-    if (!kepegawaian) {
-      console.log(kepegawaian);
+    const beasiswa = await Beasiswa.findById(id);
+    if (!beasiswa) {
+      console.log(beasiswa);
       return res.status(404).json({
-        message: "Data Kepegawaian Not Found",
+        message: "Data Beasiswa Not Found",
       });
     }
 
     res.status(200).json({
       message: "Success to Get Data Beasiswa",
-      kepegawaian: kepegawaian,
+      beasiswa: beasiswa,
     });
   } catch (error) {
     console.log(error);
@@ -285,7 +286,8 @@ export const createKepegawaian = async (req, res) => {
     if (!dataGtk) {
       console.log(dataGtk);
       return res.status(404).json({
-        message: "Data GTK Not Found",
+        error: "Data GTK Not Found",
+        message: "Data GTK Tidak di Temukan",
       });
     }
 
@@ -945,28 +947,6 @@ export const deleteTugas = async (req, res) => {
 };
 
 // All methods for model Penghargaan
-export const getPenghargaan = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const resultPenghargaan = await Penghargaan.findById(id);
-
-    if (!resultPenghargaan) {
-      console.log(resultPenghargaan);
-      res.status(404).json({ massaged: "Not Found data" });
-    }
-    res.status(200).json({
-      message: "Success to Get Data Riwayat Pendidikan",
-      pendidikan: resultPenghargaan,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Failed to Get Data Riwayat Pendidikan",
-      error: error.message,
-    });
-  }
-};
-
 // Create Data
 export const createPenghargaan = async (req, res) => {
   try {
@@ -1523,9 +1503,6 @@ export const createGtk = async (req, res) => {
       no_telp,
       email,
       nip,
-      npwp,
-      no_kk,
-      nama_wajib_pajak,
     } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
@@ -1556,9 +1533,6 @@ export const createGtk = async (req, res) => {
       no_telp: no_telp,
       email: email,
       nip: nip,
-      npwp: npwp,
-      no_kk: no_kk,
-      nama_wajib_pajak,
     });
 
     const savedGtk = await gtk.save();
@@ -1694,7 +1668,7 @@ export const getGtk = async (req, res) => {
     }
     res.status(200).json({
       message: "Get Data GTK Success",
-      gtk: gtk,
+      gtks: gtk,
     });
   } catch (error) {
     console.log(error);
@@ -1836,6 +1810,7 @@ export const getOneGtkLogin = async (req, res) => {
 };
 
 // All methods for model Status Kepegawaian
+
 // Create Data
 export const createStatus = async (req, res) => {
   try {

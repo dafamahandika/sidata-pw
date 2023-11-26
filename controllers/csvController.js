@@ -3,7 +3,7 @@ import csv from "csv-parser";
 import exceljs from "exceljs";
 import Gtk from "../models/Gtk/Gtk.js";
 
-export const importFiles = async (req, res) => {
+export const importCsv = async (req, res) => {
   try {
     const result = [];
 
