@@ -164,7 +164,7 @@ const gtkSchema = new mongoose.Schema(
     },
     no_kk: {
       type: String,
-      default: null,
+      required: true,
     },
     kode_pos: {
       type: String,
@@ -172,14 +172,7 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: [
-        "Islam",
-        "Kristen Protestan",
-        "Kristen Katholik",
-        "Hindu",
-        "Budha",
-        "Konghuchu",
-      ],
+      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
       required: true,
     },
     kewarganegaraan: {
@@ -188,11 +181,11 @@ const gtkSchema = new mongoose.Schema(
     },
     npwp: {
       type: String,
-      default: null,
+      required: true,
     },
     nama_wajib_pajak: {
       type: String,
-      default: null,
+      required: true,
     },
     status_kawin: {
       type: String,
