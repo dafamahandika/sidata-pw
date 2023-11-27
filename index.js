@@ -23,7 +23,7 @@ const io = new Server(server);
 
 app.use(
   cors({
-    origin: process.env.PORT,
+    origin: "*",
     methods: "*",
     allowedHeaders: "*",
     exposedHeaders: "*",
