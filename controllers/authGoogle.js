@@ -1,7 +1,5 @@
-// Import paket-paket yang diperlukan
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import UserGoogle from "../models/UserGoogle.js";
-import passport from "passport";
 import jwt from "jsonwebtoken";
 
 const GOOGLE_CLIENT_ID =
@@ -53,3 +51,5 @@ const googleStrategy = new GoogleStrategy(
     }
   }
 );
+
+export default googleStrategy;
