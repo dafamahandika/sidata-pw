@@ -28,18 +28,24 @@ const googleStrategy = new GoogleStrategy(
         });
         return done(null, existingUser, token);
       } else {
-        const newUser = new UserGoogle({
-          googleId,
-          googleEmail,
-        });
+        new UserGoogle({
+          googleId: profile.id,
+          googleEmail: googleEmail,
+          username: profile.displayName,
+        })
+          .save()
+          .then((newUser) => {
+            console.log("New user:", newUser);
 
-        await newUser.save();
-        console.log("New user:", newUser);
-
-        const token = jwt.sign({ userId: newUser._id }, "sidata", {
-          expiresIn: "1h",
-        });
-        return done(null, newUser, token);
+            const token = jwt.sign({ userId: newUser._id }, "sidata", {
+              expiresIn: "1h",
+            });
+            return done(null, newUser, token);
+          })
+          .catch((error) => {
+            console.error(error);
+            return done(error, null);
+          });
       }
     } catch (error) {
       console.error(error);
@@ -47,19 +53,3 @@ const googleStrategy = new GoogleStrategy(
     }
   }
 );
-
-// Serialize dan Deserialize user
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error, null);
-  }
-});
-
-export default googleStrategy;
