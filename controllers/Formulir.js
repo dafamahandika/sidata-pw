@@ -572,7 +572,7 @@ export const deleteStudent = async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/image");
+    cb(null, "uploads");
   },
   filename: function (req, file, cb) {
     cb(
