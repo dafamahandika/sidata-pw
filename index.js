@@ -10,17 +10,14 @@ import passport from "passport";
 import session from "express-session";
 import googleStrategy from "./controllers/authGoogle.js";
 import cors from "cors";
+import path from "path";
+import multer from "multer";
 import chatRoutes from "./routes/chat.js";
 import cookieParser from "cookie-parser";
-import http from "http";
-import bodyParser from "body-parser";
-import { Server } from "socket.io";
+import { file } from "googleapis/build/src/apis/file/index.js";
 const port = process.env.PORT || 3000;
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
 app.use(
   cors({
     origin: "*",
@@ -41,29 +38,38 @@ app.use(
   })
 );
 
-app.use(bodyParser.urlencoded({ extended: true }));
-io.on("connection", async (socket) => {
-  console.log("a user connected");
+app.set("view engine", "ejs");
 
-  socket.on("chat message", async (msg) => {
-    const savedMessage = await chatRoutes.saveMessage(msg);
-    io.emit("chat message", savedMessage);
+app.get("/", (req, res) => {
+  res.render("index");
+});
 
-    if (msg.receiver) {
-      io.to(msg.receiver).emit("notification", {
-        message: "New message from admin",
-      });
-    }
-  });
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/image");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
-  socket.on("notification_ack", async (receiverId) => {
-    await chatRoutes.markAsRead(receiverId);
-  });
-  socket.emit("load messages", await chatRoutes.getMessages());
+var upload = multer({ storage: storage });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
+var multipleUpload = upload.fields([
+  { name: "documentIjazah", maxCount: 1 },
+  { name: "documentAkte", maxCount: 1 },
+  { name: "documentSkhun", maxCount: 1 },
+  { name: "documentKk", maxCount: 1 },
+]);
+
+app.post("/uploadDoc/:id", multipleUpload, (req, res) => {
+  if (req.files) {
+    console.log("files uploaded");
+    console.log(req.files);
+  }
 });
 
 app.use("/uploads", express.static("uploads"));

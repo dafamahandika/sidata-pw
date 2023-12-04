@@ -3642,3 +3642,162 @@ db.once("open", () => {
 app.listen(port, () => {
   console.log(`Run Server http://localhost:${port}`);
 });
+
+
+/////////////////////////////////////////////////////////////
+
+// export const uploadFile = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     // const { ijazah_smp } = req.file;
+//     // const { akte_kelahiran } = req.file;
+//     // const { skhun } = req.file;
+//     // const { kk } = req.file;
+
+//     // const result = await Dokumen.create({
+//     //   ijazah_smp,
+//     //   akte_kelahiran,
+//     //   skhun,
+//     //   kk,
+//     // });
+
+//     let ijazah_smp = [];
+//     let akte_kelahiran = [];
+//     let skhun = [];
+//     let kk = [];
+
+//     if (req.files) {
+//       if (req.files && req.files["ijazah_smp"]) {
+//         req.files["ijazah_smp"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           ijazah_smp.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["akte_kelahiran"]) {
+//         req.files["akte_kelahiran"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           akte_kelahiran.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["skhun"]) {
+//         req.files["skhun"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           skhun.push(filePath);
+//         });
+//       }
+
+//       if (req.files && req.files["kk"]) {
+//         req.files["kk"].forEach((file) => {
+//           const filePath = `${file.filename}`;
+//           kk.push(filePath);
+//         });
+//       }
+//     }
+
+//     const result = await Dokumen.create({
+//       ijazah_smp: ijazah_smp,
+//       akte_kelahiran: akte_kelahiran,
+//       skhun: skhun,
+//       kk: kk,
+//     });
+
+//     const student = await Student.findById(id);
+
+//     if (!student) {
+//       console.log(student);
+//       return res.status(404).json({
+//         message: "Data Student Not Found",
+//       });
+//     }
+
+//     await student.updateOne({
+//       dokumen_id: result._id,
+//     });
+
+//     return res.status(200).json({
+//       message: "Behasil",
+//       data: result,
+//       dokumen_id: student.dokumen_id,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Error" });
+//   }
+// };
+
+// export const uploadMiddleware = multer({
+//   storage: multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, "uploads/");
+//     },
+//     filename: (req, file, cb) => {
+//       cb(
+//         null,
+//         file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+//       );
+//     },
+//   }),
+//   limits: { fileSize: 10000000000 }, // 10 GB limit
+// }).fields([
+//   { name: "documentIjazah", maxCount: 1 },
+//   { name: "documentAkte", maxCount: 1 },
+//   { name: "documentSkhun", maxCount: 1 },
+//   { name: "documentKk", maxCount: 1 },
+// ]);
+
+// export const uploadImage = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     uploadMiddleware(req, res, async (err) => {
+//       if (err) {
+//         return res.status(500).json({ message: err.message });
+//       }
+
+//       const newImages = {};
+
+//       // Iterate over the fields and map the paths of the uploaded files
+//       Object.keys(req.files).forEach((field) => {
+//         newImages[field] = req.files[field].map((file) => file.path);
+//       });
+
+//       console.log(req.files);
+
+//       const student = await Student.findById(id);
+
+//       if (!student) {
+//         return res.status(404).json({
+//           message: "Data Student Not Found",
+//         });
+//       }
+
+//       try {
+//         const images = await Dokumen.create(newImages);
+
+//         // Create a response object with the desired structure
+//         const response = {
+//           message: "Files uploaded successfully",
+//           documents: {
+//             documentIjazah: images.documentIjazah || [],
+//             documentAkte: images.documentAkte || [],
+//             documentSkhun: images.documentSkhun || [],
+//             documentKk: images.documentKk || [],
+//             _id: images._id,
+//             __v: images.__v,
+//           },
+//           dokumen_id: images._id,
+//         };
+
+//         return res.json(response);
+//       } catch (error) {
+//         return res.status(500).json({ message: error.message });
+//       }
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
