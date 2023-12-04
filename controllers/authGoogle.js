@@ -1,6 +1,6 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import User from "../models/User.js";
-import passport from "passport";
+import UserGoogle from "../models/UserGoogle.js";
+import jwt from "jsonwebtoken";
 
 const GOOGLE_CLIENT_ID =
   "1065873934901-r2uq3md5p70rgeia09etopm8h6gi9682.apps.googleusercontent.com";
@@ -15,32 +15,41 @@ const googleStrategy = new GoogleStrategy(
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      const user = await User.findOne({ googleId: profile.id });
+      const { id: googleId, emails } = profile;
+      const googleEmail = emails[0].value;
+      const existingUser = await UserGoogle.findOne({ googleId });
 
-      if (user) {
-        done(null, user);
-      } else {
-        const newUser = new User({
-          googleId: profile.id,
-          email: profile.emails[0].value,
-          username: profile.displayName,
+      if (existingUser) {
+        console.log("Existing user:", existingUser);
+        const token = jwt.sign({ userId: existingUser._id }, "sidata", {
+          expiresIn: "1h",
         });
-        await newUser.save();
-        done(null, newUser);
+        return done(null, existingUser, token);
+      } else {
+        new UserGoogle({
+          googleId: profile.id,
+          googleEmail: googleEmail,
+          username: profile.displayName,
+        })
+          .save()
+          .then((newUser) => {
+            console.log("New user:", newUser);
+
+            const token = jwt.sign({ userId: newUser._id }, "sidata", {
+              expiresIn: "1h",
+            });
+            return done(null, newUser, token);
+          })
+          .catch((error) => {
+            console.error(error);
+            return done(error, null);
+          });
       }
     } catch (error) {
-      console.log(error);
-      done(error, null);
+      console.error(error);
+      return done(error, null);
     }
   }
 );
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
 
 export default googleStrategy;

@@ -45,7 +45,8 @@ routes.put("/student/update/:id", updateStudent);
 routes.delete("/student/delete/:id", deleteStudent);
 routes.get("/dashboard/student/:id", getOneStudentLogin);
 
-routes.post("/upload/:id", uploadImage);
+// routes.post("/upload/:id", uploadImage);
+routes.post("/upload", uploadImage);
 routes.post("/verifikasi-data/:id", verifikasiData);
 routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
