@@ -1,18 +1,6 @@
 import mongoose from "mongoose";
 
-const gajiSchema = new mongoose.Schema({
-  no_sk: {
-    type: String,
-    required: true,
-  },
-  tanggal_sk: {
-    type: String,
-    required: true,
-  },
-  tmt_gaji: {
-    type: String,
-    required: true,
-  },
+const gajiSchema = new mongoose.Schema({  
   masa_kerja_thn: {
     type: String,
     require: true,

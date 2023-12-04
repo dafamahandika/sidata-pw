@@ -26,14 +26,6 @@ const diklatShcema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    berapa_jam: {
-      type: String,
-      required: true,
-    },
-    sertifikat: {
-      type: String,
-      required: true,
-    },
   },
   {
     timestamps: true,
