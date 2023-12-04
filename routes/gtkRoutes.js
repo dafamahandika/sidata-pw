@@ -145,7 +145,7 @@ routes.delete("/Inpassing/delete/:id", deleteInpassing);
 
 routes.get("/tunjangan/:id", getTunjangan);
 routes.post("/tunjangan/create/:id", createTunjangan);
-routes.put("/tunjangan/updte/:id", updateTunjangan);
+routes.put("/tunjangan/update/:id", updateTunjangan);
 routes.delete("/tunjangan/delete/:id", deleteTunjangan);
 
 routes.post("/csv", importCsv);

@@ -164,7 +164,7 @@ const gtkSchema = new mongoose.Schema(
     },
     no_kk: {
       type: String,
-      required: true,
+      default: null,
     },
     kode_pos: {
       type: String,
@@ -181,11 +181,11 @@ const gtkSchema = new mongoose.Schema(
     },
     npwp: {
       type: String,
-      required: true,
+      default: null,
     },
     nama_wajib_pajak: {
       type: String,
-      required: true,
+      default: null,
     },
     status_kawin: {
       type: String,

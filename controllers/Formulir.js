@@ -11,7 +11,7 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, npwp, no_kk, nama_wajib_pajak } = req.body;
+    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -43,9 +43,6 @@ export const createRayon = async (req, res) => {
       no_telp: no_telp,
       email: email,
       nip: nip,
-      npwp: npwp,
-      no_kk: no_kk,
-      nama_wajib_pajak: nama_wajib_pajak,
     });
 
     const savedGtk = await gtk.save();

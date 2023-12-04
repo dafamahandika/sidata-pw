@@ -919,6 +919,31 @@ export const deleteTugas = async (req, res) => {
 };
 
 // All methods for model Penghargaan
+// Get
+export const getPenghargaan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const penghargaan = await Penghargaan.findById(id);
+    if (!penghargaan) {
+      console.log(penghargaan);
+      return res.status(404).json({
+        message: "Data Penghargaan Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Success to Get Data Penghargaan",
+      penghargaan: penghargaan,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Failed to Get Data Penghargaan",
+    });
+  }
+};
+
 // Create Data
 export const createPenghargaan = async (req, res) => {
   try {
@@ -1141,7 +1166,7 @@ export const getGaji = async (req, res) => {
 // Create Data
 export const createGaji = async (req, res) => {
   try {
-    const { id } = req.param;
+    const { id } = req.params;
 
     const dataGtk = await Gtk.findById(id);
     if (!dataGtk) {
@@ -1449,7 +1474,7 @@ export const deleteTunjangan = async (req, res) => {
 // Create Data
 export const createGtk = async (req, res) => {
   try {
-    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip, npwp, no_kk, nama_wajib_pajak } = req.body;
+    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
     if (existingGtk) {
@@ -1479,9 +1504,6 @@ export const createGtk = async (req, res) => {
       no_telp: no_telp,
       email: email,
       nip: nip,
-      npwp: npwp,
-      no_kk: no_kk,
-      nama_wajib_pajak,
     });
 
     const savedGtk = await gtk.save();
@@ -1758,7 +1780,7 @@ export const getOneGtkLogin = async (req, res) => {
   }
 };
 
-// All methods for model Status Kepegawaian 
+// All methods for model Status Kepegawaian
 // Create Data
 export const createStatus = async (req, res) => {
   try {
