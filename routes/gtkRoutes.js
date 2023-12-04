@@ -1,31 +1,82 @@
 import express from "express";
 import {
+  // gtk
   gtkGroupRayon,
   getGtk,
   getOneGtk,
   getOneGtkLogin,
   createGtk,
   updateGtk,
+  // status & jenis ptk
   createStatus,
   createJenis,
   getStatus,
   getJenis,
+  // kepegawaian
+  getKepagawaian,
   createKepegawaian,
+  updateKepegawaian,
+  deleteKepegawaian,
+  // anak
+  getAnak,
   createAnak,
+  updateAnak,
   deleteAnak,
+  // pendidikan
+  getPendidikan,
   createPendidikan,
   updatePendidikan,
   deletePendidikan,
+  // beasiswa
+  getBeasiswa,
   createBeasiswa,
+  updateBeasiswa,
+  deleteBeasiswa,
+  // sertifikasi
+  getSertifikasi,
   createSertifikasi,
+  updateSertifikasi,
+  deleteSertifikasi,
+  // diklat
+  getDiklat,
   createDiklat,
+  updateDiklat,
+  deleteDiklat,
+  // penugasan
+  getPenugasan,
   createPenugasan,
+  updatePenugasan,
+  deletePenugasan,
+  // tugas tambahan
+  getTugas,
   createTugas,
+  updateTugas,
+  deleteTugas,
+  // penghargaan
+  getPenghargaan,
   createPenghargaan,
+  updatePenghargaan,
+  deletePenghargaan,
+  // jabatan
+  getJabatan,
   createJabatan,
+  updateJabatan,
+  deleteJabatan,
+  // gaji
+  getGaji,
   createGaji,
+  updateGaji,
+  deleteGaji,
+  // inpassing
+  getInpassing,
   createInpassing,
+  updateInpassing,
+  deleteInpassing,
+  // tunjangan
+  getTunjangan,
   createTunjangan,
+  updateTunjangan,
+  deleteTunjangan,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
@@ -103,9 +154,9 @@ routes.put("/gaji/update/:id", updateGaji);
 routes.delete("/gaji/delete/:id", deleteGaji);
 
 routes.get("/inpassing/:id", getInpassing);
-routes.post("/inpasssing/create/:id", createInpassing);
-routes.put("/Inpassing/update/:id", updateInpassing);
-routes.delete("/Inpassing/delete/:id", deleteInpassing);
+routes.post("/inpassing/create/:id", createInpassing);
+routes.put("/inpassing/update/:id", updateInpassing);
+routes.delete("/inpassing/delete/:id", deleteInpassing);
 
 routes.get("/tunjangan/:id", getTunjangan);
 routes.post("/tunjangan/create/:id", createTunjangan);

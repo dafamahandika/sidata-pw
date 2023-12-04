@@ -19,7 +19,6 @@ import DocumentGTK from "../models/Gtk/documentGtk.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import argon2 from "argon2";
-import { refreshToken } from "./Auth.js";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -202,13 +201,9 @@ export const updateBeasiswa = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateBeasiswa = req.body;
-    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(
-      id,
-      formUpdateBeasiswa,
-      {
-        new: true,
-      }
-    );
+    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(id, formUpdateBeasiswa, {
+      new: true,
+    });
     if (!updateBeasiswa) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -318,13 +313,9 @@ export const updateKepegawaian = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateKepegawaian = req.body;
-    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(
-      id,
-      formUpdateKepegawaian,
-      {
-        new: true,
-      }
-    );
+    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(id, formUpdateKepegawaian, {
+      new: true,
+    });
     if (!updateKepegawaian) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -348,9 +339,7 @@ export const deleteKepegawaian = async (req, res) => {
   try {
     const idKepegawaian = req.params;
 
-    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(
-      idKepegawaian
-    );
+    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(idKepegawaian);
 
     if (!deletedKepegawaian) {
       console.log(deletedKepegawaian);
@@ -438,13 +427,9 @@ export const updatePendidikan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePendidikan = req.body;
-    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(
-      id,
-      formUpdatePendidikan,
-      {
-        new: true,
-      }
-    );
+    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(id, formUpdatePendidikan, {
+      new: true,
+    });
     if (!updatePendidikan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -556,13 +541,9 @@ export const updateSertifikasi = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateSertifikasi = req.body;
-    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(
-      id,
-      formUpdateSertifikasi,
-      {
-        new: true,
-      }
-    );
+    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(id, formUpdateSertifikasi, {
+      new: true,
+    });
     if (!updateSertifikasi) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -780,13 +761,9 @@ export const updatePenugasan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePenugasan = req.body;
-    const updatePenugasan = await Penugasan.findByIdAndUpdate(
-      id,
-      formUpdatePenugasan,
-      {
-        new: true,
-      }
-    );
+    const updatePenugasan = await Penugasan.findByIdAndUpdate(id, formUpdatePenugasan, {
+      new: true,
+    });
     if (!updatePenugasan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -895,13 +872,9 @@ export const updateTugas = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateTugas = req.body;
-    const updateTugas = await TugasTambahan.findByIdAndUpdate(
-      id,
-      formUpdateTugas,
-      {
-        new: true,
-      }
-    );
+    const updateTugas = await TugasTambahan.findByIdAndUpdate(id, formUpdateTugas, {
+      new: true,
+    });
     if (!updateTugas) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1011,13 +984,9 @@ export const updatePenghargaan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePenghargaan = req.body;
-    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(
-      id,
-      formUpdatePenghargaan,
-      {
-        new: true,
-      }
-    );
+    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(id, formUpdatePenghargaan, {
+      new: true,
+    });
     if (!updatePenghargaan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1124,13 +1093,9 @@ export const updateJabatan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateJabatan = req.body;
-    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(
-      id,
-      formUpdateJabatan,
-      {
-        new: true,
-      }
-    );
+    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(id, formUpdateJabatan, {
+      new: true,
+    });
     if (!updateJabatan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1351,13 +1316,9 @@ export const updateInpassing = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateInpassing = req.body;
-    const updateInpassing = await Inpassing.findByIdAndUpdate(
-      id,
-      formUpdateInpassing,
-      {
-        new: true,
-      }
-    );
+    const updateInpassing = await Inpassing.findByIdAndUpdate(id, formUpdateInpassing, {
+      new: true,
+    });
     if (!updateInpassing) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1466,13 +1427,9 @@ export const updateTunjangan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateTunjangan = req.body;
-    const updateTunjangan = await Tunjangan.findByIdAndUpdate(
-      id,
-      formUpdateTunjangan,
-      {
-        new: true,
-      }
-    );
+    const updateTunjangan = await Tunjangan.findByIdAndUpdate(id, formUpdateTunjangan, {
+      new: true,
+    });
     if (!updateTunjangan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1856,9 +1813,7 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res
-        .status(404)
-        .json({ message: "Data Status Kepegawaian Not Found" });
+      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(201).json({
