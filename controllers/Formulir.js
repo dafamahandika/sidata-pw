@@ -841,7 +841,7 @@ export const isCountStudensCompleteData = async (req, res) => {
   }
 };
 
-export const isNoValidateDate = async (req, res) => {
+export const isNoValidateData = async (req, res) => {
   try {
     const { rayonName } = req.params;
 
@@ -890,7 +890,7 @@ export const isNoValidateDate = async (req, res) => {
   }
 };
 
-export const isValidateDate = async (req, res) => {
+export const isValidateData = async (req, res) => {
   try {
     const { rayonName } = req.params;
 
