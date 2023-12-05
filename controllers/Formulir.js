@@ -743,7 +743,7 @@ export const addNewTahunAjran = async (req, res) => {
   }
 };
 
-export const countStudentsWithMissingDataByRayon = async (req, res) => {
+export const isCountStudentsWithMissingData = async (req, res) => {
   try {
     const { rayonName } = req.params;
 
@@ -800,7 +800,7 @@ export const countStudentsWithMissingDataByRayon = async (req, res) => {
   }
 };
 
-export const countStudentsWithCompleteDataByRayon = async (req, res) => {
+export const isCountStudensCompleteData = async (req, res) => {
   try {
     const { rayonName } = req.params;
 
@@ -846,6 +846,104 @@ export const countStudentsWithCompleteDataByRayon = async (req, res) => {
     console.error(error);
     return res.status(500).json({
       message: "Count and Fetch Failed",
+      error: error.message,
+    });
+  }
+};
+
+export const isNoValidateDate = async (req, res) => {
+  try {
+    const { rayonName } = req.params;
+
+    const totalStudents = await Student.countDocuments({ rayon: rayonName });
+
+    const studentsData = await Student.find({
+      rayon: rayonName,
+      nama: { $nin: [null, ""] },
+    });
+
+    const studentsWithPendingStatus = studentsData.filter(
+      (student) =>
+        student.status_data_diri === "Pending" ||
+        student.status_data_family === "Pending" ||
+        student.status_data_dokumen === "Pending"
+    );
+
+    const pendingStudentsCount = studentsWithPendingStatus.length;
+
+    if (pendingStudentsCount > 0) {
+      return res.status(200).json({
+        message: "Students with pending status",
+        totalStudents,
+        pendingStudentsCount,
+        students: studentsWithPendingStatus,
+      });
+    } else {
+      return res.status(200).json({
+        message: "No students with pending status found",
+        totalStudents,
+        pendingStudentsCount: 0,
+        students: [],
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Fetch Pending Status Failed",
+      error: error.message,
+    });
+  }
+};
+
+export const isValidateDate = async (req, res) => {
+  try {
+    const { rayonName } = req.params;
+
+    const totalStudents = await Student.countDocuments({ rayon: rayonName });
+
+    const studentsData = await Student.find({
+      rayon: rayonName,
+      nama: { $nin: [null, ""] },
+    });
+
+    const studentsWithCompleteData = studentsData.filter(
+      (student) =>
+        student.status_data_diri !== "Pending" &&
+        student.status_data_family !== "Pending" &&
+        student.status_data_dokumen !== "Pending"
+    );
+
+    const validatedStudentsCount = studentsWithCompleteData.length;
+
+    if (validatedStudentsCount > 0) {
+      const completeDataFields = studentsWithCompleteData.map((student) => {
+        return {
+          _id: student._id,
+          nama: student.nama,
+          status_data_diri: student.status_data_diri,
+          status_data_family: student.status_data_family,
+          status_data_dokumen: student.status_data_dokumen,
+        };
+      });
+
+      return res.status(200).json({
+        message: "Students with non-pending status",
+        totalStudents,
+        validatedStudentsCount,
+        students: completeDataFields,
+      });
+    } else {
+      return res.status(200).json({
+        message: "No students with non-pending status found",
+        totalStudents,
+        validatedStudentsCount: 0,
+        students: [],
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Fetch Non-Pending Status Failed",
       error: error.message,
     });
   }
