@@ -11,18 +11,7 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      nip,
-      email,
-      nik,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
-      agama,
-      no_telp,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -74,9 +63,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find()
-      .populate({ path: "pembimbing_id", model: "User" })
-      .lean();
+    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
 
     res.status(200).json({
       message: "Success Get Data Rayon",
@@ -146,13 +133,9 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(
-      pembimbing_id,
-      updateAccPemb,
-      {
-        new: true,
-      }
-    );
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Success",
@@ -280,9 +263,6 @@ export const getRombel = async (req, res) => {
 
 export const createStudent = async (req, res) => {
   try {
-    const family = new Family();
-    const savedFamily = await family.save();
-
     const { email, nama, rombel, rayon, nis, jk } = req.body;
 
     const hashedPassword = await argon2.hash(nis);
@@ -304,7 +284,6 @@ export const createStudent = async (req, res) => {
     const savedUser = await user.save();
 
     const student = new Student({
-      keluarga_id: savedFamily._id,
       user_id: savedUser._id,
       nama: nama,
       rombel: rombel,
@@ -319,7 +298,6 @@ export const createStudent = async (req, res) => {
     res.status(200).json({
       message: "Berhasil Menambahkan Data Student",
       student: savedStudent,
-      family: savedFamily,
       user: savedUser.username,
     });
   } catch (error) {
@@ -423,17 +401,40 @@ export const getOneStudentLogin = async (req, res) => {
 export const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
-    const student = await Student.findById(id);
-    const family_id = student.keluarga_id;
 
-    if (!student) {
-      console.log(student);
+    const formFamily = {
+      nama_ayah: req.body.nama_ayah,
+      nik_ayah: req.body.nik_ayah,
+      tanggal_lahir_ayah: req.body.tanggal_lahir_ayah,
+      pendidikan_ayah: req.body.pendidikan_ayah,
+      pekerjaan_ayah: req.body.pekerjaan_ayah,
+      penghasilan_ayah: req.body.penghasilan_ayah,
+      nama_ibu: req.body.nama_ibu,
+      nik_ibu: req.body.nik_ibu,
+      tanggal_lahir_ibu: req.body.tanggal_lahir_ibu,
+      pendidikan_ibu: req.body.pendidikan_ibu,
+      pekerjaan_ibu: req.body.pekerjaan_ibu,
+      penghasilan_ibu: req.body.penghasilan_ibu,
+      nama_wali: req.body.nama_wali,
+      nik_wali: req.body.nik_wali,
+      tanggal_lahir_wali: req.body.tanggal_lahir_wali,
+      pendidikan_wali: req.body.pendidikan_wali,
+      pekerjaan_wali: req.body.pekerjaan_wali,
+      penghasilan_wali: req.body.penghasilan_wali,
+    };
+
+    const resultFamily = new Family({ ...formFamily });
+
+    const savedFamily = await resultFamily.save();
+
+    if (!savedFamily) {
+      console.log(savedFamily);
       return res.status(404).json({
-        message: "Data Student Not Found",
+        message: "Error",
       });
     }
-
     const updateStudent = {
+      family_id: savedFamily._id,
       nama: req.body.nama,
       nisn: req.body.nisn,
       nik: req.body.nik,
@@ -463,9 +464,6 @@ export const updateStudent = async (req, res) => {
       skhun: req.body.skhun,
       no_un: req.body.no_un,
       tahun_ajaran: req.body.tahun_ajaran,
-      status_data_diri: req.body.status_data_diri,
-      status_data_family: req.body.status_data_family,
-      status_data_dokumen: req.body.status_data_dokumen,
     };
     const resultStudent = await Student.findByIdAndUpdate(id, updateStudent, {
       new: true,
@@ -478,45 +476,10 @@ export const updateStudent = async (req, res) => {
       });
     }
 
-    const updatedFamily = {
-      nama_ayah: req.body.nama_ayah,
-      nik_ayah: req.body.nik_ayah,
-      tanggal_lahir_ayah: req.body.tanggal_lahir_ayah,
-      pendidikan_ayah: req.body.pendidikan_ayah,
-      pekerjaan_ayah: req.body.pekerjaan_ayah,
-      penghasilan_ayah: req.body.penghasilan_ayah,
-      nama_ibu: req.body.nama_ibu,
-      nik_ibu: req.body.nik_ibu,
-      tanggal_lahir_ibu: req.body.tanggal_lahir_ibu,
-      pendidikan_ibu: req.body.pendidikan_ibu,
-      pekerjaan_ibu: req.body.pekerjaan_ibu,
-      penghasilan_ibu: req.body.penghasilan_ibu,
-      nama_wali: req.body.nama_wali,
-      nik_wali: req.body.nik_wali,
-      tanggal_lahir_wali: req.body.tanggal_lahir_wali,
-      pendidikan_wali: req.body.pendidikan_wali,
-      pekerjaan_wali: req.body.pekerjaan_wali,
-      penghasilan_wali: req.body.penghasilan_wali,
-    };
-
-    const resultFamily = await Family.findByIdAndUpdate(
-      family_id,
-      updatedFamily,
-      {
-        new: true,
-      }
-    );
-
-    if (!resultFamily) {
-      console.log(resultFamily);
-      return res.status(404).json({
-        message: "Data Family Not Found",
-      });
-    }
     res.status(201).json({
       message: "Berhasil Update Data Student",
       student: resultStudent,
-      family: resultFamily,
+      family: savedFamily,
     });
   } catch (error) {
     console.log(error);
@@ -541,11 +504,11 @@ export const deleteStudent = async (req, res) => {
 
     const family_id = student.keluarga_id;
     const dokumen_id = student.dokumen_id;
-    const nis = student.nis;
+    const user_id = student.user_id;
 
     const deleteFamily = await Family.findByIdAndDelete(family_id);
     const deleteDokumen = await Dokumen.findByIdAndDelete(dokumen_id);
-    const deleteAcc = await User.findOneAndDelete({ username: nis });
+    const deleteAcc = await User.findByIdAndDelete(user_id);
     const deleteStudent = await Student.findByIdAndDelete(id);
 
     res.status(200).json({
@@ -569,10 +532,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads/students");
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -596,8 +556,7 @@ export const uploadImage = async (req, res) => {
         return res.status(500).json({ message: err.message });
       }
 
-      const { documentIjazah, documentAkte, documentSkhun, documentKk } =
-        req.files;
+      const { documentIjazah, documentAkte, documentSkhun, documentKk } = req.files;
 
       console.log(req.files);
       try {
@@ -618,10 +577,7 @@ export const uploadImage = async (req, res) => {
 
         const savedDokumenId = await dokumenId.save();
 
-        await Student.updateOne(
-          { _id: id },
-          { dokumen_id: savedDokumenId._id }
-        );
+        await Student.updateOne({ _id: id }, { dokumen_id: savedDokumenId._id });
 
         const response = {
           message: "Files uploaded successfully",
@@ -722,11 +678,7 @@ export const addNewTahunAjran = async (req, res) => {
   const { newTahunAjaran } = req.body;
 
   try {
-    const oldestStudent = await Student.findOne(
-      { isDeleted: false },
-      {},
-      { sort: { tahun_ajaran: 1 } }
-    );
+    const oldestStudent = await Student.findOne({ isDeleted: false }, {}, { sort: { tahun_ajaran: 1 } });
     if (oldestStudent) {
       oldestStudent.isDeleted = true;
       await oldestStudent.save();
@@ -851,12 +803,7 @@ export const isCountStudensCompleteData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithCompleteData = studentsData.filter(
-      (student) =>
-        student.dokumen_id !== null &&
-        student.keluarga_id !== null &&
-        student.user_id !== null
-    );
+    const studentsWithCompleteData = studentsData.filter((student) => student.dokumen_id !== null && student.keluarga_id !== null && student.user_id !== null);
 
     const countStudentsWithCompleteData = studentsWithCompleteData.length;
 
@@ -905,12 +852,7 @@ export const isNoValidateDate = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithPendingStatus = studentsData.filter(
-      (student) =>
-        student.status_data_diri === "Pending" ||
-        student.status_data_family === "Pending" ||
-        student.status_data_dokumen === "Pending"
-    );
+    const studentsWithPendingStatus = studentsData.filter((student) => student.status_data_diri === "Pending" || student.status_data_family === "Pending" || student.status_data_dokumen === "Pending");
 
     const pendingStudentsCount = studentsWithPendingStatus.length;
 
@@ -959,12 +901,7 @@ export const isValidateDate = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithCompleteData = studentsData.filter(
-      (student) =>
-        student.status_data_diri !== "Pending" &&
-        student.status_data_family !== "Pending" &&
-        student.status_data_dokumen !== "Pending"
-    );
+    const studentsWithCompleteData = studentsData.filter((student) => student.status_data_diri !== "Pending" && student.status_data_family !== "Pending" && student.status_data_dokumen !== "Pending");
 
     const validatedStudentsCount = studentsWithCompleteData.length;
 
