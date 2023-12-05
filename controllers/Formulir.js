@@ -883,14 +883,14 @@ export const isNoValidateDate = async (req, res) => {
       });
 
       return res.status(200).json({
-        message: "Students with complete data",
+        message: "Students with Pending Data",
         totalStudents,
         pendingData: pendingStudentsCount,
         students: completeDataFields,
       });
     } else {
       return res.status(200).json({
-        message: "No students with complete data found",
+        message: "No students with no Pending data found",
         totalStudents,
         completeData: 0,
         students: [],
@@ -944,7 +944,7 @@ export const isValidateDate = async (req, res) => {
       });
     } else {
       return res.status(200).json({
-        message: "No students with non-pending status found",
+        message: "No students with pending status found",
         totalStudents,
         validatedStudentsCount: 0,
         students: [],
