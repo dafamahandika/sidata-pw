@@ -780,14 +780,14 @@ export const countStudentsWithMissingDataByRayon = async (req, res) => {
       return res.status(200).json({
         message: "Some students have missing data",
         totalStudents,
-        missingDataStudent,
+        missingData,
         students: missingFields,
       });
     } else {
       return res.status(200).json({
         message: "All students have complete data",
         totalStudents,
-        missingDataStudent: 0,
+        missingData: 0,
         students: studentsData,
       });
     }
@@ -831,14 +831,14 @@ export const countStudentsWithCompleteDataByRayon = async (req, res) => {
       return res.status(200).json({
         message: "Students with complete data",
         totalStudents,
-        completeDataCount: countStudentsWithCompleteData,
+        completeData: countStudentsWithCompleteData,
         students: completeDataFields,
       });
     } else {
       return res.status(200).json({
         message: "No students with complete data found",
         totalStudents,
-        completeDataCount: 0,
+        completeData: 0,
         students: [],
       });
     }
