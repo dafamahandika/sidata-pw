@@ -18,7 +18,10 @@ import User from "../models/User.js";
 import DocumentGTK from "../models/Gtk/documentGtk.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
+import documentGtk from "../models/Gtk/documentGtk.js";
 import argon2 from "argon2";
+import multer from "multer";
+import path from "path";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -1931,46 +1934,135 @@ export const getJenis = async (req, res) => {
   }
 };
 
-export const uploadGtk = async (req, res) => {
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/gtks");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
+
+const multipleUpload = upload.fields([
+  { name: "ijazah_sd", maxCount: 1 },
+  { name: "ijazah_smp", maxCount: 1 },
+  { name: "ijazah_sma", maxCount: 1 },
+  { name: "ijazah_univ", maxCount: 1 },
+  { name: "ktp", maxCount: 1 },
+  { name: "akte_kelahiran", maxCount: 1 },
+  { name: "kk", maxCount: 1 },
+]);
+
+console.log(multipleUpload);
+
+export const uploadImageGtk = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { ijazah_sd } = req.body;
-    const { ijazah_smp } = req.body;
-    const { ijazah_sma } = req.body;
-    const { ktp } = req.body;
-    const { akte_kelahiran } = req.body;
-    const { kk } = req.body;
+    multipleUpload(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
 
-    const result = await DocumentGTK.create({
-      ijazah_sd,
-      ijazah_smp,
-      ijazah_sma,
-      ktp,
-      akte_kelahiran,
-      kk,
-    });
+      const {
+        ijazah_sd,
+        ijazah_smp,
+        ijazah_sma,
+        ijazah_univ,
+        ktp,
+        akte_kelahiran,
+        kk,
+      } = req.files;
 
-    const gtk = await Gtk.findById(id);
+      console.log(req.files);
+      try {
+        const guru = await Gtk.findById(id);
 
-    if (!gtk) {
-      console.log(gtk);
-      return res.status(404).json({
-        message: "Data GTK Not Found",
-      });
-    }
+        if (!guru) {
+          return res.status(404).json({
+            message: "Data Gtk Not Found",
+          });
+        }
 
-    await gtk.updateOne({
-      gtk_dokumen_id: result._id,
-    });
+        const dokumenId = new documentGtk({
+          ijazah_sd: ijazah_sd ? ijazah_sd[0].path : null,
+          ijazah_smp: ijazah_smp ? ijazah_smp[0].path : null,
+          ijazah_sma: ijazah_sma ? ijazah_sma[0].path : null,
+          ijazah_univ: ijazah_univ ? ijazah_univ[0].path : null,
+          ktp: ktp ? ktp[0].path : null,
+          akte_kelahiran: akte_kelahiran ? akte_kelahiran[0].path : null,
+          kk: kk ? kk[0].path : null,
+        });
 
-    return res.status(200).json({
-      message: "Behasil",
-      data: result,
-      dokumen_id: gtk.gtk_dokumen_id,
+        const savedDokumenId = await dokumenId.save();
+
+        await Gtk.updateOne({ _id: id }, { dokumen_id: savedDokumenId._id });
+
+        const response = {
+          message: "Files uploaded successfully",
+          documents: {
+            ijazah_sd: savedDokumenId.ijazah_sd,
+            ijazah_smp: savedDokumenId.ijazah_smp,
+            ijazah_sma: savedDokumenId.ijazah_sma,
+            ijazah_univ: savedDokumenId.ijazah_univ,
+            ktp: savedDokumenId.ktp,
+            akte_kelahiran: savedDokumenId.akte_kelahiran,
+            kk: savedDokumenId.kk,
+          },
+          dokumen_id: savedDokumenId._id,
+        };
+
+        return res.json(response);
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error" });
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUploadGtk = async (req, res) => {
+  try {
+    const { dokumen_id } = req.params;
+    const dokumen = await documentGtk.findById(dokumen_id);
+
+    if (!dokumen) {
+      return res.status(404).json({
+        message: "Dokumen Not Found",
+      });
+    }
+    const guru = await Gtk.findOne({ dokumen_id });
+
+    if (!guru) {
+      return res.status(404).json({
+        message: "Guru Not Found for the specified Dokumen ID",
+      });
+    }
+    const response = {
+      message: "Data upload retrieved successfully",
+      nama_guru: guru.nama_lengkap,
+      dokumen_id: dokumen._id,
+      documents: {
+        ijazah_sd: dokumen.ijazah_sd,
+        ijazah_smp: dokumen.ijazah_smp,
+        ijazah_sma: dokumen.ijazah_sma,
+        ijazah_univ: dokumen.ijazah_univ,
+        ktp: dokumen.ktp,
+        akte_kelahiran: dokumen.akte_kelahiran,
+        kk: dokumen.kk,
+      },
+    };
+
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 };

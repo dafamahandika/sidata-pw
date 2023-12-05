@@ -98,6 +98,11 @@ const gtkSchema = new mongoose.Schema(
         ref: "RiwayatGaji",
       },
     ],
+    dokumen_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+      ref: "documentGtk",
+    },
     nama_lengkap: {
       type: String,
       required: true,
