@@ -20,6 +20,7 @@ import {
   verifikasiDokumen,
   addNewTahunAjran,
   countStudentsWithMissingDataByRayon,
+  countStudentsWithCompleteDataByRayon,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -54,4 +55,5 @@ routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
 routes.post("/tahun-ajaran/:id", addNewTahunAjran);
 routes.get("/data/:rayonName", countStudentsWithMissingDataByRayon);
+routes.get("/data-lengkap/:rayonName", countStudentsWithCompleteDataByRayon);
 export default routes;

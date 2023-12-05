@@ -595,7 +595,7 @@ export const uploadImage = async (req, res) => {
       if (err) {
         return res.status(500).json({ message: err.message });
       }
-      
+
       const { documentIjazah, documentAkte, documentSkhun, documentKk } =
         req.files;
 
@@ -746,29 +746,24 @@ export const addNewTahunAjran = async (req, res) => {
 export const countStudentsWithMissingDataByRayon = async (req, res) => {
   try {
     const { rayonName } = req.params;
-    const studentsWithData = await Student.find({
+
+    const totalStudents = await Student.countDocuments({ rayon: rayonName });
+
+    const studentsData = await Student.find({
       rayon: rayonName,
       nama: { $nin: [null, ""] },
     });
 
-    if (!studentsWithData || studentsWithData.length === 0) {
-      return res.status(404).json({
-        message: `No students found in rayon ${rayonName}`,
-      });
-    }
-
-    const countStudents = studentsWithData.length;
-
-    const hasEmptyFields = studentsWithData.some(
+    const studentMissing = studentsData.filter(
       (student) =>
         student.dokumen_id === null ||
-        student.dokumen_id === "" ||
         student.keluarga_id === null ||
         student.user_id === null
     );
+    const missingData = studentMissing.length;
 
-    if (hasEmptyFields) {
-      const missingFields = studentsWithData.map((student) => {
+    if (missingData > 0) {
+      const missingFields = studentMissing.map((student) => {
         const firstMissingField = [
           { path: "dokumen_id", model: "Dokumen" },
           { path: "keluarga_id", model: "Family" },
@@ -784,14 +779,67 @@ export const countStudentsWithMissingDataByRayon = async (req, res) => {
 
       return res.status(200).json({
         message: "Some students have missing data",
-        count: countStudents,
+        totalStudents,
+        missingData,
         students: missingFields,
       });
     } else {
       return res.status(200).json({
         message: "All students have complete data",
-        count: countStudents,
-        students: studentsWithData,
+        totalStudents,
+        missingData: 0,
+        students: studentsData,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Count and Fetch Failed",
+      error: error.message,
+    });
+  }
+};
+
+export const countStudentsWithCompleteDataByRayon = async (req, res) => {
+  try {
+    const { rayonName } = req.params;
+
+    const totalStudents = await Student.countDocuments({ rayon: rayonName });
+
+    const studentsData = await Student.find({
+      rayon: rayonName,
+      nama: { $nin: [null, ""] },
+    });
+
+    const studentsWithCompleteData = studentsData.filter(
+      (student) =>
+        student.dokumen_id !== null &&
+        student.keluarga_id !== null &&
+        student.user_id !== null
+    );
+
+    const countStudentsWithCompleteData = studentsWithCompleteData.length;
+
+    if (countStudentsWithCompleteData > 0) {
+      const completeDataFields = studentsWithCompleteData.map((student) => {
+        return {
+          _id: student._id,
+          nama: student.nama,
+        };
+      });
+
+      return res.status(200).json({
+        message: "Students with complete data",
+        totalStudents,
+        completeData: countStudentsWithCompleteData,
+        students: completeDataFields,
+      });
+    } else {
+      return res.status(200).json({
+        message: "No students with complete data found",
+        totalStudents,
+        completeData: 0,
+        students: [],
       });
     }
   } catch (error) {
