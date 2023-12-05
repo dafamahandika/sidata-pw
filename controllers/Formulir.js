@@ -760,9 +760,9 @@ export const countStudentsWithMissingDataByRayon = async (req, res) => {
         student.keluarga_id === null ||
         student.user_id === null
     );
-    const missingDataStudent = studentMissing.length;
+    const missingData = studentMissing.length;
 
-    if (missingDataStudent > 0) {
+    if (missingData > 0) {
       const missingFields = studentMissing.map((student) => {
         const firstMissingField = [
           { path: "dokumen_id", model: "Dokumen" },
