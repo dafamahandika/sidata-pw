@@ -872,17 +872,27 @@ export const isNoValidateDate = async (req, res) => {
     const pendingStudentsCount = studentsWithPendingStatus.length;
 
     if (pendingStudentsCount > 0) {
+      const completeDataFields = studentsWithPendingStatus.map((student) => {
+        return {
+          _id: student._id,
+          nama: student.nama,
+          status_data_diri: student.status_data_diri,
+          status_data_family: student.status_data_family,
+          status_data_dokumen: student.status_data_dokumen,
+        };
+      });
+
       return res.status(200).json({
-        message: "Students with pending status",
+        message: "Students with complete data",
         totalStudents,
-        pendingStudentsCount,
-        students: studentsWithPendingStatus,
+        pendingData: pendingStudentsCount,
+        students: completeDataFields,
       });
     } else {
       return res.status(200).json({
-        message: "No students with pending status found",
+        message: "No students with complete data found",
         totalStudents,
-        pendingStudentsCount: 0,
+        completeData: 0,
         students: [],
       });
     }
