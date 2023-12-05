@@ -747,47 +747,87 @@ export const isCountStudentsWithMissingData = async (req, res) => {
   try {
     const { rayonName } = req.params;
 
-    const totalStudents = await Student.countDocuments({ rayon: rayonName });
-
     const studentsData = await Student.find({
       rayon: rayonName,
       nama: { $nin: [null, ""] },
     });
 
-    const studentMissing = studentsData.filter(
-      (student) =>
-        student.dokumen_id === null ||
-        student.keluarga_id === null ||
-        student.user_id === null
+    const requiredFields = [
+      "status_data_diri",
+      "status_data_family",
+      "status_data_dokumen",
+      "tahun_ajaran",
+      "isDeleted",
+      "_id",
+      "keluarga_id",
+      "dokumen_id",
+      "nama",
+      "nis",
+      "jk",
+      "rombel",
+      "rayon",
+      "nisn",
+      "nik",
+      "no_kk",
+      "tempat_lahir",
+      "tanggal_lahir",
+      "no_akta",
+      "agama",
+      "kewarganegaraan",
+      "alamat",
+      "rt",
+      "rw",
+      "nama_dusun",
+      "kecamatan",
+      "nama_kota",
+      "provinsi",
+      "kode_pos",
+      "transportasi",
+      "anak_ke",
+      "tinggal_bersama",
+      "email",
+      "no_telp",
+      "tb",
+      "bb",
+      "gol_darah",
+      "status",
+      "asal_smp",
+      "no_ijazah_smp",
+      "skhun",
+      "no_un",
+    ];
+
+    const incompleteDataStudents = studentsData.filter((student) =>
+      requiredFields.some(
+        (field) => student[field] === null || student[field] === undefined
+      )
     );
-    const missingData = studentMissing.length;
 
-    if (missingData > 0) {
-      const missingFields = studentMissing.map((student) => {
-        const firstMissingField = [
-          { path: "dokumen_id", model: "Dokumen" },
-          { path: "keluarga_id", model: "Family" },
-          { path: "user_id", model: "User" },
-        ].find(({ path }) => student[path] === null);
+    const incompleteDataCount = incompleteDataStudents.length;
 
+    if (incompleteDataCount > 0) {
+      const incompleteDataDetails = incompleteDataStudents.map((student) => {
+        const missingFields = requiredFields.filter(
+          (field) => student[field] === null || student[field] === undefined
+        );
         return {
           _id: student._id,
           nama: student.nama,
-          missingField: firstMissingField ? firstMissingField.path : "Lengkap",
+          masih_belum: missingFields,
         };
       });
 
       return res.status(200).json({
-        message: "Some students have missing data",
-        totalStudents,
-        missingData,
-        students: missingFields,
+        message: "Some students have incomplete data",
+        totalStudents: studentsData.length,
+        incompleteDataCount,
+        students: incompleteDataDetails,
       });
     } else {
       return res.status(200).json({
         message: "All students have complete data",
-        totalStudents,
-        missingData: 0,
+        totalStudents: studentsData.length,
+        incompleteDataCount: 0,
         students: studentsData,
       });
     }
@@ -825,6 +865,9 @@ export const isCountStudensCompleteData = async (req, res) => {
         return {
           _id: student._id,
           nama: student.nama,
+          user_id: student.keluarga_id,
+          keluarga_id: student.keluarga_id,
+          dokumen_id: student.keluarga_id,
         };
       });
 
