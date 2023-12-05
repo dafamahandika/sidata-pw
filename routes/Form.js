@@ -19,8 +19,10 @@ import {
   verifikasiFamily,
   verifikasiDokumen,
   addNewTahunAjran,
-  countStudentsWithMissingDataByRayon,
-  countStudentsWithCompleteDataByRayon,
+  isCountStudentsWithMissingData,
+  isCountStudensCompleteData,
+  isNoValidateDate,
+  isValidateDate,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -54,6 +56,9 @@ routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
 routes.post("/tahun-ajaran/:id", addNewTahunAjran);
-routes.get("/data/:rayonName", countStudentsWithMissingDataByRayon);
-routes.get("/data-lengkap/:rayonName", countStudentsWithCompleteDataByRayon);
+routes.get("/data/:rayonName", isCountStudentsWithMissingData);
+routes.get("/data-lengkap/:rayonName", isCountStudensCompleteData);
+routes.get("/data-novalidate/:rayonName", isNoValidateDate);
+routes.get("/data-validate/:rayonName", isValidateDate);
+
 export default routes;
