@@ -11,7 +11,18 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      nip,
+      email,
+      nik,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+      agama,
+      no_telp,
+    } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -564,7 +575,9 @@ const storage = multer.diskStorage({
     );
   },
 });
+
 const upload = multer({ storage: storage });
+
 const multipleUpload = upload.fields([
   { name: "documentIjazah", maxCount: 1 },
   { name: "documentAkte", maxCount: 1 },
@@ -582,7 +595,7 @@ export const uploadImage = async (req, res) => {
       if (err) {
         return res.status(500).json({ message: err.message });
       }
-
+      
       const { documentIjazah, documentAkte, documentSkhun, documentKk } =
         req.files;
 
@@ -727,5 +740,65 @@ export const addNewTahunAjran = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const countStudentsWithMissingDataByRayon = async (req, res) => {
+  try {
+    const { rayonName } = req.params;
+    const studentsWithData = await Student.find({
+      rayon: rayonName,
+      nama: { $nin: [null, ""] },
+    });
+
+    if (!studentsWithData || studentsWithData.length === 0) {
+      return res.status(404).json({
+        message: `No students found in rayon ${rayonName}`,
+      });
+    }
+
+    const countStudents = studentsWithData.length;
+
+    const hasEmptyFields = studentsWithData.some(
+      (student) =>
+        student.dokumen_id === null ||
+        student.dokumen_id === "" ||
+        student.keluarga_id === null ||
+        student.user_id === null
+    );
+
+    if (hasEmptyFields) {
+      const missingFields = studentsWithData.map((student) => {
+        const firstMissingField = [
+          { path: "dokumen_id", model: "Dokumen" },
+          { path: "keluarga_id", model: "Family" },
+          { path: "user_id", model: "User" },
+        ].find(({ path }) => student[path] === null);
+
+        return {
+          _id: student._id,
+          nama: student.nama,
+          missingField: firstMissingField ? firstMissingField.path : "Lengkap",
+        };
+      });
+
+      return res.status(200).json({
+        message: "Some students have missing data",
+        count: countStudents,
+        students: missingFields,
+      });
+    } else {
+      return res.status(200).json({
+        message: "All students have complete data",
+        count: countStudents,
+        students: studentsWithData,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Count and Fetch Failed",
+      error: error.message,
+    });
   }
 };
