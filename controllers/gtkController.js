@@ -2026,3 +2026,42 @@ export const uploadImageGtk = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getUploadGtk = async (req, res) => {
+  try {
+    const { dokumen_id } = req.params;
+    const dokumen = await documentGtk.findById(dokumen_id);
+
+    if (!dokumen) {
+      return res.status(404).json({
+        message: "Dokumen Not Found",
+      });
+    }
+    const guru = await Gtk.findOne({ dokumen_id });
+
+    if (!guru) {
+      return res.status(404).json({
+        message: "Guru Not Found for the specified Dokumen ID",
+      });
+    }
+    const response = {
+      message: "Data upload retrieved successfully",
+      nama_guru: guru.nama_lengkap,
+      dokumen_id: dokumen._id,
+      documents: {
+        ijazah_sd: dokumen.ijazah_sd,
+        ijazah_smp: dokumen.ijazah_smp,
+        ijazah_sma: dokumen.ijazah_sma,
+        ijazah_univ: dokumen.ijazah_univ,
+        ktp: dokumen.ktp,
+        akte_kelahiran: dokumen.akte_kelahiran,
+        kk: dokumen.kk,
+      },
+    };
+
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};

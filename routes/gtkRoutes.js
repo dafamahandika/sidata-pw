@@ -79,6 +79,7 @@ import {
   deleteTunjangan,
   // uploads
   uploadImageGtk,
+  getUploadGtk,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
@@ -168,5 +169,6 @@ routes.delete("/tunjangan/delete/:id", deleteTunjangan);
 routes.post("/csv", importCsv);
 
 routes.post("/upload-gtk/:id", uploadImageGtk);
+routes.get("/getUploadGtk/:dokumen_id", getUploadGtk);
 
 export default routes;

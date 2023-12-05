@@ -23,6 +23,7 @@ import {
   isCountStudensCompleteData,
   isNoValidateData,
   isValidateData,
+  getUpload,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -60,5 +61,7 @@ routes.get("/data/:rayonName", isCountStudentsWithMissingData);
 routes.get("/data-lengkap/:rayonName", isCountStudensCompleteData);
 routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
+routes.get("/getUpload/:dokumen_id", getUpload);
 
 export default routes;
+``
