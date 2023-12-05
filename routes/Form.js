@@ -19,6 +19,7 @@ import {
   verifikasiFamily,
   verifikasiDokumen,
   addNewTahunAjran,
+  countStudentsWithMissingDataByRayon,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -46,10 +47,11 @@ routes.delete("/student/delete/:id", deleteStudent);
 routes.get("/dashboard/student/:id", getOneStudentLogin);
 
 // routes.post("/upload/:id", uploadImage);
-routes.post("/upload", uploadImage);
+routes.post("/upload/:id", uploadImage);
 routes.post("/verifikasi-data/:id", verifikasiData);
 routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
 routes.post("/tahun-ajaran/:id", addNewTahunAjran);
+routes.get("/data/:rayonName", countStudentsWithMissingDataByRayon);
 export default routes;
