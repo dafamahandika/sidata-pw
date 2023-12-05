@@ -566,7 +566,7 @@ export const deleteStudent = async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads");
+    cb(null, "uploads/students");
   },
   filename: function (req, file, cb) {
     cb(
@@ -813,19 +813,19 @@ export const isCountStudentsWithMissingData = async (req, res) => {
         return {
           _id: student._id,
           nama: student.nama,
-          masih_belum: missingFields,
+          data_yang_belum: missingFields,
         };
       });
 
       return res.status(200).json({
-        message: "Some students have incomplete data",
+        message: "Data Masih Kurang",
         totalStudents: studentsData.length,
         incompleteDataCount,
         students: incompleteDataDetails,
       });
     } else {
       return res.status(200).json({
-        message: "All students have complete data",
+        message: "Data Sudah",
         totalStudents: studentsData.length,
         incompleteDataCount: 0,
         students: studentsData,

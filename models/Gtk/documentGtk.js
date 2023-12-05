@@ -1,35 +1,14 @@
 import mongoose from "mongoose";
 
-const documentGtk = mongoose.Schema({
-  ijazah_sd: {
-    type: String,
-    required: true,
-  },
-  ijazah_smp: {
-    type: String,
-    required: true,
-  },
-  ijazah_sma: {
-    type: String,
-    required: true,
-  },
-  ijazah_univ: {
-    type: String,
-    required: true,
-  },
-  ktp: {
-    type: String,
-    required: true,
-  },
-  akte_kelahiran: {
-    type: String,
-    required: true,
-  },
-  kk: {
-    type: String,
-    required: true,
-  },
+const documentGtkSchema = mongoose.Schema({
+  ijazah_sd: [{ type: String }],
+  ijazah_smp: [{ type: String }],
+  ijazah_sma: [{ type: String }],
+  ijazah_univ: [{ type: String }],
+  ktp: [{ type: String }],
+  akte_kelahiran: [{ type: String }],
+  kk: [{ type: String }],
 });
 
-const DokumentGTK = mongoose.model("documentGtk", documentGtk);
-export default DokumentGTK;
+const documentGtk = mongoose.model("documentGtk", documentGtkSchema);
+export default documentGtk;
