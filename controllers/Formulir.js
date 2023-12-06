@@ -734,6 +734,14 @@ export const isCountStudentsWithMissingData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "P" ? 1 : 0),
+      0
+    );
     const requiredFields = [
       "status_data_diri",
       "status_data_family",
@@ -786,12 +794,6 @@ export const isCountStudentsWithMissingData = async (req, res) => {
 
     const incompleteDataCount = incompleteDataStudents.length;
 
-    const maleCount = studentsData.reduce(
-      (count, student) => count + (student.jk === "L" ? 1 : 0),
-      0
-    );
-    const femaleCount = studentsData.length - maleCount;
-
     if (incompleteDataCount > 0) {
       const incompleteDataDetails = incompleteDataStudents.map((student) => {
         const missingFields = requiredFields.filter(
@@ -842,6 +844,15 @@ export const isCountStudensCompleteData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "P" ? 1 : 0),
+      0
+    );
+
     const studentsWithCompleteData = studentsData.filter(
       (student) =>
         student.dokumen_id !== null &&
@@ -850,12 +861,6 @@ export const isCountStudensCompleteData = async (req, res) => {
     );
 
     const countStudentsWithCompleteData = studentsWithCompleteData.length;
-
-    const maleCount = studentsData.reduce(
-      (count, student) => count + (student.jk === "L" ? 1 : 0),
-      0
-    );
-    const femaleCount = studentsData.length - maleCount;
 
     if (countStudentsWithCompleteData > 0) {
       const completeDataFields = studentsWithCompleteData.map((student) => {
