@@ -64,4 +64,3 @@ routes.get("/data-validate/:rayonName", isValidateData);
 routes.get("/getUpload/:dokumen_id", getUpload);
 
 export default routes;
-``
