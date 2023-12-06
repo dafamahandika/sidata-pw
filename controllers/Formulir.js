@@ -778,7 +778,6 @@ export const isCountStudentsWithMissingData = async (req, res) => {
       "skhun",
       "no_un",
     ];
-
     const incompleteDataStudents = studentsData.filter((student) =>
       requiredFields.some(
         (field) => student[field] === null || student[field] === undefined
@@ -786,6 +785,12 @@ export const isCountStudentsWithMissingData = async (req, res) => {
     );
 
     const incompleteDataCount = incompleteDataStudents.length;
+
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.length - maleCount;
 
     if (incompleteDataCount > 0) {
       const incompleteDataDetails = incompleteDataStudents.map((student) => {
@@ -801,6 +806,8 @@ export const isCountStudentsWithMissingData = async (req, res) => {
 
       return res.status(200).json({
         message: "Data Masih Kurang",
+        maleCount,
+        femaleCount,
         totalStudents: studentsData.length,
         incompleteDataCount,
         students: incompleteDataDetails,
@@ -808,6 +815,8 @@ export const isCountStudentsWithMissingData = async (req, res) => {
     } else {
       return res.status(200).json({
         message: "Data Sudah",
+        maleCount,
+        femaleCount,
         totalStudents: studentsData.length,
         incompleteDataCount: 0,
         students: studentsData,
@@ -842,20 +851,28 @@ export const isCountStudensCompleteData = async (req, res) => {
 
     const countStudentsWithCompleteData = studentsWithCompleteData.length;
 
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.length - maleCount;
+
     if (countStudentsWithCompleteData > 0) {
       const completeDataFields = studentsWithCompleteData.map((student) => {
         return {
           _id: student._id,
           nama: student.nama,
-          user_id: student.keluarga_id,
+          user_id: student.user_id,
           keluarga_id: student.keluarga_id,
-          dokumen_id: student.keluarga_id,
+          dokumen_id: student.dokumen_id,
         };
       });
 
       return res.status(200).json({
         message: "Students with complete data",
         totalStudents,
+        maleCount,
+        femaleCount,
         completeData: countStudentsWithCompleteData,
         students: completeDataFields,
       });
@@ -863,6 +880,8 @@ export const isCountStudensCompleteData = async (req, res) => {
       return res.status(200).json({
         message: "No students with complete data found",
         totalStudents,
+        maleCount,
+        femaleCount,
         completeData: 0,
         students: [],
       });
