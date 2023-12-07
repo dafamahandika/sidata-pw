@@ -1426,7 +1426,7 @@ export const createTunjangan = async (req, res) => {
     });
   } catch (error) {
     console.log(error.massage);
-    res.status(5005).json({
+    res.status(500).json({
       error: error.message,
       message: "Gagal Menambahkan Data Tunjangan",
     });
