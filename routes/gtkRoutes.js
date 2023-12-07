@@ -1,12 +1,13 @@
 import express from "express";
 import {
   // gtk
-  gtkGroupRayon,
+  // gtkGroupRayon,
   getGtk,
   getOneGtk,
   getOneGtkLogin,
   createGtk,
   updateGtk,
+  deleteGtk,
   // status & jenis ptk
   createStatus,
   createJenis,
@@ -92,7 +93,8 @@ routes.get("/status-kepeg", getStatus);
 routes.get("/jenis-ptk", getJenis);
 
 routes.get("/gtk", getGtk);
-routes.get("/gtk/group-rayon/:id", gtkGroupRayon);
+// routes.get("/gtk/group-rayon/:id", gtkGroupRayon);
+routes.delete("/gtk/delete/:id", deleteGtk);
 routes.get("/gtk/:id", getOneGtk);
 routes.post("/gtk", createGtk);
 routes.put("/gtk/update/:id", updateGtk);
