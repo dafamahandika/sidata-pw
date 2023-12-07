@@ -177,7 +177,7 @@ const gtkSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: ["Islam", "Kristen Protestan", "Kristen Katholik", "Hindu", "Budha", "Konghuchu"],
+      enum: ["Islam", "Protestan", "Katolik", "Hindu", "Budha", "Konghuchu"],
       required: true,
     },
     kewarganegaraan: {
