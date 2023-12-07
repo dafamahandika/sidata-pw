@@ -1570,9 +1570,8 @@ export const createGtk = async (req, res) => {
       user: saveUser._id,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
-      error: error.message,
+      error: `Gagal Menambahkan Data GTK: ${error.message}`,
       message: "Gagal Menambahkan Data GTK",
     });
   }
