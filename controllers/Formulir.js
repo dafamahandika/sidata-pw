@@ -870,6 +870,10 @@ export const isCountStudensCompleteData = async (req, res) => {
           user_id: student.user_id,
           keluarga_id: student.keluarga_id,
           dokumen_id: student.dokumen_id,
+          rombel: student.rombel,
+          rayon: student.rayon,
+          nis: student.nis,
+          no_hp: student.no_hp,
         };
       });
 
