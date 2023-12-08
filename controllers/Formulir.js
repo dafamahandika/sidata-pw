@@ -873,7 +873,7 @@ export const isCountStudensCompleteData = async (req, res) => {
           rombel: student.rombel,
           rayon: student.rayon,
           nis: student.nis,
-          no_hp: student.no_hp,
+          no_telp: student.no_telp,
         };
       });
 
