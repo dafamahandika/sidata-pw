@@ -279,7 +279,7 @@ export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const dataGtk = await Gtk.findById(id);
+    const dataGtk = await Gtk.findById(id).populate({ path: "kepegawaian_id", model: "Kepegawaian" }).lean();
     const kepegawaian_id = dataGtk.kepegawaian_id;
 
     if (!dataGtk) {
@@ -299,7 +299,6 @@ export const createKepegawaian = async (req, res) => {
 
       dataGtk.kepegawaian_id.push(savedKepegawaian._id);
       await dataGtk.save();
-      ``;
       res.status(201).json({
         massage: "Berhasil Menambahkan Data Kepegawaian",
         data: savedKepegawaian,
@@ -308,6 +307,7 @@ export const createKepegawaian = async (req, res) => {
       return res.status(500).json({
         message: "Data Kepegawaian Sudah Ada",
         data: kepegawaian_id.length,
+        dataGtk,
       });
     }
   } catch (error) {
