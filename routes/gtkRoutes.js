@@ -15,7 +15,6 @@ import {
   getJenis,
   // kepegawaian
   getKepagawaian,
-  createKepegawaian,
   updateKepegawaian,
   deleteKepegawaian,
   // anak
@@ -114,7 +113,6 @@ routes.put("/sertfikasi/update/:id", updateSertifikasi);
 routes.delete("/sertifikasi/delete/:id", deleteSertifikasi);
 
 routes.get("/kepegawaian/:id", getKepagawaian);
-routes.post("/kepegawaian/create/:id", createKepegawaian);
 routes.put("/kepegawaian/update/:id", updateKepegawaian);
 routes.delete("/kepegawaian/delete/:id", deleteKepegawaian);
 
