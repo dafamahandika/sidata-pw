@@ -986,6 +986,7 @@ export const createPenghargaan = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Gagal Menambahkan Data Penghargaan",
+      error: error.message,
     });
   }
 };
