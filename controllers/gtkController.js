@@ -241,7 +241,7 @@ export const deleteBeasiswa = async (req, res) => {
       message: "Berhasil Menghapus Data Beasiswa",
     });
   } catch (error) {
-    console.loh(error);
+    console.log(error);
     res.status(500).json({
       error: error.message,
       message: "Gagal Menghapus Data Beasiswa",
@@ -1486,6 +1486,8 @@ export const deleteTunjangan = async (req, res) => {
 // Create Data
 export const createGtk = async (req, res) => {
   try {
+    const kepegawaian = new Kepegawaian();
+    const savedKepegawaian = await kepegawaian.save();
     const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
@@ -1507,6 +1509,7 @@ export const createGtk = async (req, res) => {
 
     const gtk = new Gtk({
       user_id: saveUser._id,
+      kepegawaian_id: savedKepegawaian._id,
       nama_lengkap: nama_lengkap,
       nik: nik,
       jk: jk,
