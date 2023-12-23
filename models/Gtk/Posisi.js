@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const posisiSchema = new mongoose(
+const posisiSchema = new mongoose.Schema(
   {
     divisi: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,4 +18,4 @@ const posisiSchema = new mongoose(
 );
 
 const Posisi = mongoose.model("Posisi", posisiSchema);
-export default Posisi;    
+export default Posisi;
