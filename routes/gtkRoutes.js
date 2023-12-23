@@ -113,7 +113,7 @@ routes.delete("/anak/delete/:id", deleteAnak);
 
 routes.get("/sertifikasi/:id", getSertifikasi);
 routes.post("/sertifikasi/create/:id", createSertifikasi);
-routes.put("/sertfikasi/update/:id", updateSertifikasi);
+routes.put("/sertifikasi/update/:id", updateSertifikasi);
 routes.delete("/sertifikasi/delete/:id", deleteSertifikasi);
 
 routes.get("/kepegawaian/:id", getKepagawaian);
