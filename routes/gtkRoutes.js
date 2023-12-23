@@ -80,6 +80,10 @@ import {
   // uploads
   uploadImageGtk,
   getUploadGtk,
+  // divisi
+  getDivisi,
+  createDivisi,
+  deleteDivisi,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
@@ -171,4 +175,7 @@ routes.post("/csv", importCsv);
 routes.post("/upload-gtk/:id", uploadImageGtk);
 routes.get("/getUploadGtk/:dokumen_id", getUploadGtk);
 
+routes.get("/divisi", getDivisi);
+routes.post("/divisi/create", createDivisi);
+routes.delete("/divisi/delete", deleteDivisi);
 export default routes;

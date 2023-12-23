@@ -18,9 +18,12 @@ import User from "../models/User.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import documentGtk from "../models/Gtk/documentGtk.js";
+import Divisi from "../models/Gtk/Divisi.js";
+import Posisi from "../models/Gtk/Posisi.js";
 import argon2 from "argon2";
 import multer from "multer";
 import path from "path";
+import { constants } from "buffer";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -579,7 +582,7 @@ export const deleteSertifikasi = async (req, res) => {
 
     const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(id);
 
-    if (deletedSertifikasi) {
+    if (!deletedSertifikasi) {
       console.log(deletedSertifikasi);
       return res.status(404).json({
         message: "Data Sertifikasi Not Found",
@@ -1941,6 +1944,131 @@ export const getJenis = async (req, res) => {
   }
 };
 
+export const createDivisi = async (req, res) => {
+  try {
+    const { nama_divisi } = req.body;
+    const divisi = new Divisi({
+      nama_divisi: nama_divisi,
+    });
+    const saveDivisi = await divisi.save();
+    res.status(200).json({
+      message: "Success",
+      saveDivisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+export const getDivisi = async (req, res) => {
+  try {
+    const divisi = await Divisi.find();
+    if (!divisi) {
+      console.log(divisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+      divisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteDivisi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteDivisi = await Divisi.findByIdAndDelete(id);
+    if (!deleteDivisi) {
+      console.log(deleteDivisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const createPosisi = async (req, res) => {
+  try {
+    const { nama_posisi, divisi } = req.body;
+    const posisi = new Posisi({
+      nama_posisi: nama_posisi,
+      divisi: divisi,
+    });
+    const savePosisi = await posisi.save();
+    res.status(200).json({
+      message: "Success",
+      posisi: savePosisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const getPosisi = async (req, res) => {
+  try {
+    const posisi = await Posisi.find().populate({ path: "divisi", model: "Divisi" }).lean();
+    if (!posisi) {
+      console.log(posisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+      posisi: posisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const deletePosisi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletePosisi = await Posisi.findByIdAndDelete(id);
+    if (!deletePosisi) {
+      console.log(deletePosisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/gtks");
