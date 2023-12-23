@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const divisSchema = new mongoose.Schema(
   {
-    nama: {
+    nama_divisi: {
       type: String,
       required: true,
     },
