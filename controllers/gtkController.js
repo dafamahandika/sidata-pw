@@ -350,9 +350,9 @@ export const updateKepegawaian = async function (req, res) {
 // Delete Data
 export const deleteKepegawaian = async (req, res) => {
   try {
-    const idKepegawaian = req.params;
+    const { id } = req.params;
 
-    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(idKepegawaian);
+    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(id);
 
     if (!deletedKepegawaian) {
       console.log(deletedKepegawaian);
@@ -1465,9 +1465,9 @@ export const updateTunjangan = async function (req, res) {
 // Delete Data
 export const deleteTunjangan = async (req, res) => {
   try {
-    const idTunjangan = req.params;
+    const { id } = req.params;
 
-    const deletedTunjangan = await Tunjangan.findByIdAndDelete(idTunjangan);
+    const deletedTunjangan = await Tunjangan.findByIdAndDelete(id);
     if (!deletedTunjangan) {
       console.log(deleteTunjangan);
       return res.status(404).json({
