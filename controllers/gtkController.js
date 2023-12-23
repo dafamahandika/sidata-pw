@@ -230,9 +230,9 @@ export const updateBeasiswa = async function (req, res) {
 // Delete Data
 export const deleteBeasiswa = async (req, res) => {
   try {
-    const idBeasiswa = req.params;
+    const { id } = req.params;
 
-    const deletedBeasiswa = await Beasiswa.findByIdAndDelete(idBeasiswa);
+    const deletedBeasiswa = await Beasiswa.findByIdAndDelete(id);
     if (!deletedBeasiswa) {
       console.log(deletedBeasiswa);
       return res.status(404).json({
