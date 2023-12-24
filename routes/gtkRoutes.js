@@ -15,7 +15,6 @@ import {
   getJenis,
   // kepegawaian
   getKepagawaian,
-  createKepegawaian,
   updateKepegawaian,
   deleteKepegawaian,
   // anak
@@ -81,6 +80,10 @@ import {
   // uploads
   uploadImageGtk,
   getUploadGtk,
+  // divisi
+  getDivisi,
+  createDivisi,
+  deleteDivisi,
 } from "../controllers/gtkController.js";
 import { importCsv } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
@@ -110,11 +113,10 @@ routes.delete("/anak/delete/:id", deleteAnak);
 
 routes.get("/sertifikasi/:id", getSertifikasi);
 routes.post("/sertifikasi/create/:id", createSertifikasi);
-routes.put("/sertfikasi/update/:id", updateSertifikasi);
+routes.put("/sertifikasi/update/:id", updateSertifikasi);
 routes.delete("/sertifikasi/delete/:id", deleteSertifikasi);
 
 routes.get("/kepegawaian/:id", getKepagawaian);
-routes.post("/kepegawaian/create/:id", createKepegawaian);
 routes.put("/kepegawaian/update/:id", updateKepegawaian);
 routes.delete("/kepegawaian/delete/:id", deleteKepegawaian);
 
@@ -173,4 +175,7 @@ routes.post("/csv", importCsv);
 routes.post("/upload-gtk/:id", uploadImageGtk);
 routes.get("/getUploadGtk/:dokumen_id", getUploadGtk);
 
+routes.get("/divisi", getDivisi);
+routes.post("/divisi/create", createDivisi);
+routes.delete("/divisi/delete", deleteDivisi);
 export default routes;

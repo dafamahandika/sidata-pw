@@ -18,9 +18,12 @@ import User from "../models/User.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import documentGtk from "../models/Gtk/documentGtk.js";
+import Divisi from "../models/Gtk/Divisi.js";
+import Posisi from "../models/Gtk/Posisi.js";
 import argon2 from "argon2";
 import multer from "multer";
 import path from "path";
+import { constants } from "buffer";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -227,9 +230,9 @@ export const updateBeasiswa = async function (req, res) {
 // Delete Data
 export const deleteBeasiswa = async (req, res) => {
   try {
-    const idBeasiswa = req.params;
+    const { id } = req.params;
 
-    const deletedBeasiswa = await Beasiswa.findByIdAndDelete(idBeasiswa);
+    const deletedBeasiswa = await Beasiswa.findByIdAndDelete(id);
     if (!deletedBeasiswa) {
       console.log(deletedBeasiswa);
       return res.status(404).json({
@@ -241,7 +244,7 @@ export const deleteBeasiswa = async (req, res) => {
       message: "Berhasil Menghapus Data Beasiswa",
     });
   } catch (error) {
-    console.loh(error);
+    console.log(error);
     res.status(500).json({
       error: error.message,
       message: "Gagal Menghapus Data Beasiswa",
@@ -279,7 +282,7 @@ export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const dataGtk = await Gtk.findById(id);
+    const dataGtk = await Gtk.findById(id).populate({ path: "kepegawaian_id", model: "Kepegawaian" }).lean();
     const kepegawaian_id = dataGtk.kepegawaian_id;
 
     if (!dataGtk) {
@@ -299,7 +302,6 @@ export const createKepegawaian = async (req, res) => {
 
       dataGtk.kepegawaian_id.push(savedKepegawaian._id);
       await dataGtk.save();
-      ``;
       res.status(201).json({
         massage: "Berhasil Menambahkan Data Kepegawaian",
         data: savedKepegawaian,
@@ -308,6 +310,7 @@ export const createKepegawaian = async (req, res) => {
       return res.status(500).json({
         message: "Data Kepegawaian Sudah Ada",
         data: kepegawaian_id.length,
+        dataGtk,
       });
     }
   } catch (error) {
@@ -347,9 +350,9 @@ export const updateKepegawaian = async function (req, res) {
 // Delete Data
 export const deleteKepegawaian = async (req, res) => {
   try {
-    const idKepegawaian = req.params;
+    const { id } = req.params;
 
-    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(idKepegawaian);
+    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(id);
 
     if (!deletedKepegawaian) {
       console.log(deletedKepegawaian);
@@ -579,7 +582,7 @@ export const deleteSertifikasi = async (req, res) => {
 
     const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(id);
 
-    if (deletedSertifikasi) {
+    if (!deletedSertifikasi) {
       console.log(deletedSertifikasi);
       return res.status(404).json({
         message: "Data Sertifikasi Not Found",
@@ -986,6 +989,7 @@ export const createPenghargaan = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Gagal Menambahkan Data Penghargaan",
+      error: error.message,
     });
   }
 };
@@ -1461,9 +1465,9 @@ export const updateTunjangan = async function (req, res) {
 // Delete Data
 export const deleteTunjangan = async (req, res) => {
   try {
-    const idTunjangan = req.params;
+    const { id } = req.params;
 
-    const deletedTunjangan = await Tunjangan.findByIdAndDelete(idTunjangan);
+    const deletedTunjangan = await Tunjangan.findByIdAndDelete(id);
     if (!deletedTunjangan) {
       console.log(deleteTunjangan);
       return res.status(404).json({
@@ -1477,6 +1481,7 @@ export const deleteTunjangan = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
+      error: error.message,
       message: "Gagal Menghapus Data Tunjangan",
     });
   }
@@ -1485,6 +1490,8 @@ export const deleteTunjangan = async (req, res) => {
 // Create Data
 export const createGtk = async (req, res) => {
   try {
+    const kepegawaian = new Kepegawaian();
+    const savedKepegawaian = await kepegawaian.save();
     const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
@@ -1506,6 +1513,7 @@ export const createGtk = async (req, res) => {
 
     const gtk = new Gtk({
       user_id: saveUser._id,
+      kepegawaian_id: savedKepegawaian._id,
       nama_lengkap: nama_lengkap,
       nik: nik,
       jk: jk,
@@ -1936,6 +1944,131 @@ export const getJenis = async (req, res) => {
   }
 };
 
+export const createDivisi = async (req, res) => {
+  try {
+    const { nama_divisi } = req.body;
+    const divisi = new Divisi({
+      nama_divisi: nama_divisi,
+    });
+    const saveDivisi = await divisi.save();
+    res.status(200).json({
+      message: "Success",
+      saveDivisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+export const getDivisi = async (req, res) => {
+  try {
+    const divisi = await Divisi.find();
+    if (!divisi) {
+      console.log(divisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+      divisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteDivisi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteDivisi = await Divisi.findByIdAndDelete(id);
+    if (!deleteDivisi) {
+      console.log(deleteDivisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const createPosisi = async (req, res) => {
+  try {
+    const { nama_posisi, divisi } = req.body;
+    const posisi = new Posisi({
+      nama_posisi: nama_posisi,
+      divisi: divisi,
+    });
+    const savePosisi = await posisi.save();
+    res.status(200).json({
+      message: "Success",
+      posisi: savePosisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const getPosisi = async (req, res) => {
+  try {
+    const posisi = await Posisi.find().populate({ path: "divisi", model: "Divisi" }).lean();
+    if (!posisi) {
+      console.log(posisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+      posisi: posisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const deletePosisi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletePosisi = await Posisi.findByIdAndDelete(id);
+    if (!deletePosisi) {
+      console.log(deletePosisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/gtks");
