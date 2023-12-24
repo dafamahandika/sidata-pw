@@ -1481,6 +1481,7 @@ export const deleteTunjangan = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
+      error: error.message,
       message: "Gagal Menghapus Data Tunjangan",
     });
   }
