@@ -12,7 +12,7 @@ import googleStrategy from "./controllers/authGoogle.js";
 import cors from "cors";
 import chatRoutes from "./routes/chat.js";
 import cookieParser from "cookie-parser";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3307;
 
 const app = express();
 app.use(
