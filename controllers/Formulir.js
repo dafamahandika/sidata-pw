@@ -579,7 +579,7 @@ export const uploadImage = async (req, res) => {
       try {
         const { documentIjazah, documentAkte, documentSkhun, documentKk } =
           req.files;
-
+        console.log(req.files);
         if (!documentIjazah || !documentAkte || !documentSkhun || !documentKk) {
           return res
             .status(400)

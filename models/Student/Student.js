@@ -66,7 +66,15 @@ const studentSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
-      enum: ["Islam", "Protestan", "Katolik", "Hindu", "Budha", "Konghuchu"],
+      enum: [
+        "Islam",
+        "Protestan",
+        "Katolik",
+        "Hindu",
+        "Budha",
+        "Konghuchu",
+        null,
+      ],
       default: null,
     },
     kewarganegaraan: {
