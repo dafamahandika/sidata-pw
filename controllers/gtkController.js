@@ -1728,6 +1728,7 @@ export const getOneGtkLogin = async (req, res) => {
       }
       return res.status(200).json({
         message: "Get Data Success",
+        nama_rayon: nama_rayon,
         gtk: gtk,
         student: student,
       });
