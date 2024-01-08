@@ -599,6 +599,7 @@ export const uploadImage = async (req, res) => {
           documentAkte: documentAkte[0].path,
           documentSkhun: documentSkhun[0].path,
           documentKk: documentKk[0].path,
+          _id: id
         });
 
         const savedDokumenId = await dokumenId.save();
