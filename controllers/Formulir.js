@@ -603,7 +603,10 @@ export const uploadImage = async (req, res) => {
 
         const savedDokumenId = await dokumenId.save();
 
-        await Student.updateOne({ _id: id }, { dokumen_id: id });
+        await Student.updateOne(
+          { _id: id },
+          { dokumen_id: savedDokumenId._id }
+        );
 
         const response = {
           message: "Files uploaded successfully",
@@ -1016,6 +1019,7 @@ export const getUpload = async (req, res) => {
   try {
     const { dokumen_id } = req.params;
     const dokumen = await Dokumen.findById(dokumen_id);
+    console.log(dokumen);
 
     if (!dokumen) {
       return res.status(404).json({
