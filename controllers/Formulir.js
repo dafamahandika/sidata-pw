@@ -599,7 +599,7 @@ export const uploadImage = async (req, res) => {
           documentAkte: documentAkte[0].path,
           documentSkhun: documentSkhun[0].path,
           documentKk: documentKk[0].path,
-          _id: id
+          _id: id,
         });
 
         const savedDokumenId = await dokumenId.save();
@@ -624,6 +624,41 @@ export const uploadImage = async (req, res) => {
       } catch (error) {
         return res.status(500).json({ message: error.message });
       }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newImagePath } = req.body;
+
+    const student = await Student.findById(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    const existingDokumen = await Dokumen.findOne({ _id: id });
+
+    if (!existingDokumen) {
+      return res.status(404).json({
+        message: "Data Dokumen Not Found",
+      });
+    }
+    
+    existingDokumen.documentIjazah = [newImagePath];
+
+    await existingDokumen.save();
+
+    return res.json({
+      message: "Image updated successfully",
+      documentIjazah: existingDokumen.documentIjazah,
     });
   } catch (error) {
     console.log(error);

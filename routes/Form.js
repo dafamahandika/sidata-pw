@@ -24,6 +24,7 @@ import {
   isNoValidateData,
   isValidateData,
   getUpload,
+  updateImage,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -52,6 +53,7 @@ routes.get("/dashboard/student/:id", getOneStudentLogin);
 
 // routes.post("/upload/:id", uploadImage);
 routes.post("/upload/:id", uploadImage);
+routes.put("/updateImage/:id", updateImage);
 routes.post("/verifikasi-data/:id", verifikasiData);
 routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
