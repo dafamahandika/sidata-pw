@@ -579,7 +579,7 @@ export const uploadImage = async (req, res) => {
       try {
         const { documentIjazah, documentAkte, documentSkhun, documentKk } =
           req.files;
-        console.log(req.files);
+
         if (!documentIjazah || !documentAkte || !documentSkhun || !documentKk) {
           return res
             .status(400)
@@ -594,33 +594,54 @@ export const uploadImage = async (req, res) => {
           });
         }
 
-        const dokumenId = new Dokumen({
-          documentIjazah: documentIjazah[0].path,
-          documentAkte: documentAkte[0].path,
-          documentSkhun: documentSkhun[0].path,
-          documentKk: documentKk[0].path,
-          _id: id,
-        });
+        const existingDokumen = await Dokumen.findOne({ _id: id });
 
-        const savedDokumenId = await dokumenId.save();
+        if (existingDokumen) {
+          existingDokumen.documentIjazah = [
+            documentIjazah[0].path,
+            ...(existingDokumen.documentIjazah || []),
+          ];
+          existingDokumen.documentAkte = [
+            documentAkte[0].path,
+            ...(existingDokumen.documentAkte || []),
+          ];
+          existingDokumen.documentSkhun = [
+            documentSkhun[0].path,
+            ...(existingDokumen.documentSkhun || []),
+          ];
+          existingDokumen.documentKk = [
+            documentKk[0].path,
+            ...(existingDokumen.documentKk || []),
+          ];
 
-        await Student.updateOne(
-          { _id: id },
-          { dokumen_id: savedDokumenId._id }
-        );
+          await existingDokumen.save();
 
-        const response = {
-          message: "Files uploaded successfully",
-          documents: {
-            documentIjazah: savedDokumenId.documentIjazah,
-            documentAkte: savedDokumenId.documentAkte,
-            documentSkhun: savedDokumenId.documentSkhun,
-            documentKk: savedDokumenId.documentKk,
-          },
-          dokumen_id: savedDokumenId._id,
-        };
+          return res.json({
+            message: "Files uploaded successfully",
+            documents: existingDokumen,
+          });
+        } else {
+          // Create new dokumen
+          const dokumenId = new Dokumen({
+            documentIjazah: [documentIjazah[0].path],
+            documentAkte: [documentAkte[0].path],
+            documentSkhun: [documentSkhun[0].path],
+            documentKk: [documentKk[0].path],
+            _id: id,
+          });
 
-        return res.json(response);
+          const savedDokumenId = await dokumenId.save();
+
+          await Student.updateOne(
+            { _id: id },
+            { dokumen_id: savedDokumenId._id }
+          );
+
+          return res.json({
+            message: "Files uploaded successfully",
+            documents: savedDokumenId,
+          });
+        }
       } catch (error) {
         return res.status(500).json({ message: error.message });
       }
@@ -651,7 +672,7 @@ export const updateImage = async (req, res) => {
         message: "Data Dokumen Not Found",
       });
     }
-    
+
     existingDokumen.documentIjazah = [newImagePath];
 
     await existingDokumen.save();
