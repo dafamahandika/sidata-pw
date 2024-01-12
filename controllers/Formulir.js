@@ -570,39 +570,22 @@ export const uploadDokumen = async (req, res) => {
             message: "Data Student Not Found",
           });
         }
+        // Create new dokumen
+        const dokumenId = new Dokumen({
+          documentIjazah: [documentIjazah[0].path],
+          documentAkte: [documentAkte[0].path],
+          documentSkhun: [documentSkhun[0].path],
+          documentKk: [documentKk[0].path],
+        });
 
-        const existingDokumen = await Dokumen.findOne({ _id: id });
+        const savedDokumenId = await dokumenId.save();
 
-        if (existingDokumen) {
-          existingDokumen.documentIjazah = [documentIjazah[0].path, ...(existingDokumen.documentIjazah || [])];
-          existingDokumen.documentAkte = [documentAkte[0].path, ...(existingDokumen.documentAkte || [])];
-          existingDokumen.documentSkhun = [documentSkhun[0].path, ...(existingDokumen.documentSkhun || [])];
-          existingDokumen.documentKk = [documentKk[0].path, ...(existingDokumen.documentKk || [])];
+        await Student.updateOne({ _id: id }, { dokumen_id: savedDokumenId._id });
 
-          await existingDokumen.save();
-
-          return res.json({
-            message: "Files uploaded successfully",
-            documents: existingDokumen,
-          });
-        } else {
-          // Create new dokumen
-          const dokumenId = new Dokumen({
-            documentIjazah: [documentIjazah[0].path],
-            documentAkte: [documentAkte[0].path],
-            documentSkhun: [documentSkhun[0].path],
-            documentKk: [documentKk[0].path],
-          });
-
-          const savedDokumenId = await dokumenId.save();
-
-          await Student.updateOne({ _id: id }, { dokumen_id: savedDokumenId._id });
-
-          return res.json({
-            message: "Files uploaded successfully",
-            documents: savedDokumenId,
-          });
-        }
+        return res.json({
+          message: "Files uploaded successfully",
+          documents: savedDokumenId,
+        });
       } catch (error) {
         return res.status(500).json({ message: error.message });
       }
