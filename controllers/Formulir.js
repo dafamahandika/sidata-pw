@@ -11,18 +11,7 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const {
-      nama_rayon,
-      nama_pembimbing,
-      nip,
-      email,
-      nik,
-      jk,
-      tempat_lahir,
-      tanggal_lahir,
-      agama,
-      no_telp,
-    } = req.body;
+    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -74,9 +63,7 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find()
-      .populate({ path: "pembimbing_id", model: "User" })
-      .lean();
+    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
 
     res.status(200).json({
       message: "Success Get Data Rayon",
@@ -146,13 +133,9 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(
-      pembimbing_id,
-      updateAccPemb,
-      {
-        new: true,
-      }
-    );
+    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Success",
@@ -549,10 +532,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads/students");
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -567,7 +547,7 @@ const multipleUpload = upload.fields([
 
 console.log(multipleUpload);
 
-export const uploadImage = async (req, res) => {
+export const uploadDokumen = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -577,13 +557,10 @@ export const uploadImage = async (req, res) => {
       }
 
       try {
-        const { documentIjazah, documentAkte, documentSkhun, documentKk } =
-          req.files;
+        const { documentIjazah, documentAkte, documentSkhun, documentKk } = req.files;
 
         if (!documentIjazah || !documentAkte || !documentSkhun || !documentKk) {
-          return res
-            .status(400)
-            .json({ message: "All documents are required" });
+          return res.status(400).json({ message: "All documents are required" });
         }
 
         const student = await Student.findById(id);
@@ -597,22 +574,10 @@ export const uploadImage = async (req, res) => {
         const existingDokumen = await Dokumen.findOne({ _id: id });
 
         if (existingDokumen) {
-          existingDokumen.documentIjazah = [
-            documentIjazah[0].path,
-            ...(existingDokumen.documentIjazah || []),
-          ];
-          existingDokumen.documentAkte = [
-            documentAkte[0].path,
-            ...(existingDokumen.documentAkte || []),
-          ];
-          existingDokumen.documentSkhun = [
-            documentSkhun[0].path,
-            ...(existingDokumen.documentSkhun || []),
-          ];
-          existingDokumen.documentKk = [
-            documentKk[0].path,
-            ...(existingDokumen.documentKk || []),
-          ];
+          existingDokumen.documentIjazah = [documentIjazah[0].path, ...(existingDokumen.documentIjazah || [])];
+          existingDokumen.documentAkte = [documentAkte[0].path, ...(existingDokumen.documentAkte || [])];
+          existingDokumen.documentSkhun = [documentSkhun[0].path, ...(existingDokumen.documentSkhun || [])];
+          existingDokumen.documentKk = [documentKk[0].path, ...(existingDokumen.documentKk || [])];
 
           await existingDokumen.save();
 
@@ -627,15 +592,11 @@ export const uploadImage = async (req, res) => {
             documentAkte: [documentAkte[0].path],
             documentSkhun: [documentSkhun[0].path],
             documentKk: [documentKk[0].path],
-            _id: id,
           });
 
           const savedDokumenId = await dokumenId.save();
 
-          await Student.updateOne(
-            { _id: id },
-            { dokumen_id: savedDokumenId._id }
-          );
+          await Student.updateOne({ _id: id }, { dokumen_id: savedDokumenId._id });
 
           return res.json({
             message: "Files uploaded successfully",
@@ -652,10 +613,9 @@ export const uploadImage = async (req, res) => {
   }
 };
 
-export const updateImage = async (req, res) => {
+export const deleteOneDokumen = async (req, res) => {
   try {
     const { id } = req.params;
-    const { newImagePath } = req.body;
 
     const student = await Student.findById(id);
 
@@ -665,21 +625,13 @@ export const updateImage = async (req, res) => {
       });
     }
 
-    const existingDokumen = await Dokumen.findOne({ _id: id });
+    const dokumenId = student.dokumen_id._id;
 
-    if (!existingDokumen) {
-      return res.status(404).json({
-        message: "Data Dokumen Not Found",
-      });
-    }
+    const deleteDokumen = await Dokumen.findByIdAndDelete(dokumenId);
 
-    existingDokumen.documentIjazah = [newImagePath];
-
-    await existingDokumen.save();
-
-    return res.json({
-      message: "Image updated successfully",
-      documentIjazah: existingDokumen.documentIjazah,
+    return res.status(200).json({
+      message: "Dokumen Success Delete",
+      deleted: deleteDokumen,
     });
   } catch (error) {
     console.log(error);
@@ -764,11 +716,7 @@ export const addNewTahunAjran = async (req, res) => {
   const { newTahunAjaran } = req.body;
 
   try {
-    const oldestStudent = await Student.findOne(
-      { isDeleted: false },
-      {},
-      { sort: { tahun_ajaran: 1 } }
-    );
+    const oldestStudent = await Student.findOne({ isDeleted: false }, {}, { sort: { tahun_ajaran: 1 } });
     if (oldestStudent) {
       oldestStudent.isDeleted = true;
       await oldestStudent.save();
@@ -794,14 +742,8 @@ export const isCountStudentsWithMissingData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const maleCount = studentsData.reduce(
-      (count, student) => count + (student.jk === "L" ? 1 : 0),
-      0
-    );
-    const femaleCount = studentsData.reduce(
-      (count, student) => count + (student.jk === "P" ? 1 : 0),
-      0
-    );
+    const maleCount = studentsData.reduce((count, student) => count + (student.jk === "L" ? 1 : 0), 0);
+    const femaleCount = studentsData.reduce((count, student) => count + (student.jk === "P" ? 1 : 0), 0);
     const requiredFields = [
       "status_data_diri",
       "status_data_family",
@@ -846,19 +788,13 @@ export const isCountStudentsWithMissingData = async (req, res) => {
       "skhun",
       "no_un",
     ];
-    const incompleteDataStudents = studentsData.filter((student) =>
-      requiredFields.some(
-        (field) => student[field] === null || student[field] === undefined
-      )
-    );
+    const incompleteDataStudents = studentsData.filter((student) => requiredFields.some((field) => student[field] === null || student[field] === undefined));
 
     const incompleteDataCount = incompleteDataStudents.length;
 
     if (incompleteDataCount > 0) {
       const incompleteDataDetails = incompleteDataStudents.map((student) => {
-        const missingFields = requiredFields.filter(
-          (field) => student[field] === null || student[field] === undefined
-        );
+        const missingFields = requiredFields.filter((field) => student[field] === null || student[field] === undefined);
         return {
           _id: student._id,
           nama: student.nama,
@@ -904,21 +840,10 @@ export const isCountStudensCompleteData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const maleCount = studentsData.reduce(
-      (count, student) => count + (student.jk === "L" ? 1 : 0),
-      0
-    );
-    const femaleCount = studentsData.reduce(
-      (count, student) => count + (student.jk === "P" ? 1 : 0),
-      0
-    );
+    const maleCount = studentsData.reduce((count, student) => count + (student.jk === "L" ? 1 : 0), 0);
+    const femaleCount = studentsData.reduce((count, student) => count + (student.jk === "P" ? 1 : 0), 0);
 
-    const studentsWithCompleteData = studentsData.filter(
-      (student) =>
-        student.dokumen_id !== null &&
-        student.keluarga_id !== null &&
-        student.user_id !== null
-    );
+    const studentsWithCompleteData = studentsData.filter((student) => student.dokumen_id !== null && student.keluarga_id !== null && student.user_id !== null);
 
     const countStudentsWithCompleteData = studentsWithCompleteData.length;
 
@@ -975,12 +900,7 @@ export const isNoValidateData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithPendingStatus = studentsData.filter(
-      (student) =>
-        student.status_data_diri === "Pending" ||
-        student.status_data_family === "Pending" ||
-        student.status_data_dokumen === "Pending"
-    );
+    const studentsWithPendingStatus = studentsData.filter((student) => student.status_data_diri === "Pending" || student.status_data_family === "Pending" || student.status_data_dokumen === "Pending");
 
     const pendingStudentsCount = studentsWithPendingStatus.length;
 
@@ -1029,12 +949,7 @@ export const isValidateData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithCompleteData = studentsData.filter(
-      (student) =>
-        student.status_data_diri !== "Pending" &&
-        student.status_data_family !== "Pending" &&
-        student.status_data_dokumen !== "Pending"
-    );
+    const studentsWithCompleteData = studentsData.filter((student) => student.status_data_diri !== "Pending" && student.status_data_family !== "Pending" && student.status_data_dokumen !== "Pending");
 
     const validatedStudentsCount = studentsWithCompleteData.length;
 
@@ -1072,7 +987,7 @@ export const isValidateData = async (req, res) => {
   }
 };
 
-export const getUpload = async (req, res) => {
+export const getDokumen = async (req, res) => {
   try {
     const { dokumen_id } = req.params;
     const dokumen = await Dokumen.findById(dokumen_id);

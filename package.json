@@ -11,8 +11,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": { 
-    "argon2": "^0.31.1",  
+  "dependencies": {
+    "argon2": "^0.31.1",
     "body-parse": "^0.1.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -41,6 +41,7 @@
     "passport-google-oauth20": "^2.0.0",
     "path": "^0.12.7",
     "socket.io": "^4.7.2",
-    "twilio": "^4.19.0"
+    "twilio": "^4.19.0",
+    "whatsapp-web.js": "^1.23.0"
   }
 }
