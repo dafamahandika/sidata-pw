@@ -6,6 +6,9 @@ import Rayon from "../models/Student/Rayon.js";
 import User from "../models/User.js";
 import Gtk from "../models/Gtk/Gtk.js";
 import path from "path";
+import fs from "fs";
+import { format } from "fast-csv";
+import ExcelJS from "exceljs";
 import multer from "multer";
 import argon2 from "argon2";
 
@@ -1103,6 +1106,93 @@ export const getUpload = async (req, res) => {
     };
 
     return res.json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+export const exportDataCsv = async (req, res) => {
+  try {
+    const data = await Student.find();
+
+    const csvStream = format({ headers: true });
+
+    csvStream.pipe(fs.createWriteStream("dataSiswa.csv")).on("finish", () => {
+      res.download("dataSiswa.csv", "dataSiswa.csv", (err) => {
+        if (err) {
+          console.error(err);
+        }
+        fs.unlinkSync("dataSiswa.csv");
+      });
+    });
+
+    data.forEach((student) => {
+      csvStream.write({
+        Id: student._id,
+        Nama: student.nama,
+        Rombel: student.rombel,
+        Rayon: student.rayon,
+        Nisn: student.nis,
+      });
+    });
+
+    csvStream.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const exportDataToExcel = async (req, res) => {
+  try {
+    const data = await Student.find();
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Data Siswa");
+
+    const titleRow = worksheet.addRow([
+      "Nisn",
+      "Nama",
+      "Rombel",
+      "Rayon",
+      "Jenis Kelamin",
+      "Email",
+    ]);
+    titleRow.font = { bold: true, color: { argb: "FFFFFF" } };
+    titleRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "3498DB" },
+    };
+    titleRow.alignment = { horizontal: "center" };
+    titleRow.border = { bottom: { style: "thin" } };
+
+    data.forEach((student) => {
+      worksheet.addRow([
+        student.nis,
+        student.nama,
+        student.rombel,
+        student.rayon,
+        student.jk,
+        student.email,
+      ]);
+    });
+
+    worksheet.columns.forEach((column) => {
+      column.width = 15;
+      column.alignment = { horizontal: "left" };
+      column.border = { bottom: { style: "thin" } };
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", "attachment; filename=dataSiswa.xlsx");
+
+    await workbook.xlsx.write(res);
+
+    res.end();
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

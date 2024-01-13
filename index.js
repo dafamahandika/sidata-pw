@@ -13,7 +13,7 @@ import cors from "cors";
 import chatRoutes from "./routes/chat.js";
 import cookieParser from "cookie-parser";
 const port = process.env.PORT || 2305;
-3
+3;
 const app = express();
 app.use(
   cors({
@@ -38,7 +38,7 @@ app.use(
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("export");
 });
 
 app.use("/uploads", express.static("uploads"));

@@ -25,6 +25,8 @@ import {
   isValidateData,
   getUpload,
   updateImage,
+  exportDataCsv,
+  exportDataToExcel,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -64,5 +66,8 @@ routes.get("/data-lengkap/:rayonName", isCountStudensCompleteData);
 routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
 routes.get("/getUpload/:dokumen_id", getUpload);
+
+routes.get("/export-data", exportDataCsv);
+routes.get("/export-data-excel", exportDataToExcel);
 
 export default routes;
