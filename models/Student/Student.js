@@ -17,6 +17,11 @@ const studentSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    imageProfile: [
+      {
+        type: String,
+      },
+    ],
     nama: {
       type: String,
       required: true,

@@ -25,6 +25,10 @@ import {
   deleteOneDokumen,
   getDokumen,
   uploadDokumen,
+  updateAvatar,
+  isCountStudentsAllWithMissingData,
+  isCountStudentsAllCompleteData,
+  exportDataToExcel,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -59,10 +63,15 @@ routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
 routes.post("/tahun-ajaran/:id", addNewTahunAjran);
-routes.get("/data/:rayonName", isCountStudentsWithMissingData);
+routes.get("/data-missing/:rayonName", isCountStudentsWithMissingData);
 routes.get("/data-lengkap/:rayonName", isCountStudensCompleteData);
+routes.get("/data-missing", isCountStudentsAllWithMissingData);
+routes.get("/data-lengkap", isCountStudentsAllCompleteData);
 routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
 routes.get("/getUpload/:dokumen_id", getDokumen);
+
+routes.get("/export-data-excel", exportDataToExcel);
+routes.post("/avatar/:id", updateAvatar);
 
 export default routes;

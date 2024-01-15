@@ -14,7 +14,18 @@ import argon2 from "argon2";
 
 export const createRayon = async (req, res) => {
   try {
-    const { nama_rayon, nama_pembimbing, nip, email, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp } = req.body;
+    const {
+      nama_rayon,
+      nama_pembimbing,
+      nip,
+      email,
+      nik,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+      agama,
+      no_telp,
+    } = req.body;
 
     const hashedNip = await argon2.hash(nip);
 
@@ -66,7 +77,9 @@ export const createRayon = async (req, res) => {
 
 export const getRayon = async (req, res) => {
   try {
-    const dataRayon = await Rayon.find().populate({ path: "pembimbing_id", model: "User" }).lean();
+    const dataRayon = await Rayon.find()
+      .populate({ path: "pembimbing_id", model: "User" })
+      .lean();
 
     res.status(200).json({
       message: "Success Get Data Rayon",
@@ -136,9 +149,13 @@ export const updateRayon = async (req, res) => {
       password: hashedPassword,
     };
 
-    const resultAccPemb = await User.findByIdAndUpdate(pembimbing_id, updateAccPemb, {
-      new: true,
-    });
+    const resultAccPemb = await User.findByIdAndUpdate(
+      pembimbing_id,
+      updateAccPemb,
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json({
       message: "Success",
@@ -535,7 +552,10 @@ const storage = multer.diskStorage({
     cb(null, "uploads/students");
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
@@ -560,10 +580,13 @@ export const uploadDokumen = async (req, res) => {
       }
 
       try {
-        const { documentIjazah, documentAkte, documentSkhun, documentKk } = req.files;
+        const { documentIjazah, documentAkte, documentSkhun, documentKk } =
+          req.files;
 
         if (!documentIjazah || !documentAkte || !documentSkhun || !documentKk) {
-          return res.status(400).json({ message: "All documents are required" });
+          return res
+            .status(400)
+            .json({ message: "All documents are required" });
         }
 
         const student = await Student.findById(id);
@@ -583,7 +606,10 @@ export const uploadDokumen = async (req, res) => {
 
         const savedDokumenId = await dokumenId.save();
 
-        await Student.updateOne({ _id: id }, { dokumen_id: savedDokumenId._id });
+        await Student.updateOne(
+          { _id: id },
+          { dokumen_id: savedDokumenId._id }
+        );
 
         return res.json({
           message: "Files uploaded successfully",
@@ -702,7 +728,11 @@ export const addNewTahunAjran = async (req, res) => {
   const { newTahunAjaran } = req.body;
 
   try {
-    const oldestStudent = await Student.findOne({ isDeleted: false }, {}, { sort: { tahun_ajaran: 1 } });
+    const oldestStudent = await Student.findOne(
+      { isDeleted: false },
+      {},
+      { sort: { tahun_ajaran: 1 } }
+    );
     if (oldestStudent) {
       oldestStudent.isDeleted = true;
       await oldestStudent.save();
@@ -728,8 +758,14 @@ export const isCountStudentsWithMissingData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const maleCount = studentsData.reduce((count, student) => count + (student.jk === "L" ? 1 : 0), 0);
-    const femaleCount = studentsData.reduce((count, student) => count + (student.jk === "P" ? 1 : 0), 0);
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "P" ? 1 : 0),
+      0
+    );
     const requiredFields = [
       "status_data_diri",
       "status_data_family",
@@ -774,13 +810,19 @@ export const isCountStudentsWithMissingData = async (req, res) => {
       "skhun",
       "no_un",
     ];
-    const incompleteDataStudents = studentsData.filter((student) => requiredFields.some((field) => student[field] === null || student[field] === undefined));
+    const incompleteDataStudents = studentsData.filter((student) =>
+      requiredFields.some(
+        (field) => student[field] === null || student[field] === undefined
+      )
+    );
 
     const incompleteDataCount = incompleteDataStudents.length;
 
     if (incompleteDataCount > 0) {
       const incompleteDataDetails = incompleteDataStudents.map((student) => {
-        const missingFields = requiredFields.filter((field) => student[field] === null || student[field] === undefined);
+        const missingFields = requiredFields.filter(
+          (field) => student[field] === null || student[field] === undefined
+        );
         return {
           _id: student._id,
           nama: student.nama,
@@ -815,6 +857,110 @@ export const isCountStudentsWithMissingData = async (req, res) => {
   }
 };
 
+export const isCountStudentsAllWithMissingData = async (req, res) => {
+  try {
+    const studentsData = await Student.find({
+      nama: { $nin: [null, ""] },
+    });
+
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "P" ? 1 : 0),
+      0
+    );
+    const requiredFields = [
+      "status_data_diri",
+      "status_data_family",
+      "status_data_dokumen",
+      "tahun_ajaran",
+      "isDeleted",
+      "_id",
+      "keluarga_id",
+      "dokumen_id",
+      "nama",
+      "nis",
+      "jk",
+      "rombel",
+      "rayon",
+      "nisn",
+      "nik",
+      "no_kk",
+      "tempat_lahir",
+      "tanggal_lahir",
+      "no_akta",
+      "agama",
+      "kewarganegaraan",
+      "alamat",
+      "rt",
+      "rw",
+      "nama_dusun",
+      "kecamatan",
+      "nama_kota",
+      "provinsi",
+      "kode_pos",
+      "transportasi",
+      "anak_ke",
+      "tinggal_bersama",
+      "email",
+      "no_telp",
+      "tb",
+      "bb",
+      "gol_darah",
+      "status",
+      "asal_smp",
+      "no_ijazah_smp",
+      "skhun",
+      "no_un",
+    ];
+    const incompleteDataStudents = studentsData.filter((student) =>
+      requiredFields.some(
+        (field) => student[field] === null || student[field] === undefined
+      )
+    );
+
+    const incompleteDataCount = incompleteDataStudents.length;
+
+    if (incompleteDataCount > 0) {
+      const incompleteDataDetails = incompleteDataStudents.map((student) => {
+        const missingFields = requiredFields.filter(
+          (field) => student[field] === null || student[field] === undefined
+        );
+        return {
+          _id: student._id,
+          nama: student.nama,
+          data_yang_belum: missingFields,
+        };
+      });
+
+      return res.status(200).json({
+        message: "Data Masih Kurang",
+        maleCount,
+        femaleCount,
+        totalStudents: studentsData.length,
+        incompleteDataCount,
+        students: incompleteDataDetails,
+      });
+    } else {
+      return res.status(200).json({
+        message: "Data Sudah",
+        maleCount,
+        femaleCount,
+        totalStudents: studentsData.length,
+        incompleteDataCount: 0,
+        students: studentsData,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Count and Fetch Failed",
+      error: error.message,
+    });
+  }
+};
 export const isCountStudensCompleteData = async (req, res) => {
   try {
     const { rayonName } = req.params;
@@ -826,10 +972,89 @@ export const isCountStudensCompleteData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const maleCount = studentsData.reduce((count, student) => count + (student.jk === "L" ? 1 : 0), 0);
-    const femaleCount = studentsData.reduce((count, student) => count + (student.jk === "P" ? 1 : 0), 0);
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "P" ? 1 : 0),
+      0
+    );
 
-    const studentsWithCompleteData = studentsData.filter((student) => student.dokumen_id !== null && student.keluarga_id !== null && student.user_id !== null);
+    const studentsWithCompleteData = studentsData.filter(
+      (student) =>
+        student.dokumen_id !== null &&
+        student.keluarga_id !== null &&
+        student.user_id !== null
+    );
+
+    const countStudentsWithCompleteData = studentsWithCompleteData.length;
+
+    if (countStudentsWithCompleteData > 0) {
+      const completeDataFields = studentsWithCompleteData.map((student) => {
+        return {
+          _id: student._id,
+          nama: student.nama,
+          user_id: student.user_id,
+          keluarga_id: student.keluarga_id,
+          dokumen_id: student.dokumen_id,
+          rombel: student.rombel,
+          rayon: student.rayon,
+          nis: student.nis,
+          no_telp: student.no_telp,
+        };
+      });
+
+      return res.status(200).json({
+        message: "Students with complete data",
+        totalStudents,
+        maleCount,
+        femaleCount,
+        completeData: countStudentsWithCompleteData,
+        students: completeDataFields,
+      });
+    } else {
+      return res.status(200).json({
+        message: "No students with complete data found",
+        totalStudents,
+        maleCount,
+        femaleCount,
+        completeData: 0,
+        students: [],
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Count and Fetch Failed",
+      error: error.message,
+    });
+  }
+};
+
+export const isCountStudentsAllCompleteData = async (req, res) => {
+  try {
+    const totalStudents = await Student.countDocuments();
+
+    const studentsData = await Student.find({
+      nama: { $nin: [null, ""] },
+    });
+
+    const maleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "L" ? 1 : 0),
+      0
+    );
+    const femaleCount = studentsData.reduce(
+      (count, student) => count + (student.jk === "P" ? 1 : 0),
+      0
+    );
+
+    const studentsWithCompleteData = studentsData.filter(
+      (student) =>
+        student.dokumen_id !== null &&
+        student.keluarga_id !== null &&
+        student.user_id !== null
+    );
 
     const countStudentsWithCompleteData = studentsWithCompleteData.length;
 
@@ -886,7 +1111,12 @@ export const isNoValidateData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithPendingStatus = studentsData.filter((student) => student.status_data_diri === "Pending" || student.status_data_family === "Pending" || student.status_data_dokumen === "Pending");
+    const studentsWithPendingStatus = studentsData.filter(
+      (student) =>
+        student.status_data_diri === "Pending" ||
+        student.status_data_family === "Pending" ||
+        student.status_data_dokumen === "Pending"
+    );
 
     const pendingStudentsCount = studentsWithPendingStatus.length;
 
@@ -935,7 +1165,12 @@ export const isValidateData = async (req, res) => {
       nama: { $nin: [null, ""] },
     });
 
-    const studentsWithCompleteData = studentsData.filter((student) => student.status_data_diri !== "Pending" && student.status_data_family !== "Pending" && student.status_data_dokumen !== "Pending");
+    const studentsWithCompleteData = studentsData.filter(
+      (student) =>
+        student.status_data_diri !== "Pending" &&
+        student.status_data_family !== "Pending" &&
+        student.status_data_dokumen !== "Pending"
+    );
 
     const validatedStudentsCount = studentsWithCompleteData.length;
 
@@ -1091,6 +1326,68 @@ export const exportDataToExcel = async (req, res) => {
     await workbook.xlsx.write(res);
 
     res.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const storageAvatar = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/avatar/student");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const uploadAvatar = multer({ storage: storageAvatar });
+
+const singleAvatar = uploadAvatar.fields([
+  { name: "imageProfile", maxCount: 1 },
+]);
+
+export const updateAvatar = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    singleAvatar(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+
+      try {
+        const { imageProfile } = req.files;
+
+        if (!imageProfile) {
+          return res
+            .status(400)
+            .json({ message: "All documents are required" });
+        }
+
+        const student = await Student.findById(id);
+
+        if (!student) {
+          return res.status(404).json({
+            message: "Data Student Not Found",
+          });
+        }
+
+        // Update imageProfile property in Student model
+        student.imageProfile = imageProfile[0].path;
+        await student.save();
+
+        return res.json({
+          message: "Profile image updated successfully",
+          student,
+        });
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
