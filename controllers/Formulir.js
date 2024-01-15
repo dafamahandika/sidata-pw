@@ -286,8 +286,12 @@ export const createStudent = async (req, res) => {
 
     const savedUser = await user.save();
 
+    const family = new Family();
+    const savedFamily = await family.save();
+
     const student = new Student({
       user_id: savedUser._id,
+      keluarga_id: savedFamily._id,
       nama: nama,
       rombel: rombel,
       rayon: rayon,
@@ -327,6 +331,7 @@ export const getStudent = async (req, res) => {
       });
     }
 
+    console.log(students);
     res.status(200).json({
       message: "Succes To Get Data Student",
       students: students,
@@ -405,6 +410,9 @@ export const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const student = await Student.findById(id).populate({ path: "keluarga_id", model: "Family" });
+    const keluargaId = student.keluarga_id._id;
+
     const formFamily = {
       nama_ayah: req.body.nama_ayah,
       nik_ayah: req.body.nik_ayah,
@@ -426,18 +434,17 @@ export const updateStudent = async (req, res) => {
       penghasilan_wali: req.body.penghasilan_wali,
     };
 
-    const resultFamily = new Family({ ...formFamily });
+    const updateFamily = await Family.findByIdAndUpdate(keluargaId, formFamily, {
+      new: true,
+    });
 
-    const savedFamily = await resultFamily.save();
-
-    if (!savedFamily) {
-      console.log(savedFamily);
+    if (!updateFamily) {
+      console.log(updateFamily);
       return res.status(404).json({
-        message: "Error",
+        message: "Family Not Found",
       });
     }
     const updateStudent = {
-      family_id: savedFamily._id,
       nama: req.body.nama,
       nisn: req.body.nisn,
       nik: req.body.nik,
@@ -482,7 +489,7 @@ export const updateStudent = async (req, res) => {
     res.status(201).json({
       message: "Berhasil Update Data Student",
       student: resultStudent,
-      family: savedFamily,
+      family: updateFamily,
     });
   } catch (error) {
     console.log(error);
@@ -1048,14 +1055,7 @@ export const exportDataToExcel = async (req, res) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Data Siswa");
 
-    const titleRow = worksheet.addRow([
-      "Nisn",
-      "Nama",
-      "Rombel",
-      "Rayon",
-      "Jenis Kelamin",
-      "Email",
-    ]);
+    const titleRow = worksheet.addRow(["Nisn", "Nama", "Rombel", "Rayon", "Jenis Kelamin", "Email"]);
     titleRow.font = { bold: true, color: { argb: "FFFFFF" } };
     titleRow.fill = {
       type: "pattern",
@@ -1066,14 +1066,7 @@ export const exportDataToExcel = async (req, res) => {
     titleRow.border = { bottom: { style: "thin" } };
 
     data.forEach((student) => {
-      worksheet.addRow([
-        student.nis,
-        student.nama,
-        student.rombel,
-        student.rayon,
-        student.jk,
-        student.email,
-      ]);
+      worksheet.addRow([student.nis, student.nama, student.rombel, student.rayon, student.jk, student.email]);
     });
 
     worksheet.columns.forEach((column) => {
@@ -1082,10 +1075,7 @@ export const exportDataToExcel = async (req, res) => {
       column.border = { bottom: { style: "thin" } };
     });
 
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.setHeader("Content-Disposition", "attachment; filename=dataSiswa.xlsx");
 
     await workbook.xlsx.write(res);
