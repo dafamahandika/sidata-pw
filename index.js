@@ -64,7 +64,9 @@ db.on("error", (err) => {
 db.once("open", () => {
   console.log("Connected to database");
 });
-
+const date = new Date("");
+date.toString();
 app.listen(port, () => {
   console.log(`Run Server http://localhost:${port}`);
+  console.log(date);
 });

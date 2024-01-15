@@ -23,7 +23,6 @@ import Posisi from "../models/Gtk/Posisi.js";
 import argon2 from "argon2";
 import multer from "multer";
 import path from "path";
-import { constants } from "buffer";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -1623,7 +1622,7 @@ export const getGtk = async (req, res) => {
         { path: "dokumen_id", model: "documentGtk" },
       ])
       .lean();
-    if (!gtk) {
+    if (!gtk && gtk.length == 0) {
       console.log(gtk);
       return res.status(404).json({
         message: "Data GTK Not Found",
@@ -1723,7 +1722,7 @@ export const getOneGtkLogin = async (req, res) => {
         ])
         .lean();
 
-      if (!student || student.length === 0) {
+      if (!student) {
         console.log(student);
         return res.status(404).json({
           message: "Data Student Not Found",
@@ -1734,6 +1733,7 @@ export const getOneGtkLogin = async (req, res) => {
         nama_rayon: nama_rayon,
         gtk: gtk,
         student: student,
+        total: student.length,
       });
     }
     const gtk = await Gtk.findOne({ user_id: id })
@@ -2154,4 +2154,26 @@ export const uploadImageGtk = async (req, res) => {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
+};
+
+export const deleteOneDokumenGtk = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await Student.findById(id);
+    if (!student) {
+      console.log(student);
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    const dokumenId = student.dokumen_id._id;
+
+    const deleteDokumen = await documentGtk.findByIdAndDelete(dokumenId);
+
+    res.status(200).json({
+      message: "Dokumen GTK Success Delete",
+    });
+  } catch (error) {}
 };
