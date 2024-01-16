@@ -2269,7 +2269,7 @@ export const exportDataGtkToExcell = async (req, res) => {
     titleRow.border = { bottom: { style: "thin" } };
 
     data.forEach((gtk) => {
-      workSheet.addRow([gtk.nip, gtk.nik, gtk.nama_lengkap, gtk.tanggak_lahir, gtk.tempat_lahir, gtk.agama, gtk.jk, gtk.email, gtk.no_telp, gtk.status_kawin, gtk.npwp, gtk.tb, gtk.bb, gtk.gol_darah, gtk.no_kk]);
+      workSheet.addRow([gtk.nip, gtk.nik, gtk.nama_lengkap, gtk.tanggal_lahir, gtk.tempat_lahir, gtk.agama, gtk.jk, gtk.email, gtk.no_telp, gtk.status_kawin, gtk.npwp, gtk.tb, gtk.bb, gtk.gol_darah, gtk.no_kk]);
     });
 
     workSheet.columns.forEach((column) => {
