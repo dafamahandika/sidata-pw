@@ -11,6 +11,7 @@ import { format } from "fast-csv";
 import ExcelJS from "exceljs";
 import multer from "multer";
 import argon2 from "argon2";
+import { RecordingRulesInstance } from "twilio/lib/rest/video/v1/room/recordingRules.js";
 
 export const createRayon = async (req, res) => {
   try {
@@ -1129,42 +1130,6 @@ export const isValidateData = async (req, res) => {
   }
 };
 
-export const getDokumen = async (req, res) => {
-  try {
-    const { dokumen_id } = req.params;
-    const dokumen = await Dokumen.findById(dokumen_id);
-    console.log(dokumen);
-
-    if (!dokumen) {
-      return res.status(404).json({
-        message: "Dokumen Not Found",
-      });
-    }
-    const student = await Student.findOne({ dokumen_id });
-
-    if (!student) {
-      return res.status(404).json({
-        message: "Student Not Found for the specified Dokumen ID",
-      });
-    }
-    const response = {
-      message: "Data upload retrieved successfully",
-      student_name: student.nama,
-      dokumen_id: dokumen._id,
-      documents: {
-        documentIjazah: dokumen.documentIjazah,
-        documentAkte: dokumen.documentAkte,
-        documentSkhun: dokumen.documentSkhun,
-        documentKk: dokumen.documentKk,
-      },
-    };
-
-    return res.json(response);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-};
 export const exportDataCsv = async (req, res) => {
   try {
     const data = await Student.find();
@@ -1197,14 +1162,35 @@ export const exportDataCsv = async (req, res) => {
   }
 };
 
-export const exportDataToExcel = async (req, res) => {
+export const exportDataStudentToExcell = async (req, res) => {
   try {
     const data = await Student.find();
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Data Siswa");
+    const workBook = new ExcelJS.Workbook();
+    const workSheet = workBook.addWorksheet("Data Siswa");
 
-    const titleRow = worksheet.addRow(["NIS", "NISN", "Nama", "Rombel", "Rayon", "Jenis Kelamin", "Email", "Tanggal Lahir", "Tempat Lahir", "Agama", "Asal Sekolah", "Tinggi Badan", "Berat Badan", "Golongan Darah"]);
+    const titleRow = workSheet.addRow([
+      "NIS",
+      "NISN",
+      "NIK",
+      "Nama",
+      "Rombel",
+      "Rayon",
+      "Jenis Kelamin",
+      "Email",
+      "No. Telepon",
+      "Tanggal Lahir",
+      "Tempat Lahir",
+      "Agama",
+      "Asal Sekolah",
+      "Tinggi Badan",
+      "Berat Badan",
+      "Golongan Darah",
+      "No. KK",
+      "No. Akta",
+      "No. Ijazah SMP",
+      "No. SKHUN",
+    ]);
     titleRow.font = { bold: true, color: { argb: "FFFFFF" } };
     titleRow.fill = {
       type: "pattern",
@@ -1215,14 +1201,16 @@ export const exportDataToExcel = async (req, res) => {
     titleRow.border = { bottom: { style: "thin" } };
 
     data.forEach((student) => {
-      worksheet.addRow([
+      workSheet.addRow([
         student.nis,
         student.nisn,
+        student.nik,
         student.nama,
         student.rombel,
         student.rayon,
         student.jk,
         student.email,
+        student.no_telp,
         student.tanggal_lahir,
         student.tempat_lahir,
         student.agama,
@@ -1230,25 +1218,114 @@ export const exportDataToExcel = async (req, res) => {
         student.tb,
         student.bb,
         student.gol_darah,
+        student.no_kk,
+        student.no_akta,
+        student.no_ijazah_smp,
+        student.skhun,
       ]);
     });
 
-    worksheet.columns.forEach((column) => {
+    workSheet.columns.forEach((column) => {
       column.width = 15;
       column.alignment = { horizontal: "left" };
-      column.border = { bottom: { style: "thin" } };
+      column.border = { bottom: { style: "thin" }, right: { style: "thin" }, left: { style: "thin" }, top: { style: "thin" } };
     });
-    const date = new Date();
-    date.toISOString();
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    res.setHeader("Content-Disposition", "attachment; filename=dataSiswa.xlsx");
+    res.setHeader("Content-Disposition", "attachment; filename=Data Siswa.xlsx");
 
-    await workbook.xlsx.write(res);
+    await workBook.xlsx.write(res);
 
     res.end();
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const exportDataStudentByRayonToExcell = async (req, res) => {
+  try {
+    const { rayon } = req.params;
+    const students = await Student.find({ rayon: rayon });
+    if (!students) {
+      console.log(students);
+      return res.status(404).json({ message: "Data Student Not Found" });
+    }
+    const workBook = new ExcelJS.Workbook();
+    const workSheet = workBook.addWorksheet(`Data Siswa ${rayon}`);
+
+    const titleRow = workSheet.addRow([
+      "NIS",
+      "NISN",
+      "NIK",
+      "Nama",
+      "Rombel",
+      "Rayon",
+      "Jenis Kelamin",
+      "Email",
+      "No. Telepon",
+      "Tanggal Lahir",
+      "Tempat Lahir",
+      "Agama",
+      "Asal Sekolah",
+      "Tinggi Badan",
+      "Berat Badan",
+      "Golongan Darah",
+      "No. KK",
+      "No. Akta",
+      "No. Ijazah SMP",
+      "No. SKHUN",
+    ]);
+    titleRow.font = { bold: true, color: { argb: "FFFFFF" } };
+    titleRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "3498DB" },
+    };
+    titleRow.alignment = { horizontal: "center" };
+    titleRow.border = { bottom: { style: "thin" } };
+
+    students.forEach((student) => {
+      workSheet.addRow([
+        student.nis,
+        student.nisn,
+        student.nik,
+        student.nama,
+        student.rombel,
+        student.rayon,
+        student.jk,
+        student.email,
+        student.no_telp,
+        student.tanggal_lahir,
+        student.tempat_lahir,
+        student.agama,
+        student.asal_smp,
+        student.tb,
+        student.bb,
+        student.gol_darah,
+        student.no_kk,
+        student.no_akta,
+        student.no_ijazah_smp,
+        student.skhun,
+      ]);
+    });
+
+    workSheet.columns.forEach((column) => {
+      column.width = 15;
+      column.alignment = { horizontal: "left" };
+      column.border = { bottom: { style: "thin" }, right: { style: "thin" }, left: { style: "thin" }, top: { style: "thin" } };
+    });
+    const date = Date.now();
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename=Data Siswa ${rayon}.xlsx`);
+
+    await workBook.xlsx.write(res);
+
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      message: error.message,
+    });
   }
 };
 
