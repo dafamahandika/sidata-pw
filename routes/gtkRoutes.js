@@ -78,8 +78,8 @@ import {
   updateTunjangan,
   deleteTunjangan,
   // uploads
-  uploadImageGtk,
-  getUploadGtk,
+  uploadDokumenGtk,
+  deleteOneDokumenGtk,
   // divisi
   getDivisi,
   createDivisi,
@@ -174,8 +174,10 @@ routes.delete("/tunjangan/delete/:id", deleteTunjangan);
 
 routes.post("/csv", importCsvStudent);
 
-routes.post("/upload-gtk/:id", uploadImageGtk);
-routes.get("/getUploadGtk/:dokumen_id", getUploadGtk);
+routes.get("/export-data-excell-gtk", exportDataGtkToExcell);
+
+routes.post("/upload-gtk/:id", uploadDokumenGtk);
+routes.delete("/delete-gtk/:id", deleteOneDokumenGtk);
 
 routes.get("/divisi", getDivisi);
 routes.post("/divisi/create", createDivisi);

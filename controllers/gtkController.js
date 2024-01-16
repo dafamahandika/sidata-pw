@@ -20,10 +20,10 @@ import Student from "../models/Student/Student.js";
 import documentGtk from "../models/Gtk/documentGtk.js";
 import Divisi from "../models/Gtk/Divisi.js";
 import Posisi from "../models/Gtk/Posisi.js";
+import ExcelJS from "exceljs";
 import argon2 from "argon2";
 import multer from "multer";
 import path from "path";
-import { constants } from "buffer";
 // All method for model Anak
 // Get Data
 export const getAnak = async (req, res) => {
@@ -1672,9 +1672,10 @@ export const getGtk = async (req, res) => {
         { path: "gaji_id", model: "RiwayatGaji" },
         { path: "inpassing_id", model: "Inpassing" },
         { path: "tunjangan_id", model: "Tunjangan" },
+        { path: "dokumen_id", model: "documentGtk" },
       ])
       .lean();
-    if (!gtk) {
+    if (!gtk && gtk.length == 0) {
       console.log(gtk);
       return res.status(404).json({
         message: "Data GTK Not Found",
@@ -1711,6 +1712,7 @@ export const getOneGtk = async (req, res) => {
         { path: "gaji_id", model: "RiwayatGaji" },
         { path: "inpassing_id", model: "Inpassing" },
         { path: "tunjangan_id", model: "Tunjangan" },
+        { path: "dokumen_id", model: "documentGtk" },
       ])
       .lean();
     if (!gtk) {
@@ -1754,6 +1756,7 @@ export const getOneGtkLogin = async (req, res) => {
           { path: "gaji_id", model: "RiwayatGaji" },
           { path: "inpassing_id", model: "Inpassing" },
           { path: "tunjangan_id", model: "Tunjangan" },
+          { path: "dokumen_id", model: "documentGtk" },
         ])
         .lean();
       if (!gtk) {
@@ -1764,7 +1767,7 @@ export const getOneGtkLogin = async (req, res) => {
       }
 
       const nama_rayon = rayon.nama_rayon;
-      const student = await Student.find({ rayon: nama_rayon })
+      const students = await Student.find({ rayon: nama_rayon })
         .populate([
           { path: "dokumen_id", model: "Dokumen" },
           { path: "keluarga_id", model: "Family" },
@@ -1772,8 +1775,8 @@ export const getOneGtkLogin = async (req, res) => {
         ])
         .lean();
 
-      if (!student || student.length === 0) {
-        console.log(student);
+      if (!students) {
+        console.log(students);
         return res.status(404).json({
           message: "Data Student Not Found",
         });
@@ -1782,7 +1785,8 @@ export const getOneGtkLogin = async (req, res) => {
         message: "Get Data Success",
         nama_rayon: nama_rayon,
         gtk: gtk,
-        student: student,
+        student: students,
+        total: students.length,
       });
     }
     const gtk = await Gtk.findOne({ user_id: id })
@@ -2152,7 +2156,7 @@ const multipleUpload = upload.fields([
 
 console.log(multipleUpload);
 
-export const uploadImageGtk = async (req, res) => {
+export const uploadDokumenGtk = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -2220,42 +2224,70 @@ export const uploadImageGtk = async (req, res) => {
   }
 };
 
-export const getUploadGtk = async (req, res) => {
+export const deleteOneDokumenGtk = async (req, res) => {
   try {
-    const { dokumen_id } = req.params;
-    const dokumen = await documentGtk.findById(dokumen_id);
+    const { id } = req.params;
 
-    if (!dokumen) {
+    const gtk = await Gtk.findById(id);
+    if (!gtk) {
+      console.log(gtk);
       return res.status(404).json({
-        message: "Dokumen Not Found",
+        message: "Data GTK Not Found",
       });
     }
-    const guru = await Gtk.findOne({ dokumen_id });
+    const dokumenId = gtk.dokumen_id._id;
 
-    if (!guru) {
-      return res.status(404).json({
-        message: "Guru Not Found for the specified Dokumen ID",
-      });
-    }
-    const response = {
-      message: "Data upload retrieved successfully",
-      nama_guru: guru.nama_lengkap,
-      dokumen_id: dokumen._id,
-      documents: {
-        ijazah_sd: dokumen.ijazah_sd,
-        ijazah_smp: dokumen.ijazah_smp,
-        ijazah_sma: dokumen.ijazah_sma,
-        ijazah_univ: dokumen.ijazah_univ,
-        ktp: dokumen.ktp,
-        akte_kelahiran: dokumen.akte_kelahiran,
-        kk: dokumen.kk,
-      },
-    };
+    const deleteDokumen = await documentGtk.findByIdAndDelete(dokumenId);
 
-    return res.json(response);
+    res.status(200).json({
+      message: "Dokumen GTK Success Delete",
+      dokumenGtk: deleteDokumen,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Dokumen GTK Failed Delete",
+    });
+  }
+};
+
+export const exportDataGtkToExcell = async (req, res) => {
+  try {
+    const data = await Gtk.find();
+
+    const workBook = new ExcelJS.Workbook();
+    const workSheet = workBook.addWorksheet("Data GTK");
+
+    const titleRow = workSheet.addRow(["NIP", "NIK", "Nama", "Tanggal Lahir", "Tempat Lahir", "Agama", "JK", "Email", "No. Telepon", "Status Kawin", "NPWP", "Tinggi Badan", "Berat Badan", "Golongan Darah", "No. KK"]);
+    titleRow.font = { bold: true, color: { argb: "FFFF" } };
+    titleRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgcolor: { argb: "3498DB" },
+    };
+    titleRow.alignment = { horizontal: "center" };
+    titleRow.border = { bottom: { style: "thin" } };
+
+    data.forEach((gtk) => {
+      workSheet.addRow([gtk.nip, gtk.nik, gtk.nama_lengkap, gtk.tanggak_lahir, gtk.tempat_lahir, gtk.agama, gtk.jk, gtk.email, gtk.no_telp, gtk.status_kawin, gtk.npwp, gtk.tb, gtk.bb, gtk.gol_darah, gtk.no_kk]);
+    });
+
+    workSheet.columns.forEach((column) => {
+      column.width = 15;
+      column.alignment = { horizontal: "left" };
+      column.border = { bottom: { style: "thin" }, right: { style: "thin" }, left: { style: "thin" }, top: { style: "thin" } };
+    });
+
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", "attachment; filename=Data GTK.xlsx");
+
+    await workBook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
