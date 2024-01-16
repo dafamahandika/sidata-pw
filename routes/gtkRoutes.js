@@ -86,6 +86,7 @@ import {
   deleteDivisi,
   // profile
   updateAvatarGtk,
+  exportDataGtkToExcell,
 } from "../controllers/gtkController.js";
 import { importCsvStudent } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
