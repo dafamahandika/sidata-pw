@@ -73,5 +73,4 @@ routes.get("/getUpload/:dokumen_id", getDokumen);
 
 routes.get("/export-data-excel", exportDataToExcel);
 routes.post("/avatar/:id", updateAvatar);
-
 export default routes;

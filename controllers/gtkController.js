@@ -206,9 +206,13 @@ export const updateBeasiswa = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateBeasiswa = req.body;
-    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(id, formUpdateBeasiswa, {
-      new: true,
-    });
+    const updateBeasiswa = await Beasiswa.findByIdAndUpdate(
+      id,
+      formUpdateBeasiswa,
+      {
+        new: true,
+      }
+    );
     if (!updateBeasiswa) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -282,7 +286,9 @@ export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const dataGtk = await Gtk.findById(id).populate({ path: "kepegawaian_id", model: "Kepegawaian" }).lean();
+    const dataGtk = await Gtk.findById(id)
+      .populate({ path: "kepegawaian_id", model: "Kepegawaian" })
+      .lean();
     const kepegawaian_id = dataGtk.kepegawaian_id;
 
     if (!dataGtk) {
@@ -326,9 +332,13 @@ export const updateKepegawaian = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateKepegawaian = req.body;
-    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(id, formUpdateKepegawaian, {
-      new: true,
-    });
+    const updateKepegawaian = await Kepegawaian.findByIdAndUpdate(
+      id,
+      formUpdateKepegawaian,
+      {
+        new: true,
+      }
+    );
     if (!updateKepegawaian) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -440,9 +450,13 @@ export const updatePendidikan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePendidikan = req.body;
-    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(id, formUpdatePendidikan, {
-      new: true,
-    });
+    const updatePendidikan = await RiwayatPendidikan.findByIdAndUpdate(
+      id,
+      formUpdatePendidikan,
+      {
+        new: true,
+      }
+    );
     if (!updatePendidikan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -554,9 +568,13 @@ export const updateSertifikasi = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateSertifikasi = req.body;
-    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(id, formUpdateSertifikasi, {
-      new: true,
-    });
+    const updateSertifikasi = await Sertifikasi.findByIdAndUpdate(
+      id,
+      formUpdateSertifikasi,
+      {
+        new: true,
+      }
+    );
     if (!updateSertifikasi) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -774,9 +792,13 @@ export const updatePenugasan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePenugasan = req.body;
-    const updatePenugasan = await Penugasan.findByIdAndUpdate(id, formUpdatePenugasan, {
-      new: true,
-    });
+    const updatePenugasan = await Penugasan.findByIdAndUpdate(
+      id,
+      formUpdatePenugasan,
+      {
+        new: true,
+      }
+    );
     if (!updatePenugasan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -885,9 +907,13 @@ export const updateTugas = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateTugas = req.body;
-    const updateTugas = await TugasTambahan.findByIdAndUpdate(id, formUpdateTugas, {
-      new: true,
-    });
+    const updateTugas = await TugasTambahan.findByIdAndUpdate(
+      id,
+      formUpdateTugas,
+      {
+        new: true,
+      }
+    );
     if (!updateTugas) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -998,9 +1024,13 @@ export const updatePenghargaan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdatePenghargaan = req.body;
-    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(id, formUpdatePenghargaan, {
-      new: true,
-    });
+    const updatePenghargaan = await Penghargaan.findByIdAndUpdate(
+      id,
+      formUpdatePenghargaan,
+      {
+        new: true,
+      }
+    );
     if (!updatePenghargaan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1107,9 +1137,13 @@ export const updateJabatan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateJabatan = req.body;
-    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(id, formUpdateJabatan, {
-      new: true,
-    });
+    const updateJabatan = await RiwayatJabatan.findByIdAndUpdate(
+      id,
+      formUpdateJabatan,
+      {
+        new: true,
+      }
+    );
     if (!updateJabatan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1330,9 +1364,13 @@ export const updateInpassing = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateInpassing = req.body;
-    const updateInpassing = await Inpassing.findByIdAndUpdate(id, formUpdateInpassing, {
-      new: true,
-    });
+    const updateInpassing = await Inpassing.findByIdAndUpdate(
+      id,
+      formUpdateInpassing,
+      {
+        new: true,
+      }
+    );
     if (!updateInpassing) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1441,9 +1479,13 @@ export const updateTunjangan = async function (req, res) {
   try {
     const { id } = req.params;
     const formUpdateTunjangan = req.body;
-    const updateTunjangan = await Tunjangan.findByIdAndUpdate(id, formUpdateTunjangan, {
-      new: true,
-    });
+    const updateTunjangan = await Tunjangan.findByIdAndUpdate(
+      id,
+      formUpdateTunjangan,
+      {
+        new: true,
+      }
+    );
     if (!updateTunjangan) {
       return res.status(404).json({
         massage: "Data Anak Not Found",
@@ -1492,7 +1534,17 @@ export const createGtk = async (req, res) => {
   try {
     const kepegawaian = new Kepegawaian();
     const savedKepegawaian = await kepegawaian.save();
-    const { nama_lengkap, nik, jk, tempat_lahir, tanggal_lahir, agama, no_telp, email, nip } = req.body;
+    const {
+      nama_lengkap,
+      nik,
+      jk,
+      tempat_lahir,
+      tanggal_lahir,
+      agama,
+      no_telp,
+      email,
+      nip,
+    } = req.body;
     const existingGtk = await Gtk.findOne({ nik: nik });
 
     if (existingGtk) {
@@ -1882,7 +1934,9 @@ export const getStatus = async (req, res) => {
     const statusKepegawaian = await StatusKepegawaian.find();
 
     if (!statusKepegawaian) {
-      return res.status(404).json({ message: "Data Status Kepegawaian Not Found" });
+      return res
+        .status(404)
+        .json({ message: "Data Status Kepegawaian Not Found" });
     }
 
     res.status(201).json({
@@ -2030,7 +2084,9 @@ export const createPosisi = async (req, res) => {
 };
 export const getPosisi = async (req, res) => {
   try {
-    const posisi = await Posisi.find().populate({ path: "divisi", model: "Divisi" }).lean();
+    const posisi = await Posisi.find()
+      .populate({ path: "divisi", model: "Divisi" })
+      .lean();
     if (!posisi) {
       console.log(posisi);
       return res.status(404).json({
@@ -2075,7 +2131,10 @@ const storage = multer.diskStorage({
     cb(null, "uploads/gtks");
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
@@ -2102,7 +2161,15 @@ export const uploadImageGtk = async (req, res) => {
         return res.status(500).json({ message: err.message });
       }
 
-      const { ijazah_sd, ijazah_smp, ijazah_sma, ijazah_univ, ktp, akte_kelahiran, kk } = req.files;
+      const {
+        ijazah_sd,
+        ijazah_smp,
+        ijazah_sma,
+        ijazah_univ,
+        ktp,
+        akte_kelahiran,
+        kk,
+      } = req.files;
 
       console.log(req.files);
       try {
@@ -2186,6 +2253,68 @@ export const getUploadGtk = async (req, res) => {
     };
 
     return res.json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const storageAvatar = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/avatar/gtk");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const uploadAvatar = multer({ storage: storageAvatar });
+
+const singleAvatar = uploadAvatar.fields([
+  { name: "imageProfileGtk", maxCount: 1 },
+]);
+
+export const updateAvatarGtk = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    singleAvatar(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+
+      try {
+        const { imageProfileGtk } = req.files;
+
+        if (!imageProfileGtk) {
+          return res
+            .status(400)
+            .json({ message: "All documents are required" });
+        }
+
+        const gtk = await Gtk.findById(id);
+
+        if (!gtk) {
+          return res.status(404).json({
+            message: "Data gtk Not Found",
+          });
+        }
+
+        // Update imageProfile property in gtk model
+        gtk.imageProfile = imageProfile[0].path;
+        await gtk.save();
+
+        return res.json({
+          message: "Profile image updated successfully",
+          gtk,
+        });
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

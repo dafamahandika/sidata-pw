@@ -103,6 +103,11 @@ const gtkSchema = new mongoose.Schema(
       default: null,
       ref: "documentGtk",
     },
+    imageProfileGtk: [
+      {
+        type: String,
+      },
+    ],
     nama_lengkap: {
       type: String,
       required: true,
