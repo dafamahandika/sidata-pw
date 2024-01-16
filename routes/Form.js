@@ -23,12 +23,12 @@ import {
   isNoValidateData,
   isValidateData,
   deleteOneDokumen,
-  getDokumen,
   uploadDokumen,
   updateAvatar,
   isCountStudentsAllWithMissingData,
   isCountStudentsAllCompleteData,
-  exportDataToExcel,
+  exportDataStudentToExcell,
+  exportDataStudentByRayonToExcell,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -69,9 +69,8 @@ routes.get("/data-missing", isCountStudentsAllWithMissingData);
 routes.get("/data-lengkap", isCountStudentsAllCompleteData);
 routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
-routes.get("/getUpload/:dokumen_id", getDokumen);
 
-routes.get("/export-data-excel", exportDataToExcel);
+routes.get("/export-data-excell-student", exportDataStudentToExcell);
+routes.get("/export-data-excell-student/:rayon", exportDataStudentByRayonToExcell);
 routes.post("/avatar/:id", updateAvatar);
-
 export default routes;

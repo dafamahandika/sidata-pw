@@ -12,6 +12,8 @@ import googleStrategy from "./controllers/authGoogle.js";
 import cors from "cors";
 import chatRoutes from "./routes/chat.js";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
+
 const port = process.env.PORT || 2036;
 const app = express();
 app.use(
@@ -48,6 +50,7 @@ app.use(passport.session());
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(fileUpload());
 
 app.use(create);
 app.use(register);
@@ -64,9 +67,7 @@ db.on("error", (err) => {
 db.once("open", () => {
   console.log("Connected to database");
 });
-const date = new Date("");
-date.toString();
+
 app.listen(port, () => {
   console.log(`Run Server http://localhost:${port}`);
-  console.log(date);
 });

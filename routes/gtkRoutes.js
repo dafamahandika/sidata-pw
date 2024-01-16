@@ -78,13 +78,17 @@ import {
   updateTunjangan,
   deleteTunjangan,
   // uploads
-  uploadImageGtk,
+  uploadDokumenGtk,
+  deleteOneDokumenGtk,
   // divisi
   getDivisi,
   createDivisi,
   deleteDivisi,
+  // profile
+  updateAvatarGtk,
+  exportDataGtkToExcell,
 } from "../controllers/gtkController.js";
-import { importCsv } from "../controllers/csvController.js";
+import { importCsvStudent } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -169,11 +173,16 @@ routes.post("/tunjangan/create/:id", createTunjangan);
 routes.put("/tunjangan/update/:id", updateTunjangan);
 routes.delete("/tunjangan/delete/:id", deleteTunjangan);
 
-routes.post("/csv", importCsv);
+routes.post("/csv", importCsvStudent);
 
-routes.post("/upload-gtk/:id", uploadImageGtk);
+routes.get("/export-data-excell-gtk", exportDataGtkToExcell);
+
+routes.post("/upload-gtk/:id", uploadDokumenGtk);
+routes.delete("/delete-gtk/:id", deleteOneDokumenGtk);
 
 routes.get("/divisi", getDivisi);
 routes.post("/divisi/create", createDivisi);
 routes.delete("/divisi/delete", deleteDivisi);
+
+routes.post("/updateAvatar/:id", updateAvatarGtk);
 export default routes;
