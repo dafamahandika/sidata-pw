@@ -3890,3 +3890,148 @@ export const importCsvStudent = async (req, res) => {
     res.status(500).json({ message: "Terjadi kesalahan", error: error });
   }
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import Gtk from "../models/Gtk/Gtk";
+import Student from "../models/Student/Student";
+import xlsx from "xlsx";
+import { PDFDocument } from "pdf-lib";
+
+export const exportGtkData = async (req, res) => {
+  try {
+    const gtkData = await Gtk.find();
+
+    if (!gtkData || gtkData.length === 0) {
+      return res.status(404).json({ message: "Gtk data not found" });
+    }
+
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(gtkData);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Gtk");
+    const excelBuffer = xlsx.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
+    const excelData = excelBuffer.toString("base64");
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage();
+    page.drawText("Gtk Data", { x: 50, y: 50, size: 24 });
+    for (const gtk of gtkData) {
+      page.drawText(
+        `Nama: ${gtk.nama_lengkap}, No_Nik: ${gtk.nik}, Email: ${gtk.email}, Nip: ${gtk.nip}, Tgl_Lahir: ${gtk.tanggal_lahir}, Tempat_Lahir: ${gtk.tempat_lahir}, Agama: ${gtk.agama}, No_Telp: ${gtk.no_telp}`,
+        {
+          x: 50,
+          y: 50,
+        }
+      );
+    }
+    const pdfBytes = await pdfDoc.save();
+    const pdfData = pdfBytes.toString("base64");
+
+    res.json({ excelData, pdfData });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const exportStudentData = async (req, res) => {
+  try {
+    const studentData = await Student.find();
+
+    if (!studentData || studentData.length === 0) {
+      return res.status(404).json({ message: "Student data not found" });
+    }
+
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(studentData);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Students");
+    const excelBuffer = xlsx.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
+    const excelData = excelBuffer.toString("base64");
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage();
+    page.drawText("Students", { x: 50, y: 50, size: 24 });
+    for (const student of studentData) {
+      page.drawText(
+        `Name: ${student.nama}, Email: ${student.email}, Nis: ${student.nis}, Rombel: ${student.rombel}, Rayon: ${student.rayon}, `,
+        {
+          x: 50,
+          y: 50,
+        }
+      );
+    }
+    const pdfBytes = await pdfDoc.save();
+    const pdfData = pdfBytes.toString("base64");
+
+    res.json({ excelData, pdfData });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+import path from "path";
+import multer from "multer";
+import Student from "../models/Student/Student";
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/avatar/student");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const extname = path.extname(file.originalname);
+    cb(null, "profile-" + uniqueSuffix + extname);
+  },
+});
+
+const upload = multer({ storage });
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await Student.findById(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Data Student Not Found",
+      });
+    }
+
+    upload.single("imageProfile")(req, res, async (err) => {
+      if (err instanceof multer.MulterError) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ message: "Terjadi kesalahan saat mengunggah gambar" });
+      } else if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ message: "Terjadi kesalahan saat memperbarui profil" });
+      }
+
+      const imageProfile = req.file;
+
+      if (imageProfile) {
+        student.imageProfile = imageProfile.path;
+        await student.save();
+      }
+
+      res.status(200).json({ message: "Profil berhasil diperbarui" });
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat memperbarui profil" });
+  }
+};
