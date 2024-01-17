@@ -15,10 +15,12 @@ import RiwayatGaji from "../models/Gtk/RiwayatGaji.js";
 import Inpassing from "../models/Gtk/Inpassing.js";
 import Tunjangan from "../models/Gtk/Tunjangan.js";
 import User from "../models/User.js";
-import DocumentGTK from "../models/Gtk/documentGtk.js";
 import Rayon from "../models/Student/Rayon.js";
 import Student from "../models/Student/Student.js";
 import documentGtk from "../models/Gtk/documentGtk.js";
+import Divisi from "../models/Gtk/Divisi.js";
+import Posisi from "../models/Gtk/Posisi.js";
+import ExcelJS from "exceljs";
 import argon2 from "argon2";
 import multer from "multer";
 import path from "path";
@@ -232,9 +234,9 @@ export const updateBeasiswa = async function (req, res) {
 // Delete Data
 export const deleteBeasiswa = async (req, res) => {
   try {
-    const idBeasiswa = req.params;
+    const { id } = req.params;
 
-    const deletedBeasiswa = await Beasiswa.findByIdAndDelete(idBeasiswa);
+    const deletedBeasiswa = await Beasiswa.findByIdAndDelete(id);
     if (!deletedBeasiswa) {
       console.log(deletedBeasiswa);
       return res.status(404).json({
@@ -246,7 +248,7 @@ export const deleteBeasiswa = async (req, res) => {
       message: "Berhasil Menghapus Data Beasiswa",
     });
   } catch (error) {
-    console.loh(error);
+    console.log(error);
     res.status(500).json({
       error: error.message,
       message: "Gagal Menghapus Data Beasiswa",
@@ -258,22 +260,22 @@ export const deleteBeasiswa = async (req, res) => {
 export const getKepagawaian = async (req, res) => {
   try {
     const { id } = req.params;
-    const beasiswa = await Beasiswa.findById(id);
-    if (!beasiswa) {
-      console.log(beasiswa);
+    const kepegawaian = await Kepegawaian.findById(id);
+    if (!kepegawaian) {
+      console.log(kepegawaian);
       return res.status(404).json({
-        message: "Data Beasiswa Not Found",
+        message: "Data Kepegawaian Not Found",
       });
     }
 
     res.status(200).json({
-      message: "Success to Get Data Beasiswa",
-      beasiswa: beasiswa,
+      message: "Success to Get Data Kepegawaian",
+      beasiswa: kepegawaian,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Failed to Get Data Beasiswa",
+      message: "Failed to Get Data Kepegawaian",
       error: error.message,
     });
   }
@@ -284,7 +286,11 @@ export const createKepegawaian = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const dataGtk = await Gtk.findById(id);
+    const dataGtk = await Gtk.findById(id)
+      .populate({ path: "kepegawaian_id", model: "Kepegawaian" })
+      .lean();
+    const kepegawaian_id = dataGtk.kepegawaian_id;
+
     if (!dataGtk) {
       console.log(dataGtk);
       return res.status(404).json({
@@ -292,21 +298,27 @@ export const createKepegawaian = async (req, res) => {
         message: "Data GTK Tidak di Temukan",
       });
     }
+    if (kepegawaian_id.length == 0) {
+      const formKepegawaian = req.body;
+      const kepegawaian = new Kepegawaian({
+        ...formKepegawaian,
+      });
 
-    const formKepegawaian = req.body;
-    const kepegawaian = new Kepegawaian({
-      ...formKepegawaian,
-    });
+      const savedKepegawaian = await kepegawaian.save();
 
-    const savedKepegawaian = await kepegawaian.save();
-
-    dataGtk.kepegawaian_id.push(savedKepegawaian._id);
-    await dataGtk.save();
-
-    res.status(201).json({
-      massage: "Berhasil Menambahkan Data Kepegawaian",
-      data: savedKepegawaian,
-    });
+      dataGtk.kepegawaian_id.push(savedKepegawaian._id);
+      await dataGtk.save();
+      res.status(201).json({
+        massage: "Berhasil Menambahkan Data Kepegawaian",
+        data: savedKepegawaian,
+      });
+    } else {
+      return res.status(500).json({
+        message: "Data Kepegawaian Sudah Ada",
+        data: kepegawaian_id.length,
+        dataGtk,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -348,11 +360,9 @@ export const updateKepegawaian = async function (req, res) {
 // Delete Data
 export const deleteKepegawaian = async (req, res) => {
   try {
-    const idKepegawaian = req.params;
+    const { id } = req.params;
 
-    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(
-      idKepegawaian
-    );
+    const deletedKepegawaian = await Kepegawaian.findByIdAndDelete(id);
 
     if (!deletedKepegawaian) {
       console.log(deletedKepegawaian);
@@ -590,7 +600,7 @@ export const deleteSertifikasi = async (req, res) => {
 
     const deletedSertifikasi = await Sertifikasi.findByIdAndDelete(id);
 
-    if (deletedSertifikasi) {
+    if (!deletedSertifikasi) {
       console.log(deletedSertifikasi);
       return res.status(404).json({
         message: "Data Sertifikasi Not Found",
@@ -1005,6 +1015,7 @@ export const createPenghargaan = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Gagal Menambahkan Data Penghargaan",
+      error: error.message,
     });
   }
 };
@@ -1496,9 +1507,9 @@ export const updateTunjangan = async function (req, res) {
 // Delete Data
 export const deleteTunjangan = async (req, res) => {
   try {
-    const idTunjangan = req.params;
+    const { id } = req.params;
 
-    const deletedTunjangan = await Tunjangan.findByIdAndDelete(idTunjangan);
+    const deletedTunjangan = await Tunjangan.findByIdAndDelete(id);
     if (!deletedTunjangan) {
       console.log(deleteTunjangan);
       return res.status(404).json({
@@ -1512,6 +1523,7 @@ export const deleteTunjangan = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
+      error: error.message,
       message: "Gagal Menghapus Data Tunjangan",
     });
   }
@@ -1520,6 +1532,8 @@ export const deleteTunjangan = async (req, res) => {
 // Create Data
 export const createGtk = async (req, res) => {
   try {
+    const kepegawaian = new Kepegawaian();
+    const savedKepegawaian = await kepegawaian.save();
     const {
       nama_lengkap,
       nik,
@@ -1551,6 +1565,7 @@ export const createGtk = async (req, res) => {
 
     const gtk = new Gtk({
       user_id: saveUser._id,
+      kepegawaian_id: savedKepegawaian._id,
       nama_lengkap: nama_lengkap,
       nik: nik,
       jk: jk,
@@ -1638,33 +1653,6 @@ export const updateGtk = async (req, res) => {
   }
 };
 
-export const gtkGroupRayon = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const rayon = await Rayon.findOne({ pembimbing_id: id });
-    const nama_rayon = rayon.nama_rayon;
-    const student = await Student.find({ rayon: nama_rayon });
-
-    if (!student) {
-      console.log(student);
-      return res.status(404).json({
-        message: "Data Student Not Found",
-      });
-    }
-    res.status(200).json({
-      message: "Success to Get Data Student",
-      student: student,
-      rayon: rayon,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Failed to Get Data Student",
-      error: error.message,
-    });
-  }
-};
-
 // Read Data
 export const getGtk = async (req, res) => {
   try {
@@ -1684,9 +1672,10 @@ export const getGtk = async (req, res) => {
         { path: "gaji_id", model: "RiwayatGaji" },
         { path: "inpassing_id", model: "Inpassing" },
         { path: "tunjangan_id", model: "Tunjangan" },
+        { path: "dokumen_id", model: "documentGtk" },
       ])
       .lean();
-    if (!gtk) {
+    if (!gtk && gtk.length == 0) {
       console.log(gtk);
       return res.status(404).json({
         message: "Data GTK Not Found",
@@ -1723,6 +1712,7 @@ export const getOneGtk = async (req, res) => {
         { path: "gaji_id", model: "RiwayatGaji" },
         { path: "inpassing_id", model: "Inpassing" },
         { path: "tunjangan_id", model: "Tunjangan" },
+        { path: "dokumen_id", model: "documentGtk" },
       ])
       .lean();
     if (!gtk) {
@@ -1766,6 +1756,7 @@ export const getOneGtkLogin = async (req, res) => {
           { path: "gaji_id", model: "RiwayatGaji" },
           { path: "inpassing_id", model: "Inpassing" },
           { path: "tunjangan_id", model: "Tunjangan" },
+          { path: "dokumen_id", model: "documentGtk" },
         ])
         .lean();
       if (!gtk) {
@@ -1776,7 +1767,7 @@ export const getOneGtkLogin = async (req, res) => {
       }
 
       const nama_rayon = rayon.nama_rayon;
-      const student = await Student.find({ rayon: nama_rayon })
+      const students = await Student.find({ rayon: nama_rayon })
         .populate([
           { path: "dokumen_id", model: "Dokumen" },
           { path: "keluarga_id", model: "Family" },
@@ -1784,16 +1775,18 @@ export const getOneGtkLogin = async (req, res) => {
         ])
         .lean();
 
-      if (!student || student.length === 0) {
-        console.log(student);
+      if (!students) {
+        console.log(students);
         return res.status(404).json({
           message: "Data Student Not Found",
         });
       }
       return res.status(200).json({
         message: "Get Data Success",
+        nama_rayon: nama_rayon,
         gtk: gtk,
-        student: student,
+        student: students,
+        total: students.length,
       });
     }
     const gtk = await Gtk.findOne({ user_id: id })
@@ -1831,6 +1824,84 @@ export const getOneGtkLogin = async (req, res) => {
     return res.status(500).json({
       message: "Get Data Failed",
       error: error.message,
+    });
+  }
+};
+
+export const deleteGtk = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const gtk = await Gtk.findById(id);
+    const user_id = gtk.user_id;
+    const kepegawaian_id = gtk.kepegawaian_id;
+    const pendidikan_id = gtk.pendidikan_id;
+    const anak_id = gtk.anak_id;
+    const beasiswa_id = gtk.beasiswa_id;
+    const sertifikasi_id = gtk.sertifikasi_id;
+    const diklat_id = gtk.diklat_id;
+    const penugasan_id = gtk.penugasan_id;
+    const tugas_tambahan_id = gtk.tugas_tambahan_id;
+    const penghargaan_id = gtk.penghargaan_id;
+    const tunjangan_id = gtk.tunjangan_id;
+    const inpassing_id = gtk.inpassing_id;
+    const jabatan_id = gtk.jabatan_id;
+    const gaji_id = gtk.gaji_id;
+    if (!gtk) {
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    await User.findByIdAndDelete(user_id);
+    await Kepegawaian.findByIdAndDelete(kepegawaian_id);
+
+    for (let i = 0; i < pendidikan_id.length; i++) {
+      await RiwayatPendidikan.findByIdAndDelete(pendidikan_id[i]);
+    }
+    for (let i = 0; i < anak_id.length; i++) {
+      await Anak.findByIdAndDelete(anak_id[i]);
+    }
+    for (let i = 0; i < beasiswa_id.length; i++) {
+      await Beasiswa.findByIdAndDelete(beasiswa_id[i]);
+    }
+    for (let i = 0; i < sertifikasi_id.length; i++) {
+      await Anak.findByIdAndDelete(sertifikasi_id[i]);
+    }
+    for (let i = 0; i < diklat_id.length; i++) {
+      await Anak.findByIdAndDelete(diklat_id[i]);
+    }
+    for (let i = 0; i < penugasan_id.length; i++) {
+      await Anak.findByIdAndDelete(penugasan_id[i]);
+    }
+    for (let i = 0; i < tugas_tambahan_id.length; i++) {
+      await Anak.findByIdAndDelete(tugas_tambahan_id[i]);
+    }
+    for (let i = 0; i < penghargaan_id.length; i++) {
+      await Anak.findByIdAndDelete(penghargaan_id[i]);
+    }
+    for (let i = 0; i < tunjangan_id.length; i++) {
+      await Anak.findByIdAndDelete(tunjangan_id[i]);
+    }
+    for (let i = 0; i < inpassing_id.length; i++) {
+      await Anak.findByIdAndDelete(inpassing_id[i]);
+    }
+    for (let i = 0; i < jabatan_id.length; i++) {
+      await Anak.findByIdAndDelete(jabatan_id[i]);
+    }
+    for (let i = 0; i < gaji_id.length; i++) {
+      await Anak.findByIdAndDelete(gaji_id[i]);
+    }
+
+    const deleteGtk = await Gtk.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Succes Deleted",
+      gtk: deleteGtk,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Failed",
     });
   }
 };
@@ -1932,6 +2003,133 @@ export const getJenis = async (req, res) => {
   }
 };
 
+export const createDivisi = async (req, res) => {
+  try {
+    const { nama_divisi } = req.body;
+    const divisi = new Divisi({
+      nama_divisi: nama_divisi,
+    });
+    const saveDivisi = await divisi.save();
+    res.status(200).json({
+      message: "Success",
+      saveDivisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+export const getDivisi = async (req, res) => {
+  try {
+    const divisi = await Divisi.find();
+    if (!divisi) {
+      console.log(divisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+      divisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteDivisi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteDivisi = await Divisi.findByIdAndDelete(id);
+    if (!deleteDivisi) {
+      console.log(deleteDivisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const createPosisi = async (req, res) => {
+  try {
+    const { nama_posisi, divisi } = req.body;
+    const posisi = new Posisi({
+      nama_posisi: nama_posisi,
+      divisi: divisi,
+    });
+    const savePosisi = await posisi.save();
+    res.status(200).json({
+      message: "Success",
+      posisi: savePosisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const getPosisi = async (req, res) => {
+  try {
+    const posisi = await Posisi.find()
+      .populate({ path: "divisi", model: "Divisi" })
+      .lean();
+    if (!posisi) {
+      console.log(posisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+      posisi: posisi,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+export const deletePosisi = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletePosisi = await Posisi.findByIdAndDelete(id);
+    if (!deletePosisi) {
+      console.log(deletePosisi);
+      return res.status(404).json({
+        message: "Data Not Found",
+      });
+    }
+    res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/gtks");
@@ -1958,7 +2156,7 @@ const multipleUpload = upload.fields([
 
 console.log(multipleUpload);
 
-export const uploadImageGtk = async (req, res) => {
+export const uploadDokumenGtk = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -2026,39 +2224,169 @@ export const uploadImageGtk = async (req, res) => {
   }
 };
 
-export const getUploadGtk = async (req, res) => {
+export const deleteOneDokumenGtk = async (req, res) => {
   try {
-    const { dokumen_id } = req.params;
-    const dokumen = await documentGtk.findById(dokumen_id);
+    const { id } = req.params;
 
-    if (!dokumen) {
+    const gtk = await Gtk.findById(id);
+    if (!gtk) {
+      console.log(gtk);
       return res.status(404).json({
-        message: "Dokumen Not Found",
+        message: "Data GTK Not Found",
       });
     }
-    const guru = await Gtk.findOne({ dokumen_id });
+    const dokumenId = gtk.dokumen_id._id;
 
-    if (!guru) {
-      return res.status(404).json({
-        message: "Guru Not Found for the specified Dokumen ID",
-      });
-    }
-    const response = {
-      message: "Data upload retrieved successfully",
-      nama_guru: guru.nama_lengkap,
-      dokumen_id: dokumen._id,
-      documents: {
-        ijazah_sd: dokumen.ijazah_sd,
-        ijazah_smp: dokumen.ijazah_smp,
-        ijazah_sma: dokumen.ijazah_sma,
-        ijazah_univ: dokumen.ijazah_univ,
-        ktp: dokumen.ktp,
-        akte_kelahiran: dokumen.akte_kelahiran,
-        kk: dokumen.kk,
-      },
+    const deleteDokumen = await documentGtk.findByIdAndDelete(dokumenId);
+
+    res.status(200).json({
+      message: "Dokumen GTK Success Delete",
+      dokumenGtk: deleteDokumen,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Dokumen GTK Failed Delete",
+    });
+  }
+};
+
+export const exportDataGtkToExcell = async (req, res) => {
+  try {
+    const data = await Gtk.find();
+
+    const workBook = new ExcelJS.Workbook();
+    const workSheet = workBook.addWorksheet("Data GTK");
+
+    const titleRow = workSheet.addRow([
+      "NIP",
+      "NIK",
+      "Nama",
+      "Tanggal Lahir",
+      "Tempat Lahir",
+      "Agama",
+      "JK",
+      "Email",
+      "No. Telepon",
+      "Status Kawin",
+      "NPWP",
+      "Tinggi Badan",
+      "Berat Badan",
+      "Golongan Darah",
+      "No. KK",
+    ]);
+    titleRow.font = { bold: true, color: { argb: "FFFF" } };
+    titleRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgcolor: { argb: "3498DB" },
     };
+    titleRow.alignment = { horizontal: "center" };
+    titleRow.border = { bottom: { style: "thin" } };
 
-    return res.json(response);
+    data.forEach((gtk) => {
+      workSheet.addRow([
+        gtk.nip,
+        gtk.nik,
+        gtk.nama_lengkap,
+        gtk.tanggal_lahir,
+        gtk.tempat_lahir,
+        gtk.agama,
+        gtk.jk,
+        gtk.email,
+        gtk.no_telp,
+        gtk.status_kawin,
+        gtk.npwp,
+        gtk.tb,
+        gtk.bb,
+        gtk.gol_darah,
+        gtk.no_kk,
+      ]);
+    });
+
+    workSheet.columns.forEach((column) => {
+      column.width = 15;
+      column.alignment = { horizontal: "left" };
+      column.border = {
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+        left: { style: "thin" },
+        top: { style: "thin" },
+      };
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", "attachment; filename=Data GTK.xlsx");
+
+    await workBook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const storageAvatar = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/avatar/gtk");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const uploadAvatar = multer({ storage: storageAvatar });
+
+const singleAvatar = uploadAvatar.fields([
+  { name: "imageProfileGtk", maxCount: 1 },
+]);
+
+export const updateAvatarGtk = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    singleAvatar(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+
+      try {
+        const { imageProfileGtk } = req.files;
+
+        if (!imageProfileGtk) {
+          return res
+            .status(400)
+            .json({ message: "All documents are required" });
+        }
+
+        const gtk = await Gtk.findById(id);
+
+        if (!gtk) {
+          return res.status(404).json({
+            message: "Data gtk Not Found",
+          });
+        }
+
+        // Update imageProfile property in gtk model
+        gtk.imageProfile = imageProfile[0].path;
+        await gtk.save();
+
+        return res.json({
+          message: "Profile image updated successfully",
+          gtk,
+        });
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

@@ -14,7 +14,6 @@ import {
   createStudent,
   updateStudent,
   deleteStudent,
-  uploadImage,
   verifikasiData,
   verifikasiFamily,
   verifikasiDokumen,
@@ -23,7 +22,13 @@ import {
   isCountStudensCompleteData,
   isNoValidateData,
   isValidateData,
-  getUpload,
+  deleteOneDokumen,
+  uploadDokumen,
+  updateAvatar,
+  isCountStudentsAllWithMissingData,
+  isCountStudentsAllCompleteData,
+  exportDataStudentToExcell,
+  exportDataStudentByRayonToExcell,
 } from "../controllers/Formulir.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
@@ -51,16 +56,24 @@ routes.delete("/student/delete/:id", deleteStudent);
 routes.get("/dashboard/student/:id", getOneStudentLogin);
 
 // routes.post("/upload/:id", uploadImage);
-routes.post("/upload/:id", uploadImage);
+routes.post("/upload/:id", uploadDokumen);
+routes.delete("/delete-dokumen/:id", deleteOneDokumen);
 routes.post("/verifikasi-data/:id", verifikasiData);
 routes.post("/verifikasi-family/:id", verifikasiFamily);
 routes.post("/verifikasi-dokumen/:id", verifikasiDokumen);
 
 routes.post("/tahun-ajaran/:id", addNewTahunAjran);
-routes.get("/data/:rayonName", isCountStudentsWithMissingData);
+routes.get("/data-missing/:rayonName", isCountStudentsWithMissingData);
 routes.get("/data-lengkap/:rayonName", isCountStudensCompleteData);
+routes.get("/data-missing", isCountStudentsAllWithMissingData);
+routes.get("/data-lengkap", isCountStudentsAllCompleteData);
 routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
-routes.get("/getUpload/:dokumen_id", getUpload);
 
+routes.get("/export-data-excell-student", exportDataStudentToExcell);
+routes.get(
+  "/export-data-excell-student/:rayon",
+  exportDataStudentByRayonToExcell
+);
+routes.post("/avatar/:id", updateAvatar);
 export default routes;

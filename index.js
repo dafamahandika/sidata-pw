@@ -1,19 +1,16 @@
 import express from "express";
 import db from "./config/conn.js";
 import create from "./routes/Form.js";
-import register from "./routes/Regist.js";
 import Login from "./routes/Login.js";
 import refreshToken from "./routes/geToken.js";
 import createStatus from "./routes/gtkRoutes.js";
 import createJenis from "./routes/gtkRoutes.js";
-import passport from "passport";
 import session from "express-session";
-import googleStrategy from "./controllers/authGoogle.js";
 import cors from "cors";
-import chatRoutes from "./routes/chat.js";
 import cookieParser from "cookie-parser";
-const port = process.env.PORT || 3000;
-
+import dotenv from "dotenv";
+dotenv.config();
+const port = process.env.PORT;
 const app = express();
 app.use(
   cors({
@@ -43,20 +40,14 @@ app.get("/", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-passport.use(googleStrategy);
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use(express.json());
 app.use(cookieParser());
 
 app.use(create);
-app.use(register);
 app.use(Login);
 app.use(refreshToken);
 app.use(createStatus);
 app.use(createJenis);
-app.use("/api", chatRoutes);
 
 db.on("error", (err) => {
   console.log(err);

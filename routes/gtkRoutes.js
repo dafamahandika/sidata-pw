@@ -1,12 +1,13 @@
 import express from "express";
 import {
   // gtk
-  gtkGroupRayon,
+  // gtkGroupRayon,
   getGtk,
   getOneGtk,
   getOneGtkLogin,
   createGtk,
   updateGtk,
+  deleteGtk,
   // status & jenis ptk
   createStatus,
   createJenis,
@@ -14,7 +15,6 @@ import {
   getJenis,
   // kepegawaian
   getKepagawaian,
-  createKepegawaian,
   updateKepegawaian,
   deleteKepegawaian,
   // anak
@@ -78,10 +78,17 @@ import {
   updateTunjangan,
   deleteTunjangan,
   // uploads
-  uploadImageGtk,
-  getUploadGtk,
+  uploadDokumenGtk,
+  deleteOneDokumenGtk,
+  // divisi
+  getDivisi,
+  createDivisi,
+  deleteDivisi,
+  // profile
+  updateAvatarGtk,
+  exportDataGtkToExcell,
 } from "../controllers/gtkController.js";
-import { importCsv } from "../controllers/csvController.js";
+import { importCsvStudent } from "../controllers/csvController.js";
 // import { isGuru } from "../middleware/isGuru.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isLogin } from "../middleware/isLogin.js";
@@ -92,7 +99,8 @@ routes.get("/status-kepeg", getStatus);
 routes.get("/jenis-ptk", getJenis);
 
 routes.get("/gtk", getGtk);
-routes.get("/gtk/group-rayon/:id", gtkGroupRayon);
+// routes.get("/gtk/group-rayon/:id", gtkGroupRayon);
+routes.delete("/gtk/delete/:id", deleteGtk);
 routes.get("/gtk/:id", getOneGtk);
 routes.post("/gtk", createGtk);
 routes.put("/gtk/update/:id", updateGtk);
@@ -108,11 +116,10 @@ routes.delete("/anak/delete/:id", deleteAnak);
 
 routes.get("/sertifikasi/:id", getSertifikasi);
 routes.post("/sertifikasi/create/:id", createSertifikasi);
-routes.put("/sertfikasi/update/:id", updateSertifikasi);
+routes.put("/sertifikasi/update/:id", updateSertifikasi);
 routes.delete("/sertifikasi/delete/:id", deleteSertifikasi);
 
 routes.get("/kepegawaian/:id", getKepagawaian);
-routes.post("/kepegawaian/create/:id", createKepegawaian);
 routes.put("/kepegawaian/update/:id", updateKepegawaian);
 routes.delete("/kepegawaian/delete/:id", deleteKepegawaian);
 
@@ -166,9 +173,16 @@ routes.post("/tunjangan/create/:id", createTunjangan);
 routes.put("/tunjangan/update/:id", updateTunjangan);
 routes.delete("/tunjangan/delete/:id", deleteTunjangan);
 
-routes.post("/csv", importCsv);
+routes.post("/csv", importCsvStudent);
 
-routes.post("/upload-gtk/:id", uploadImageGtk);
-routes.get("/getUploadGtk/:dokumen_id", getUploadGtk);
+routes.get("/export-data-excell-gtk", exportDataGtkToExcell);
 
+routes.post("/upload-gtk/:id", uploadDokumenGtk);
+routes.delete("/delete-gtk/:id", deleteOneDokumenGtk);
+
+routes.get("/divisi", getDivisi);
+routes.post("/divisi/create", createDivisi);
+routes.delete("/divisi/delete", deleteDivisi);
+
+routes.post("/updateAvatar/:id", updateAvatarGtk);
 export default routes;

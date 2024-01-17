@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const Login = async (req, res) => {
   const { email, password } = req.body;
@@ -25,13 +27,17 @@ export const Login = async (req, res) => {
     const userEmail = user.email;
     const userName = user.username;
 
-    const token = jwt.sign({ userId: user._id, role: user.role }, "sidata", {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     const refreshToken = jwt.sign(
       { userId, userEmail, userName },
-      "sidatawikrama",
+      process.env.REFRESH_TOKEN,
       {
         expiresIn: "1h",
       }
@@ -68,9 +74,13 @@ export const refreshToken = async (req, res) => {
       const userId = decoded.userId;
       const userName = decoded.userName;
       const userEmail = decoded.userEmail;
-      const token = jwt.sign({ userId, userName, userEmail }, "sidatawikrama", {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { userId, userName, userEmail },
+        process.env.REFRESH_TOKEN,
+        {
+          expiresIn: "1h",
+        }
+      );
 
       res.json({ token });
     });
