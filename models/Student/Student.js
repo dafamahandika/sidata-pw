@@ -17,6 +17,11 @@ const studentSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    imageProfile: [
+      {
+        type: String,
+      },
+    ],
     nama: {
       type: String,
       required: true,
@@ -66,6 +71,15 @@ const studentSchema = new mongoose.Schema(
     },
     agama: {
       type: String,
+      enum: [
+        "Islam",
+        "Protestan",
+        "Katolik",
+        "Hindu",
+        "Budha",
+        "Konghuchu",
+        null,
+      ],
       default: null,
     },
     kewarganegaraan: {

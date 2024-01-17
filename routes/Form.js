@@ -71,9 +71,6 @@ routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
 
 routes.get("/export-data-excell-student", exportDataStudentToExcell);
-routes.get(
-  "/export-data-excell-student/:rayon",
-  exportDataStudentByRayonToExcell
-);
+routes.get("/export-data-excell-student/:rayon", exportDataStudentByRayonToExcell);
 routes.post("/avatar/:id", updateAvatar);
 export default routes;
