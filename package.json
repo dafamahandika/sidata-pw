@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "argon2": "^0.31.1",
+    "aws-sdk": "^2.1546.0",
     "body-parse": "^0.1.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -43,7 +44,8 @@
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
-    "path": "^0.12.7", 
+    "path": "^0.12.7",
+    "s3-node": "^0.0.1",
     "socket.io": "^4.7.2",
     "twilio": "^4.19.0",
     "whatsapp-web.js": "^1.23.0",

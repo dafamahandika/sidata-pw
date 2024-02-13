@@ -30,6 +30,7 @@ import {
   exportDataStudentToExcell,
   exportDataStudentByRayonToExcell,
 } from "../controllers/Formulir.js";
+import { handleSingleFileUpload } from "../s3.js";
 // import upload from "../middleware/uploads.js";
 // import { isAdmin } from "../middleware/isAdmin.js";
 // import { isMurid } from "../middleware/isMurid.js";
@@ -71,6 +72,11 @@ routes.get("/data-novalidate/:rayonName", isNoValidateData);
 routes.get("/data-validate/:rayonName", isValidateData);
 
 routes.get("/export-data-excell-student", exportDataStudentToExcell);
-routes.get("/export-data-excell-student/:rayon", exportDataStudentByRayonToExcell);
+routes.get(
+  "/export-data-excell-student/:rayon",
+  exportDataStudentByRayonToExcell
+);
 routes.post("/avatar/:id", updateAvatar);
+
+routes.post("/upload-stree", handleSingleFileUpload);
 export default routes;
